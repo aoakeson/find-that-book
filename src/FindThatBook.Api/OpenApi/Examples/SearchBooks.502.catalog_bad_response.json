@@ -1,0 +1,12 @@
+{
+  "summary": "Open Library sent something unusable",
+  "description": "Unparseable JSON or an unexpected non-transient status on the first call.",
+  "value": {
+    "type": "/problems/catalog-bad-response",
+    "title": "Open Library returned an unexpected response",
+    "status": 502,
+    "detail": "The response could not be used (1 attempt(s)).",
+    "code": "catalog_bad_response",
+    "trace_id": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
+  }
+}

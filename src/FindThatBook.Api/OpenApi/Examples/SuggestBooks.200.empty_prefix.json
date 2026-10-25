@@ -1,0 +1,8 @@
+{
+  "summary": "Empty prefix",
+  "description": "A typing state, not an error.",
+  "value": {
+    "prefix": "",
+    "suggestions": []
+  }
+}

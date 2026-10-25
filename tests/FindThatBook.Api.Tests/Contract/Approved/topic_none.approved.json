@@ -1,0 +1,113 @@
+{
+  "query": "a book about xqzv",
+  "status": "none",
+  "status_reason": "no_candidates",
+  "hint": "Try a broader topic, or add a title or author.",
+  "degraded": true,
+  "degraded_reasons": [
+    "ai_not_configured"
+  ],
+  "interpretation": {
+    "title": null,
+    "author": null,
+    "characters": [],
+    "keywords": [
+      "xqzv"
+    ],
+    "english_title": null,
+    "original_title": null,
+    "year": null,
+    "removed_noise": [],
+    "source": "heuristic",
+    "intent": "topic",
+    "topics": [
+      "xqzv"
+    ]
+  },
+  "candidates": [],
+  "meta": {
+    "request_id": "<scrubbed>",
+    "elapsed_ms": 3030,
+    "timings_ms": {
+      "clean": 0,
+      "interpret": 0,
+      "retrieve": 3020,
+      "rank": 0
+    },
+    "open_library": {
+      "calls": 3,
+      "cache_hits": 0,
+      "upstream_requests": 3,
+      "retries": 0,
+      "slow_empty_requeries": 0,
+      "budget": 5,
+      "steps": [
+        {
+          "step": "broad",
+          "outcome": "ok",
+          "cache_hit": false,
+          "attempts": 1,
+          "elapsed_ms": 1100,
+          "results": 0,
+          "num_found": 0
+        },
+        {
+          "step": "topic",
+          "outcome": "ok",
+          "cache_hit": false,
+          "attempts": 1,
+          "elapsed_ms": 980,
+          "results": 0,
+          "num_found": 0
+        },
+        {
+          "step": "topic_any",
+          "outcome": "ok",
+          "cache_hit": false,
+          "attempts": 1,
+          "elapsed_ms": 940,
+          "results": 0,
+          "num_found": 0
+        }
+      ]
+    },
+    "llm": {
+      "provider": "gemini",
+      "model": "test-model",
+      "calls": 0,
+      "cache_hits": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "est_cost_usd": 0,
+      "prompt_versions": {
+        "interpret": "interpret.v3"
+      },
+      "steps": [
+        {
+          "operation": "interpret",
+          "provider": "gemini",
+          "model": "test-model",
+          "prompt_id": "interpret.v3",
+          "status": "not_configured",
+          "cache_hit": false,
+          "elapsed_ms": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ]
+    },
+    "judge": {
+      "enabled": false,
+      "status": "off",
+      "pick": null,
+      "probability": null,
+      "threshold": 0.9,
+      "agreed": null,
+      "model": null,
+      "latency_ms": null,
+      "input_tokens": null,
+      "est_cost_usd": null,
+      "detail": null
+    }
+  }
+}

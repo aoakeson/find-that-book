@@ -1,0 +1,281 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/atkinson-hyperlegible-next/wght.css";
+
+/*
+ * Find That Book design tokens. Every colour, radius, shadow and duration the app uses is defined here once.
+ * Rationale and contrast measurements: docs/DESIGN.md.
+ */
+
+:root {
+  /* Palette */
+  --paper: #fafcfc;
+  --surface: #ffffff;
+  --ink: #283d43;
+  --ink-secondary: #5c7077; /* #60747b darkened slightly so it stays ≥ 4.5:1 on mist and sage */
+  --line: #e1e9e9;
+  --line-strong: #7b8e93; /* control outlines: ≥ 3:1 on paper and surface */
+  --mist: #f0f6f7;
+  --sage: #eaf3ef;
+  --teal: #3d706a;
+  --teal-hover: #315e59;
+
+  /* States: always paired with an icon or words, never colour alone */
+  --danger: #a8321f;
+  --danger-surface: #fdf1ee;
+  --danger-line: #f1c9c0;
+  --warning: #7a5200;
+  --warning-surface: #fbf3e2;
+  --warning-line: #ecd9ad;
+  --success: #3d706a;
+  --success-surface: #eaf3ef;
+
+  /* shadcn semantic tokens, mapped from the palette */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--teal);
+  --primary-foreground: #ffffff;
+  --secondary: var(--mist);
+  --secondary-foreground: var(--ink);
+  --muted: var(--mist);
+  --muted-foreground: var(--ink-secondary);
+  --accent: var(--sage);
+  --accent-foreground: var(--ink);
+  --destructive: var(--danger);
+  --border: var(--line);
+  --input: var(--line-strong);
+  --ring: var(--teal);
+
+  --radius: 0.75rem; /* controls: 12px */
+}
+
+@theme inline {
+  --font-sans:
+    "Atkinson Hyperlegible Next Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans",
+    "Hiragino Sans", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Apple SD Gothic Neo", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji";
+  --font-heading: var(--font-sans);
+
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-mist: var(--mist);
+  --color-sage: var(--sage);
+  --color-teal: var(--teal);
+  --color-teal-hover: var(--teal-hover);
+  --color-danger: var(--danger);
+  --color-danger-surface: var(--danger-surface);
+  --color-danger-line: var(--danger-line);
+  --color-warning: var(--warning);
+  --color-warning-surface: var(--warning-surface);
+  --color-warning-line: var(--warning-line);
+  --color-success: var(--success);
+  --color-success-surface: var(--success-surface);
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-panel: 1rem;
+  --radius-composer: 1.5rem;
+
+  /* Running text measure (max-w-measure): about 70 characters of body text. Not 70ch: this font's "0" is wide
+     (1ch ≈ 10.4px at 16px), so 70ch would allow about 95 characters of prose per line. */
+  --container-measure: 33rem;
+
+  /* Type scale: 13 · 14 · 16 · 18 · 21 · 26–32 (heading grows with the viewport) */
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.45;
+  --text-heading: clamp(1.625rem, 1.25rem + 1.6vw, 2rem);
+  --text-heading--line-height: 1.2;
+  --text-title: 1.125rem;
+  --text-title--line-height: 1.35;
+
+  --shadow-composer: 0 1px 2px rgb(40 61 67 / 0.05), 0 12px 32px -16px rgb(40 61 67 / 0.18);
+  --shadow-panel: 0 1px 2px rgb(40 61 67 / 0.04);
+
+  --ease-out-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply min-h-svh bg-background text-base leading-relaxed text-foreground antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply text-balance;
+  }
+}
+
+/*
+ * Unlayered on purpose: it beats the components' `outline-none` utilities, so every focusable element gets the same
+ * solid ≥ 3:1 indicator (shadcn's 50% ring alone measures about 2:1 on white).
+ */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+[data-slot="input-group-control"]:focus-visible {
+  outline: none;
+}
+[data-slot="input-group"]:has([data-slot="input-group-control"]:focus-visible) {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+/* The composer draws its own single 2px teal edge on focus (border + 1px ring), so it skips the offset outline. */
+[data-slot="input-group"][data-composer]:has([data-slot="input-group-control"]:focus-visible) {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * App shell (S1). Decorative motion only: the paper background drift + pointer parallax and the page-turn book.
+ * Both stop when `prefers-reduced-motion` is set (kill-switch above, plus `animation: none` below), when the tab is
+ * hidden, and when the user pauses motion (MotionProvider sets html[data-motion="paused"]).
+ */
+html {
+  /* Keyboard focus never lands under the fixed motion control in the bottom corner. */
+  scroll-padding-bottom: 4.5rem;
+}
+
+/* Programmatic focus targets after route changes: not controls, so no focus ring. */
+#main:focus-visible,
+#page-heading:focus-visible {
+  outline: none;
+}
+
+.paper {
+  transition: opacity 250ms var(--ease-out-soft);
+}
+.paper[data-quiet] {
+  opacity: 0.45;
+}
+/* Short viewports (phone landscape, 200% zoom): the curves reach up behind content even on the home page. */
+@media (max-height: 32rem) {
+  .paper {
+    opacity: 0.45;
+  }
+}
+.paper-layer {
+  position: absolute;
+  inset-block: 0;
+  inset-inline: -8%;
+  transform: translate3d(
+    calc(var(--paper-x, 0) * var(--paper-depth, 0) * -1px),
+    calc(var(--paper-y, 0) * var(--paper-depth, 0) * -0.5px),
+    0
+  );
+  transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.paper-drift {
+  height: 100%;
+  animation: paper-drift var(--paper-drift-duration, 60s) ease-in-out var(--paper-drift-delay, 0s) infinite alternate;
+  animation-play-state: paused;
+  will-change: transform;
+}
+.paper[data-motion="running"] .paper-drift {
+  animation-play-state: running;
+}
+.paper[data-motion="off"] .paper-drift {
+  animation: none;
+  will-change: auto;
+}
+@keyframes paper-drift {
+  from {
+    transform: translate3d(-1.6%, 0, 0);
+  }
+  to {
+    transform: translate3d(1.6%, 0.375rem, 0);
+  }
+}
+
+/* PageTurnBook: one page lifts from the right, crosses the spine and settles on the left, then the cycle repeats. */
+.page-turn-leaf {
+  transform-box: view-box;
+  transform-origin: 12px 12px;
+  opacity: 0;
+}
+.page-turn[data-turning="true"] .page-turn-leaf {
+  animation: page-turn 1.6s cubic-bezier(0.45, 0.05, 0.35, 1) infinite;
+}
+@keyframes page-turn {
+  0% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+  10% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  32% {
+    transform: scaleX(0.35) skewY(-7deg);
+  }
+  50% {
+    transform: scaleX(-0.35) skewY(7deg);
+  }
+  68%,
+  82% {
+    transform: scaleX(-1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(-1);
+    opacity: 0;
+  }
+}
+
+/* The in-app pause also stills the Trace's running shimmer (reduced motion already does, via the utility). */
+:root[data-motion="paused"] [data-slot="trace-title"] {
+  --shimmer-image: none;
+  --shimmer-text-fill: currentColor;
+  animation: none;
+}

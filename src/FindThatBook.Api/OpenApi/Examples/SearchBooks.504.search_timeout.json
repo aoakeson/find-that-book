@@ -1,0 +1,12 @@
+{
+  "summary": "Deadline passed with nothing in hand",
+  "description": "No Open Library results arrived within the 25 s deadline. With partial results the answer is a 200 with degraded_reasons [deadline_reached] instead.",
+  "value": {
+    "type": "/problems/search-timeout",
+    "title": "The search did not finish in time",
+    "status": 504,
+    "detail": "No Open Library results arrived before the request deadline. Try again shortly.",
+    "code": "search_timeout",
+    "trace_id": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
+  }
+}

@@ -1,0 +1,197 @@
+{
+  "label": "final3-topic-v2-live-none",
+  "command": "dotnet run --project tools/FindThatBook.Eval -- run --set topic --catalog live --provider none --quiet --label final3-topic-v2-live-none",
+  "started": "2026-10-25T03:27:25.6724650-06:00",
+  "wall_seconds": 28.3,
+  "dataset": {
+    "name": "topic requests and controls",
+    "version": 2,
+    "path": "eval/datasets/topic.v2.jsonl",
+    "sha256": "de6e58c6305a94e9",
+    "held_out": false,
+    "tuning": "dev set for the topic-search feature (written before the feature exists); the feature will be built against it, so treat its numbers as in-sample",
+    "cases": 38
+  },
+  "code_fingerprint": "sha256:918d7b88cc5867cf (151 files)",
+  "eval_fingerprint": "sha256:9e8b27340734c970 (31 files)",
+  "binary_fingerprint": "sha256:bb794a4ff02178f3 (2 files)",
+  "catalog": "live",
+  "provider": "none",
+  "model": null,
+  "observed_models": [],
+  "judge": false,
+  "hypotheses": null,
+  "hypotheses_recorded_on": null,
+  "explain": "llm",
+  "ranker": "default",
+  "catalog_cache": null,
+  "label_note": "topic feature dev set: topic rows need the pipeline to expose matched subjects",
+  "held_out": false,
+  "bypass_caches": false,
+  "stopped": null,
+  "counts": {
+    "cases": 38,
+    "run": 38,
+    "skipped": 0,
+    "rejected": 0,
+    "errors": 0,
+    "replay_miss_rows": 0,
+    "in_sample": 0
+  },
+  "ops": {
+    "searched": 38,
+    "latency_p50_ms": 843,
+    "latency_p95_ms": 4786,
+    "ol_calls_per_query": 1.9473684210526316,
+    "ol_attempts_per_query": 1.894736842105263,
+    "paid_llm_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_per_1k_usd": null,
+    "degraded_rows": 38,
+    "degraded_by_settings_rows": 38,
+    "provider_error_rows": 0,
+    "explanations_llm": 0,
+    "explanations_template": 168,
+    "grounding_rejections": 0
+  },
+  "overall": {
+    "rows": 38,
+    "answerable": 37,
+    "top1": {
+      "hits": 31,
+      "total": 37,
+      "value": 0.8378378378378378
+    },
+    "top5": {
+      "hits": 30,
+      "total": 37,
+      "value": 0.8108108108108109
+    },
+    "status": {
+      "hits": 32,
+      "total": 38,
+      "value": 0.8421052631578947
+    },
+    "match_precision": {
+      "hits": 12,
+      "total": 12,
+      "value": 1
+    },
+    "coverage": {
+      "hits": 12,
+      "total": 37,
+      "value": 0.32432432432432434
+    },
+    "no_answer_rows": 1,
+    "false_matches": 0,
+    "errors": 0,
+    "severe_matches": 0,
+    "dup_record_matches": 0
+  },
+  "categories": {
+    "topic": {
+      "rows": 24,
+      "answerable": 24,
+      "top1": {
+        "hits": 18,
+        "total": 24,
+        "value": 0.75
+      },
+      "top5": {
+        "hits": 17,
+        "total": 24,
+        "value": 0.7083333333333334
+      },
+      "status": {
+        "hits": 18,
+        "total": 24,
+        "value": 0.75
+      },
+      "match_precision": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "coverage": {
+        "hits": 0,
+        "total": 24,
+        "value": 0
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "topic_author": {
+      "rows": 1,
+      "answerable": 0,
+      "top1": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "top5": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "status": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "coverage": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "no_answer_rows": 1,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "topic_control": {
+      "rows": 13,
+      "answerable": 13,
+      "top1": {
+        "hits": 13,
+        "total": 13,
+        "value": 1
+      },
+      "top5": {
+        "hits": 13,
+        "total": 13,
+        "value": 1
+      },
+      "status": {
+        "hits": 13,
+        "total": 13,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 12,
+        "total": 12,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 12,
+        "total": 13,
+        "value": 0.9230769230769231
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    }
+  },
+  "excluding_replay_misses": null
+}

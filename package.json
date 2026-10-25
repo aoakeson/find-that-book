@@ -1,0 +1,19 @@
+{
+  "name": "find-that-book",
+  "private": true,
+  "workspaces": [
+    "web"
+  ],
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "start": "node scripts/start.mjs",
+    "build": "npm run build -w web",
+    "test": "npm run test -w web",
+    "check": "npm run typecheck -w web && npm run lint -w web && npm run format:check -w web && npm run test -w web && npm run build -w web",
+    "doctor": "node scripts/doctor.mjs",
+    "smoke": "node scripts/smoke.mjs start && node scripts/smoke.mjs dev"
+  }
+}

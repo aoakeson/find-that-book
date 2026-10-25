@@ -1,0 +1,138 @@
+{
+  "query": "mark huckleberry",
+  "status": "ambiguous",
+  "status_reason": "near_title_author",
+  "hint": "Add more of the title or the author's full name.",
+  "degraded": true,
+  "degraded_reasons": [
+    "interpretation_fallback",
+    "explanation_fallback"
+  ],
+  "interpretation": {
+    "title": null,
+    "author": null,
+    "characters": [],
+    "keywords": [
+      "mark",
+      "huckleberry"
+    ],
+    "english_title": null,
+    "original_title": null,
+    "year": null,
+    "removed_noise": [],
+    "source": "heuristic",
+    "intent": "book",
+    "topics": []
+  },
+  "candidates": [
+    {
+      "rank": 1,
+      "work_id": "OL53908W",
+      "title": "Adventures of Huckleberry Finn",
+      "subtitle": null,
+      "author": "Mark Twain",
+      "primary_authors": [
+        {
+          "key": "OL18319A",
+          "name": "Mark Twain",
+          "url": "https://openlibrary.org/authors/OL18319A"
+        }
+      ],
+      "primary_authors_total": 1,
+      "contributors": [],
+      "contributors_total": 0,
+      "first_publish_year": 1876,
+      "edition_count": 2623,
+      "open_library_url": "https://openlibrary.org/works/OL53908W",
+      "cover_url": "https://covers.openlibrary.org/b/id/8231994-M.jpg",
+      "match_tier": "c",
+      "match_tier_label": "Near-match title + author",
+      "matched_subjects": [],
+      "explanation": "Title contains \"huckleberry\"; Mark Twain is the primary author; 2,623 editions.",
+      "explanation_source": "template",
+      "second_opinion": false,
+      "duplicates_folded": 0
+    }
+  ],
+  "meta": {
+    "request_id": "<scrubbed>",
+    "elapsed_ms": 1760,
+    "timings_ms": {
+      "clean": 0,
+      "interpret": 212,
+      "retrieve": 1730,
+      "rank": 1,
+      "explain": 0,
+      "judge": 0
+    },
+    "open_library": {
+      "calls": 1,
+      "cache_hits": 0,
+      "upstream_requests": 1,
+      "retries": 0,
+      "slow_empty_requeries": 0,
+      "budget": 5,
+      "steps": [
+        {
+          "step": "broad",
+          "outcome": "ok",
+          "cache_hit": false,
+          "attempts": 1,
+          "elapsed_ms": 1730,
+          "results": 20,
+          "num_found": 214
+        }
+      ]
+    },
+    "llm": {
+      "provider": "gemini",
+      "model": "test-model",
+      "calls": 1,
+      "cache_hits": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "est_cost_usd": 0,
+      "prompt_versions": {
+        "interpret": "interpret.v3",
+        "explain": "explain.v3"
+      },
+      "steps": [
+        {
+          "operation": "interpret",
+          "provider": "gemini",
+          "model": "test-model",
+          "prompt_id": "interpret.v3",
+          "status": "rate_limited",
+          "cache_hit": false,
+          "elapsed_ms": 212,
+          "input_tokens": null,
+          "output_tokens": null
+        },
+        {
+          "operation": "explain",
+          "provider": "gemini",
+          "model": "test-model",
+          "prompt_id": "explain.v3",
+          "status": "budget_exhausted",
+          "cache_hit": false,
+          "elapsed_ms": 0,
+          "input_tokens": null,
+          "output_tokens": null
+        }
+      ]
+    },
+    "judge": {
+      "enabled": false,
+      "status": "off",
+      "pick": null,
+      "probability": null,
+      "threshold": 0.9,
+      "agreed": null,
+      "model": null,
+      "latency_ms": null,
+      "input_tokens": null,
+      "est_cost_usd": null,
+      "detail": null
+    }
+  }
+}

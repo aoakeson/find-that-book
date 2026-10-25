@@ -1,0 +1,990 @@
+{
+  "what": "Recorded Open Library search.json responses for the golden replay regression test (tests/FindThatBook.Api.Tests/Golden). Built by the eval tool; never edited by hand. Replay matches q/title/author/author_key/sort and ignores fields/limit.",
+  "rebuild": "dotnet run --project tools/FindThatBook.Eval -- fixtures   (offline, from the replay sources)   |   dotnet run --project tools/FindThatBook.Eval -- record   (live Open Library, LLM off)",
+  "known_bias": "Files with has_v3_fields=false were recorded by the research prototypes before v3 asked for editions.title and author_alternative_name, so edition-title and alias-name evidence cannot fire on them. Re-record live to remove the bias.",
+  "file_count": 85,
+  "files": [
+    {
+      "file": "search_01db10b2b1f2.json",
+      "request": "q=person:(xqzv AND plorft AND wibble)",
+      "limit": 20,
+      "docs": 0,
+      "source": "live 2026-10-25T07:08:14.5029750\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "none-01"
+      ]
+    },
+    {
+      "file": "search_03152a0fa3b8.json",
+      "request": "q=huxley brave new world",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:54.8096630\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "ta-05"
+      ]
+    },
+    {
+      "file": "search_047079694dde.json",
+      "request": "q=farenheit 451 bradbury",
+      "limit": 20,
+      "docs": 3,
+      "source": "live 2026-10-25T07:07:59.5694940\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "typo-04"
+      ]
+    },
+    {
+      "file": "search_0dfc3136c6bb.json",
+      "request": "q=tale 2 cities",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:44.0865940\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "brief-05",
+        "dup-03"
+      ]
+    },
+    {
+      "file": "search_0e80db52a386.json",
+      "request": "q=mice men steinbeck",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:54.0260640\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "ta-04"
+      ]
+    },
+    {
+      "file": "search_10f6d85fea2d.json",
+      "request": "q=austen OR bennet",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:46.4226890\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "brief-06"
+      ]
+    },
+    {
+      "file": "search_13af1085860a.json",
+      "request": "q=ahab OR whale",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:08.2426970\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-02"
+      ]
+    },
+    {
+      "file": "search_183434ab3993.json",
+      "request": "q=mark huckleberry",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:41.7232080\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "brief-01"
+      ]
+    },
+    {
+      "file": "search_19b88fef2347.json",
+      "request": "author_key=OL15318546A\u0026sort=editions",
+      "limit": 10,
+      "docs": 2,
+      "source": "live 2026-10-25T07:07:48.2291460\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "author-01"
+      ]
+    },
+    {
+      "file": "search_1a8cd8dda97f.json",
+      "request": "q=dickens",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:43.1632290\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "brief-04"
+      ]
+    },
+    {
+      "file": "search_1d8dec08660e.json",
+      "request": "q=person:(hermione)",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:13.6636850\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "ambig-03"
+      ]
+    },
+    {
+      "file": "search_23a2f21a0bff.json",
+      "request": "q=bronte jane eyre",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:03.6911610\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "diacritics-01"
+      ]
+    },
+    {
+      "file": "search_2510c5eddddc.json",
+      "request": "q=meyer",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:12.3615030\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "ambig-02"
+      ]
+    },
+    {
+      "file": "search_2567be8356fc.json",
+      "request": "q=person:(xqzv OR plorft OR wibble)",
+      "limit": 20,
+      "docs": 0,
+      "source": "live 2026-10-25T07:08:14.6489330\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "none-01"
+      ]
+    },
+    {
+      "file": "search_2873a4e697fc.json",
+      "request": "q=bilbo OR dragon",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:08.2108510\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-03"
+      ]
+    },
+    {
+      "file": "search_293fcd9a1f74.json",
+      "request": "q=mark twain",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:49.7128900\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "author-03"
+      ]
+    },
+    {
+      "file": "search_2e74bb365b62.json",
+      "request": "q=scout atticus",
+      "limit": 20,
+      "docs": 7,
+      "source": "live 2026-10-25T07:08:05.1063070\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-01"
+      ]
+    },
+    {
+      "file": "search_304b85ec5e49.json",
+      "request": "q=sherlock OR baskerville",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:10.1041710\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-05"
+      ]
+    },
+    {
+      "file": "search_35e7ca8833b4.json",
+      "request": "q=person:(ahab OR whale)",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:08.6866630\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-02"
+      ]
+    },
+    {
+      "file": "search_38f57cc6ee3d.json",
+      "request": "q=moby dick melville",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:56.6646820\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "noisy-04"
+      ]
+    },
+    {
+      "file": "search_40224c4a2006.json",
+      "request": "q=bilbo dragon",
+      "limit": 20,
+      "docs": 2,
+      "source": "live 2026-10-25T07:08:06.1580360\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-03"
+      ]
+    },
+    {
+      "file": "search_4148da2305fd.json",
+      "request": "q=garcia marquez 100 years solitude",
+      "limit": 20,
+      "docs": 12,
+      "source": "live 2026-10-25T07:08:05.4331400\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "diacritics-04"
+      ]
+    },
+    {
+      "file": "search_43ac276f6808.json",
+      "request": "q=hobbit there back again",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:02.8599430\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "subtitle-01"
+      ]
+    },
+    {
+      "file": "search_44bd95816b37.json",
+      "request": "q=old man sea hemingway",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:02.2252950\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "partial-02"
+      ]
+    },
+    {
+      "file": "search_46ad6c57a8ee.json",
+      "request": "q=person:(ahab AND whale)",
+      "limit": 20,
+      "docs": 0,
+      "source": "live 2026-10-25T07:08:08.3814430\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-02"
+      ]
+    },
+    {
+      "file": "search_4cd920f3cb3f.json",
+      "request": "q=hobbit graphic",
+      "limit": 20,
+      "docs": 7,
+      "source": "live 2026-10-25T07:08:10.7387310\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "contrib-02"
+      ]
+    },
+    {
+      "file": "search_4e14b7d24248.json",
+      "request": "q=hermione",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:13.0170010\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "ambig-03"
+      ]
+    },
+    {
+      "file": "search_4f4c35f58f74.json",
+      "request": "q=dracula stoker",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:52.2773940\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "ta-01"
+      ]
+    },
+    {
+      "file": "search_51add3199fb3.json",
+      "request": "q=christmas carol dickens",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:56.0419800\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "noisy-02"
+      ]
+    },
+    {
+      "file": "search_52b8875b552d.json",
+      "request": "q=dickens tale 2 cities",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:55.4191490\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "ta-06"
+      ]
+    },
+    {
+      "file": "search_5546bd11ab3a.json",
+      "request": "author_key=OL19981A\u0026sort=editions",
+      "limit": 10,
+      "docs": 10,
+      "source": "live 2026-10-25T07:07:51.5773090\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "author-05"
+      ]
+    },
+    {
+      "file": "search_57d3abeb479d.json",
+      "request": "q=wuthering hieghts",
+      "limit": 20,
+      "docs": 0,
+      "source": "live 2026-10-25T07:07:59.7064540\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "typo-05"
+      ]
+    },
+    {
+      "file": "search_5ad7a3400d92.json",
+      "request": "q=person:(bennet)",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:46.6786430\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "brief-06"
+      ]
+    },
+    {
+      "file": "search_5c896ca222ca.json",
+      "request": "q=harry OR poter OR philosophers OR stone",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:02.1616940\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "typo-03"
+      ]
+    },
+    {
+      "file": "search_5ce628ff2f29.json",
+      "request": "q=great gatsby fitzgerald",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:55.8055420\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "noisy-01"
+      ]
+    },
+    {
+      "file": "search_5d5d17434925.json",
+      "request": "q=person:(mark AND huckleberry)",
+      "limit": 20,
+      "docs": 16,
+      "source": "live 2026-10-25T07:07:44.9674050\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "brief-01"
+      ]
+    },
+    {
+      "file": "search_62b9a1b1b573.json",
+      "request": "q=person:(scout AND atticus)",
+      "limit": 20,
+      "docs": 6,
+      "source": "live 2026-10-25T07:08:05.8371180\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-01"
+      ]
+    },
+    {
+      "file": "search_64038317d79a.json",
+      "request": "q=person:(sherlock AND baskerville)",
+      "limit": 20,
+      "docs": 16,
+      "source": "live 2026-10-25T07:08:10.6672440\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-05"
+      ]
+    },
+    {
+      "file": "search_646c5331e2ec.json",
+      "request": "q=adventures huckleberry finn",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:12.2870960\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "dup-02"
+      ]
+    },
+    {
+      "file": "search_651d103f6559.json",
+      "request": "q=tolkein OR hobbit",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:57.1774380\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "typo-01"
+      ]
+    },
+    {
+      "file": "search_65c4a4b244de.json",
+      "request": "q=frankenstein modern prometheus",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:02.9234100\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "subtitle-02"
+      ]
+    },
+    {
+      "file": "search_68e10129b059.json",
+      "request": "q=j OR k OR rowling",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:55.3134600\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "author-04"
+      ]
+    },
+    {
+      "file": "search_6e1439d74bb6.json",
+      "request": "q=person:(bilbo OR dragon)",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:08.6366290\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-03"
+      ]
+    },
+    {
+      "file": "search_6f00f6f813ee.json",
+      "request": "q=holden OR caulfield",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:09.7854490\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-04"
+      ]
+    },
+    {
+      "file": "search_713604a69c64.json",
+      "request": "q=tolkein hobbit",
+      "limit": 20,
+      "docs": 1,
+      "source": "live 2026-10-25T07:07:56.5959480\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "typo-01"
+      ]
+    },
+    {
+      "file": "search_76ef32499213.json",
+      "request": "q=ahab whale",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:05.9352030\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-02"
+      ]
+    },
+    {
+      "file": "search_78789dfaf764.json",
+      "request": "q=twilight meyer",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:41.7300330\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "brief-02"
+      ]
+    },
+    {
+      "file": "search_7aadbb3babef.json",
+      "request": "q=great OR expecttions OR dikens",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:59.2693770\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "typo-02"
+      ]
+    },
+    {
+      "file": "search_7d4469e7d68c.json",
+      "request": "q=frankenstein",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:46.1932580\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "title-02"
+      ]
+    },
+    {
+      "file": "search_94e23ee36205.json",
+      "request": "q=xqzv OR plorft OR wibble",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:14.1615130\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "none-01"
+      ]
+    },
+    {
+      "file": "search_9610fced907b.json",
+      "request": "author_key=OL24638A\u0026sort=editions",
+      "limit": 10,
+      "docs": 10,
+      "source": "live 2026-10-25T07:07:43.4189950\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "brief-04"
+      ]
+    },
+    {
+      "file": "search_969975adbce1.json",
+      "request": "author_key=OL1391085A\u0026sort=editions",
+      "limit": 10,
+      "docs": 10,
+      "source": "live 2026-10-25T07:08:12.5376800\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "ambig-02"
+      ]
+    },
+    {
+      "file": "search_97a5b74b9702.json",
+      "request": "q=purple OR elephant OR who OR sang OR opera OR mars",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:17.5864340\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "none-03"
+      ]
+    },
+    {
+      "file": "search_9d16c8938428.json",
+      "request": "q=great gatsby",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:46.8955570\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "title-03"
+      ]
+    },
+    {
+      "file": "search_9fa9b425f5ef.json",
+      "request": "q=harry OR potter OR sorcerers OR stone",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:04.8463820\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "subtitle-03"
+      ]
+    },
+    {
+      "file": "search_a2166458e605.json",
+      "request": "q=hobbit dixon",
+      "limit": 20,
+      "docs": 9,
+      "source": "live 2026-10-25T07:08:10.1772230\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "contrib-01"
+      ]
+    },
+    {
+      "file": "search_a5167529d9e7.json",
+      "request": "q=pride prejudice",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:56.3548030\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "diacritics-02",
+        "dup-01",
+        "noisy-03"
+      ]
+    },
+    {
+      "file": "search_ac5ebd3838c6.json",
+      "request": "author_key=OL21594A\u0026sort=editions",
+      "limit": 10,
+      "docs": 10,
+      "source": "live 2026-10-25T07:07:48.6227340\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "author-02"
+      ]
+    },
+    {
+      "file": "search_ae37232069d9.json",
+      "request": "q=hobbit",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:45.5306030\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "title-01"
+      ]
+    },
+    {
+      "file": "search_afa3ccc51a9f.json",
+      "request": "q=tolkien hobbit",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:42.3507840\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "brief-03",
+        "noisy-05"
+      ]
+    },
+    {
+      "file": "search_b1cb3ecbafbb.json",
+      "request": "q=orwell",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:48.0905430\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "author-01"
+      ]
+    },
+    {
+      "file": "search_b4cbdd2bd0c0.json",
+      "request": "q=jane austen",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:48.3590260\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "author-02"
+      ]
+    },
+    {
+      "file": "search_bedfa48390b1.json",
+      "request": "q=scout OR atticus",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:05.5560510\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-01"
+      ]
+    },
+    {
+      "file": "search_bf342fcd7b97.json",
+      "request": "q=les miserables hugo",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:04.8463570\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "diacritics-03"
+      ]
+    },
+    {
+      "file": "search_c0c658409f92.json",
+      "request": "q=moby dick",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:47.1656610\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "title-04"
+      ]
+    },
+    {
+      "file": "search_c11272401120.json",
+      "request": "q=austen bennet",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:44.6014830\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "brief-06"
+      ]
+    },
+    {
+      "file": "search_c261333077d5.json",
+      "request": "q=anne green gables",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:01.3031730\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "partial-01"
+      ]
+    },
+    {
+      "file": "search_c2b5e6ea83ec.json",
+      "request": "q=person:(bilbo AND dragon)",
+      "limit": 20,
+      "docs": 0,
+      "source": "live 2026-10-25T07:08:08.3279390\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-03"
+      ]
+    },
+    {
+      "file": "search_c7ff75c3b4b6.json",
+      "request": "q=purple elephant who sang opera mars",
+      "limit": 20,
+      "docs": 0,
+      "source": "live 2026-10-25T07:08:14.6176420\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "none-03"
+      ]
+    },
+    {
+      "file": "search_cd0599f05731.json",
+      "request": "q=1984 orwell",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:52.7023730\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "ta-02"
+      ]
+    },
+    {
+      "file": "search_cf5fe708362a.json",
+      "request": "q=xqzv plorft wibble",
+      "limit": 20,
+      "docs": 0,
+      "source": "live 2026-10-25T07:08:13.6339970\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "none-01"
+      ]
+    },
+    {
+      "file": "search_d3893af6b648.json",
+      "request": "q=harry poter philosophers stone",
+      "limit": 20,
+      "docs": 2,
+      "source": "live 2026-10-25T07:07:57.8024060\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "typo-03"
+      ]
+    },
+    {
+      "file": "search_d89a7f02f9d9.json",
+      "request": "q=wuthering OR hieghts",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:00.1748690\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "typo-05"
+      ]
+    },
+    {
+      "file": "search_d8f83f6a01bb.json",
+      "request": "q=emma",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:13.0937560\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "ambig-04"
+      ]
+    },
+    {
+      "file": "search_dcfb2d31b09b.json",
+      "request": "q=stephen king",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:51.2721850\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "author-05"
+      ]
+    },
+    {
+      "file": "search_dfe4db2ddccd.json",
+      "request": "q=twilight",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:11.7973820\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "ambig-01"
+      ]
+    },
+    {
+      "file": "search_e2b2d3933603.json",
+      "request": "q=great expecttions dikens",
+      "limit": 20,
+      "docs": 0,
+      "source": "live 2026-10-25T07:07:56.9130610\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "typo-02"
+      ]
+    },
+    {
+      "file": "search_e4ad3fa07ec0.json",
+      "request": "q=holden caulfield",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:09.1054000\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-04"
+      ]
+    },
+    {
+      "file": "search_e5500e55ce00.json",
+      "request": "q=j k rowling",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:49.3631480\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "author-04"
+      ]
+    },
+    {
+      "file": "search_e7fd1a3e8187.json",
+      "request": "author_key=OL18319A\u0026sort=editions",
+      "limit": 10,
+      "docs": 10,
+      "source": "live 2026-10-25T07:07:50.2428900\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "author-03"
+      ]
+    },
+    {
+      "file": "search_ebfa40275be3.json",
+      "request": "q=hobbit tolkien dixon",
+      "limit": 20,
+      "docs": 4,
+      "source": "live 2026-10-25T07:08:10.9306590\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "contrib-03"
+      ]
+    },
+    {
+      "file": "search_f782029b1d62.json",
+      "request": "q=sherlock baskerville",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:09.5121390\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "character-05"
+      ]
+    },
+    {
+      "file": "search_f8391f3bf0d6.json",
+      "request": "q=emma austen",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:53.2287510\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "ta-03"
+      ]
+    },
+    {
+      "file": "search_fa89dbab473e.json",
+      "request": "q=harry potter sorcerers stone",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:08:03.5615010\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "subtitle-03"
+      ]
+    },
+    {
+      "file": "search_fef8dfbe9038.json",
+      "request": "q=kill mockingbird",
+      "limit": 20,
+      "docs": 20,
+      "source": "live 2026-10-25T07:07:47.4810900\u002B00:00",
+      "has_v3_fields": true,
+      "used_by": [
+        "partial-04",
+        "title-05"
+      ]
+    }
+  ],
+  "builds": [
+    {
+      "command": "fixtures",
+      "args": "",
+      "date": "2026-10-24 23:46 MT (-06:00) \u00B7 2026-10-25 01:46 ET (-04:00)",
+      "dataset": "Find That Book golden set v2 sha256:5b70cc75033b87c6",
+      "provider": "none",
+      "code_fingerprint": "sha256:cd23167c6a7d02fd (116 files)",
+      "files_written": 85,
+      "misses": []
+    },
+    {
+      "command": "fixtures",
+      "args": "",
+      "date": "2026-10-24 23:57 MT (-06:00) \u00B7 2026-10-25 01:57 ET (-04:00)",
+      "dataset": "Find That Book golden set v2 sha256:5b70cc75033b87c6",
+      "provider": "none",
+      "code_fingerprint": "sha256:b70498869bcc91cb (136 files)",
+      "files_written": 85,
+      "misses": []
+    },
+    {
+      "command": "record",
+      "args": "--label record-golden-v2-live-off",
+      "date": "2026-10-25 01:08 MT (-06:00) \u00B7 2026-10-25 03:08 ET (-04:00)",
+      "dataset": "Find That Book golden set v2 sha256:5b70cc75033b87c6",
+      "provider": "none",
+      "code_fingerprint": "sha256:1880a7951bae30f1 (145 files)",
+      "files_written": 85,
+      "misses": []
+    },
+    {
+      "command": "fixtures",
+      "args": "",
+      "date": "2026-10-25 01:08 MT (-06:00) \u00B7 2026-10-25 03:08 ET (-04:00)",
+      "dataset": "Find That Book golden set v2 sha256:5b70cc75033b87c6",
+      "provider": "none",
+      "code_fingerprint": "sha256:04b946a70ca01b03 (145 files)",
+      "files_written": 85,
+      "misses": []
+    }
+  ]
+}

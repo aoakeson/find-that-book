@@ -1,0 +1,295 @@
+{
+ "note": "Live Open Library search.json responses recorded 2026-10-24/25 (each file keeps the original url), docs trimmed to the fields FindThatBook requests. Replayed by WireMock, matched on q/title/author/author_key/sort only. Older recordings lack author_alternative_name and editions; the mapper treats them as empty.",
+ "fixtures": [
+  {
+   "name": "hobbit-dixon",
+   "file": "hobbit-dixon.json",
+   "params": {
+    "q": "hobbit dixon",
+    "limit": "20"
+   },
+   "v3_fields": false,
+   "person_field": false,
+   "num_found": 9,
+   "docs": 9,
+   "dt": 2.08,
+   "why": "golden: graphic novel OL219602W (Dixon/Deming adapters, Tolkien last)",
+   "subject_field": false
+  },
+  {
+   "name": "tolkien-hobbit",
+   "file": "tolkien-hobbit.json",
+   "params": {
+    "q": "tolkien hobbit",
+    "limit": "20"
+   },
+   "v3_fields": false,
+   "person_field": false,
+   "num_found": 242,
+   "docs": 20,
+   "dt": 17.24,
+   "why": "golden: OL27482W rank 1; slow live call (17 s)",
+   "subject_field": false
+  },
+  {
+   "name": "hobbit-title-tolkien",
+   "file": "hobbit-title-tolkien.json",
+   "params": {
+    "title": "hobbit",
+    "author": "tolkien",
+    "limit": "20"
+   },
+   "v3_fields": false,
+   "person_field": false,
+   "num_found": 39,
+   "docs": 20,
+   "dt": 2.46,
+   "why": "title=&author= split shape",
+   "subject_field": false
+  },
+  {
+   "name": "dickens",
+   "file": "dickens.json",
+   "params": {
+    "q": "dickens",
+    "limit": "20"
+   },
+   "v3_fields": false,
+   "person_field": false,
+   "num_found": 17314,
+   "docs": 20,
+   "dt": 4.45,
+   "why": "author-only query by q=",
+   "subject_field": false
+  },
+  {
+   "name": "dickens-author-key",
+   "file": "dickens-author-key.json",
+   "params": {
+    "author_key": "OL24638A",
+    "sort": "editions",
+    "limit": "10"
+   },
+   "v3_fields": false,
+   "person_field": false,
+   "num_found": 7572,
+   "docs": 10,
+   "dt": 7.15,
+   "why": "author_key=OL24638A&sort=editions&limit=10 (author top works)",
+   "subject_field": false
+  },
+  {
+   "name": "pride-prejudice",
+   "file": "pride-prejudice.json",
+   "params": {
+    "q": "pride prejudice",
+    "limit": "20"
+   },
+   "v3_fields": false,
+   "person_field": false,
+   "num_found": 2629,
+   "docs": 20,
+   "dt": 4.68,
+   "why": "golden: OL66554W plus duplicate works",
+   "subject_field": false
+  },
+  {
+   "name": "pride-ampersand-prejudice",
+   "file": "pride-ampersand-prejudice.json",
+   "params": {
+    "q": "pride & prejudice",
+    "limit": "10"
+   },
+   "v3_fields": false,
+   "person_field": false,
+   "num_found": 2626,
+   "docs": 10,
+   "dt": 2.1,
+   "why": "& in q (encoded %26); base fields only",
+   "subject_field": false
+  },
+  {
+   "name": "harry-potter",
+   "file": "harry-potter.json",
+   "params": {
+    "q": "harry potter",
+    "limit": "20"
+   },
+   "v3_fields": false,
+   "person_field": false,
+   "num_found": 4068,
+   "docs": 20,
+   "dt": 3.71,
+   "why": "IN-058 series-name trap",
+   "subject_field": false
+  },
+  {
+   "name": "harry-potter-philosophers-stone",
+   "file": "harry-potter-philosophers-stone.json",
+   "params": {
+    "q": "harry potter philosophers stone",
+    "limit": "20"
+   },
+   "v3_fields": false,
+   "person_field": false,
+   "num_found": 47,
+   "docs": 20,
+   "dt": 2.19,
+   "why": "golden: Philosopher's Stone",
+   "subject_field": false
+  },
+  {
+   "name": "person-harry-potter",
+   "file": "person-harry-potter.json",
+   "params": {
+    "q": "person:(harry AND potter)",
+    "limit": "20"
+   },
+   "v3_fields": false,
+   "person_field": true,
+   "num_found": 109,
+   "docs": 20,
+   "dt": 1.2,
+   "why": "q=person:(harry AND potter) with the person field",
+   "subject_field": false
+  },
+  {
+   "name": "tolkein-or-hobbit",
+   "file": "tolkein-or-hobbit.json",
+   "params": {
+    "q": "tolkein OR hobbit",
+    "limit": "20"
+   },
+   "v3_fields": false,
+   "person_field": false,
+   "num_found": 728,
+   "docs": 20,
+   "dt": 1.53,
+   "why": "OR-joined typo rescue",
+   "subject_field": false
+  },
+  {
+   "name": "three-body-problem",
+   "file": "three-body-problem.json",
+   "params": {
+    "title": "three body problem",
+    "author": "cixin",
+    "limit": "20"
+   },
+   "v3_fields": true,
+   "person_field": false,
+   "num_found": 10,
+   "docs": 10,
+   "dt": 4.84,
+   "why": "v3 fields: editions.title + author_alternative_name (刘慈欣)",
+   "subject_field": false
+  },
+  {
+   "name": "santi-cjk-title",
+   "file": "santi-cjk-title.json",
+   "params": {
+    "title": "三体",
+    "limit": "20"
+   },
+   "v3_fields": true,
+   "person_field": false,
+   "num_found": 1,
+   "docs": 1,
+   "dt": 3.15,
+   "why": "DE-05: title=三体 (CJK, < 3 chars), v3 fields",
+   "subject_field": false
+  },
+  {
+   "name": "kokoro-soseki",
+   "file": "kokoro-soseki.json",
+   "params": {
+    "title": "kokoro",
+    "author": "soseki",
+    "limit": "20"
+   },
+   "v3_fields": true,
+   "person_field": false,
+   "num_found": 7,
+   "docs": 7,
+   "dt": 3.65,
+   "why": "v3 fields, Japanese author names",
+   "subject_field": false
+  },
+  {
+   "name": "vegetarian-kang",
+   "file": "vegetarian-kang.json",
+   "params": {
+    "title": "vegetarian",
+    "author": "kang",
+    "limit": "20"
+   },
+   "v3_fields": true,
+   "person_field": false,
+   "num_found": 1,
+   "docs": 1,
+   "dt": 2.29,
+   "why": "v3 fields, translator listed as co-author",
+   "subject_field": false
+  },
+  {
+   "name": "empty",
+   "file": "empty.json",
+   "params": {
+    "q": "purple elephant who sang opera mars",
+    "limit": "20"
+   },
+   "v3_fields": false,
+   "person_field": false,
+   "num_found": 0,
+   "docs": 0,
+   "dt": 0.73,
+   "why": "genuine fast empty (numFound 0, 0.7 s)",
+   "subject_field": false
+  },
+  {
+   "name": "slow-empty-cutoff",
+   "file": "slow-empty-cutoff.json",
+   "params": {
+    "q": "great OR gatsby",
+    "limit": "20"
+   },
+   "v3_fields": false,
+   "person_field": false,
+   "num_found": 0,
+   "docs": 0,
+   "dt": 11.68,
+   "why": "DA-064: q=great OR gatsby -> 200 numFound 0 after 11.7 s (Solr time-allowed cut-off)",
+   "subject_field": false
+  },
+  {
+   "name": "subject-bears",
+   "file": "subject-bears.json",
+   "params": {
+    "q": "subject:(bears)",
+    "limit": "20"
+   },
+   "v3_fields": true,
+   "person_field": false,
+   "subject_field": true,
+   "num_found": 15119,
+   "docs": 20,
+   "dt": 0.76,
+   "why": "topic call: q=subject:(bears), relevance, with the subject field"
+  },
+  {
+   "name": "suggestions-bear-titles",
+   "file": "suggestions-bear-titles.json",
+   "params": {
+    "q": "title:(winnie pooh) OR title:(paddington) OR title:(corduroy)",
+    "limit": "20"
+   },
+   "v3_fields": true,
+   "person_field": false,
+   "subject_field": true,
+   "num_found": 3227,
+   "docs": 20,
+   "dt": 0.81,
+   "why": "suggestions call: one OR-joined title:(...) query verifies several suggested books"
+  }
+ ]
+}

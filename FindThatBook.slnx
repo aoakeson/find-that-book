@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FindThatBook.Api/FindThatBook.Api.csproj" />
+    <Project Path="src/FindThatBook.Core/FindThatBook.Core.csproj" />
+    <Project Path="src/FindThatBook.Infrastructure/FindThatBook.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FindThatBook.Api.Tests/FindThatBook.Api.Tests.csproj" />
+    <Project Path="tests/FindThatBook.Core.Tests/FindThatBook.Core.Tests.csproj" />
+    <Project Path="tests/FindThatBook.Infrastructure.Tests/FindThatBook.Infrastructure.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/FindThatBook.Eval/FindThatBook.Eval.csproj" />
+  </Folder>
+</Solution>

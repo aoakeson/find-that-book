@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\FindThatBook.Core\FindThatBook.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.AI" />
+    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" />
+    <PackageReference Include="OpenAI" />
+    <PackageReference Include="Google.GenAI" />
+    <PackageReference Include="Anthropic" />
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Versioned prompts (Ai/Prompts, Explanations/Prompts) and the prebuilt suggest index ship inside the assembly. -->
+    <EmbeddedResource Include="**\Prompts\*.md" />
+    <EmbeddedResource Include="Suggest\*.json.gz" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="FindThatBook.Infrastructure.Tests" />
+    <InternalsVisibleTo Include="FindThatBook.Eval" />
+  </ItemGroup>
+</Project>

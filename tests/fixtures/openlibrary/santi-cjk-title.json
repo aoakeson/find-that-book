@@ -1,0 +1,5 @@
+{"url": "https://openlibrary.org/search.json?title=%E4%B8%89%E4%BD%93&fields=key%2Ctitle%2Csubtitle%2Cauthor_name%2Cauthor_key%2Cfirst_publish_year%2Cedition_count%2Ccover_i%2Ccontributor%2Creadinglog_count%2Cauthor_alternative_name%2Ceditions%2Ceditions.title&limit=20", "dt": 3.15,
+ "body": {"numFound": 1, "start": 0, "numFoundExact": true, "docs": [
+  {"author_alternative_name": ["Cixin Liu; Liu Cixin", "Cixin Liu", "Лю Цысинь", "Liu Cixin"], "author_key": ["OL7044246A", "OL10346704A", "OL9081346A", "OL9118672A"], "author_name": ["刘慈欣", "Vincent Schmitt", "Gwennaël Gaffric", "Marc Simonetti"], "contributor": ["Liu, Ken, 1976- translator"], "cover_i": 9157544, "edition_count": 45, "first_publish_year": 2008, "key": "/works/OL17267881W", "title": "三体", "readinglog_count": 1588, "editions": {"numFound": 3, "start": 0, "numFoundExact": true, "docs": [{"title": "三体 (sān tǐ)"}]}}
+ ]}
+}

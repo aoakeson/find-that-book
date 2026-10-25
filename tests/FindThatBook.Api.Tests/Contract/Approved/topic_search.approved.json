@@ -1,0 +1,229 @@
+{
+  "query": "find me a book about bears",
+  "status": "ambiguous",
+  "status_reason": "topic_search",
+  "hint": "Add a title or author to find a specific one.",
+  "degraded": false,
+  "degraded_reasons": [],
+  "interpretation": {
+    "title": null,
+    "author": null,
+    "characters": [],
+    "keywords": [],
+    "english_title": null,
+    "original_title": null,
+    "year": null,
+    "removed_noise": [],
+    "source": "llm",
+    "intent": "topic",
+    "topics": [
+      "bears"
+    ]
+  },
+  "candidates": [
+    {
+      "rank": 1,
+      "work_id": "OL900001W",
+      "title": "Little Bear",
+      "subtitle": null,
+      "author": "Else Holmelund Minarik",
+      "primary_authors": [
+        {
+          "key": "OL900001A",
+          "name": "Else Holmelund Minarik",
+          "url": "https://openlibrary.org/authors/OL900001A"
+        }
+      ],
+      "primary_authors_total": 1,
+      "contributors": [
+        {
+          "key": "OL900002A",
+          "name": "Maurice Sendak",
+          "role": "illustrator"
+        }
+      ],
+      "contributors_total": 1,
+      "first_publish_year": 1957,
+      "edition_count": 87,
+      "open_library_url": "https://openlibrary.org/works/OL900001W",
+      "cover_url": "https://covers.openlibrary.org/b/id/900001-M.jpg",
+      "match_tier": "e",
+      "match_tier_label": "No clear winner",
+      "matched_subjects": [
+        "Bears",
+        "Teddy bears",
+        "Bears -- Fiction"
+      ],
+      "explanation": "Topic match: Open Library lists the subjects Bears and Teddy bears; Else Holmelund Minarik is the primary author; 87 editions.",
+      "explanation_source": "llm",
+      "second_opinion": false,
+      "duplicates_folded": 0
+    },
+    {
+      "rank": 2,
+      "work_id": "OL900002W",
+      "title": "A Bear Called Paddington",
+      "subtitle": null,
+      "author": "Michael Bond",
+      "primary_authors": [
+        {
+          "key": "OL900003A",
+          "name": "Michael Bond",
+          "url": "https://openlibrary.org/authors/OL900003A"
+        }
+      ],
+      "primary_authors_total": 1,
+      "contributors": [],
+      "contributors_total": 0,
+      "first_publish_year": 1958,
+      "edition_count": 112,
+      "open_library_url": "https://openlibrary.org/works/OL900002W",
+      "cover_url": "https://covers.openlibrary.org/b/id/900002-M.jpg",
+      "match_tier": "e",
+      "match_tier_label": "No clear winner",
+      "matched_subjects": [
+        "Bears",
+        "Paddington Bear (Fictitious character)"
+      ],
+      "explanation": "Topic match: Open Library lists the subject Bears; Michael Bond is the primary author; 112 editions.",
+      "explanation_source": "llm",
+      "second_opinion": false,
+      "duplicates_folded": 0
+    },
+    {
+      "rank": 3,
+      "work_id": "OL900003W",
+      "title": "We're Going on a Bear Hunt",
+      "subtitle": null,
+      "author": "Michael Rosen",
+      "primary_authors": [
+        {
+          "key": "OL900004A",
+          "name": "Michael Rosen",
+          "url": "https://openlibrary.org/authors/OL900004A"
+        }
+      ],
+      "primary_authors_total": 1,
+      "contributors": [
+        {
+          "key": "OL900005A",
+          "name": "Helen Oxenbury",
+          "role": "illustrator"
+        }
+      ],
+      "contributors_total": 1,
+      "first_publish_year": 1989,
+      "edition_count": 64,
+      "open_library_url": "https://openlibrary.org/works/OL900003W",
+      "cover_url": "https://covers.openlibrary.org/b/id/900003-M.jpg",
+      "match_tier": "e",
+      "match_tier_label": "No clear winner",
+      "matched_subjects": [
+        "Bears"
+      ],
+      "explanation": "Topic match: Open Library lists the subject Bears; Michael Rosen is the primary author; 64 editions.",
+      "explanation_source": "template",
+      "second_opinion": false,
+      "duplicates_folded": 0
+    }
+  ],
+  "meta": {
+    "request_id": "<scrubbed>",
+    "elapsed_ms": 3870,
+    "timings_ms": {
+      "clean": 0,
+      "interpret": 700,
+      "retrieve": 3430,
+      "rank": 2,
+      "explain": 420,
+      "judge": 0
+    },
+    "open_library": {
+      "calls": 3,
+      "cache_hits": 0,
+      "upstream_requests": 3,
+      "retries": 0,
+      "slow_empty_requeries": 0,
+      "budget": 5,
+      "steps": [
+        {
+          "step": "broad",
+          "outcome": "ok",
+          "cache_hit": false,
+          "attempts": 1,
+          "elapsed_ms": 1840,
+          "results": 20,
+          "num_found": 2210
+        },
+        {
+          "step": "topic",
+          "outcome": "ok",
+          "cache_hit": false,
+          "attempts": 1,
+          "elapsed_ms": 2120,
+          "results": 20,
+          "num_found": 15119
+        },
+        {
+          "step": "suggestions",
+          "outcome": "ok",
+          "cache_hit": false,
+          "attempts": 1,
+          "elapsed_ms": 1310,
+          "results": 2,
+          "num_found": 2
+        }
+      ]
+    },
+    "llm": {
+      "provider": "gemini",
+      "model": "test-model",
+      "calls": 2,
+      "cache_hits": 0,
+      "input_tokens": 1500,
+      "output_tokens": 286,
+      "est_cost_usd": 0.001165,
+      "prompt_versions": {
+        "interpret": "interpret.v4",
+        "explain": "explain.v3"
+      },
+      "steps": [
+        {
+          "operation": "interpret",
+          "provider": "gemini",
+          "model": "test-model",
+          "prompt_id": "interpret.v4",
+          "status": "ok",
+          "cache_hit": false,
+          "elapsed_ms": 700,
+          "input_tokens": 520,
+          "output_tokens": 96
+        },
+        {
+          "operation": "explain",
+          "provider": "gemini",
+          "model": "test-model",
+          "prompt_id": "explain.v3",
+          "status": "ok",
+          "cache_hit": false,
+          "elapsed_ms": 420,
+          "input_tokens": 980,
+          "output_tokens": 190
+        }
+      ]
+    },
+    "judge": {
+      "enabled": false,
+      "status": "off",
+      "pick": null,
+      "probability": null,
+      "threshold": 0.9,
+      "agreed": null,
+      "model": null,
+      "latency_ms": null,
+      "input_tokens": null,
+      "est_cost_usd": null,
+      "detail": null
+    }
+  }
+}

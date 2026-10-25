@@ -1,0 +1,169 @@
+{
+  "query": "tolkien hobbit illustrated deluxe 1937",
+  "status": "match",
+  "status_reason": "exact_title_primary_author",
+  "hint": null,
+  "degraded": false,
+  "degraded_reasons": [],
+  "interpretation": {
+    "title": "The Hobbit",
+    "author": "J.R.R. Tolkien",
+    "characters": [],
+    "keywords": [],
+    "english_title": null,
+    "original_title": null,
+    "year": 1937,
+    "removed_noise": [
+      "illustrated",
+      "deluxe"
+    ],
+    "source": "llm",
+    "intent": "book",
+    "topics": []
+  },
+  "candidates": [
+    {
+      "rank": 1,
+      "work_id": "OL27482W",
+      "title": "The Hobbit",
+      "subtitle": null,
+      "author": "J.R.R. Tolkien",
+      "primary_authors": [
+        {
+          "key": "OL26320A",
+          "name": "J.R.R. Tolkien",
+          "url": "https://openlibrary.org/authors/OL26320A"
+        }
+      ],
+      "primary_authors_total": 1,
+      "contributors": [
+        {
+          "key": null,
+          "name": "Alan Lee",
+          "role": "illustrator"
+        }
+      ],
+      "contributors_total": 1,
+      "first_publish_year": 1937,
+      "edition_count": 482,
+      "open_library_url": "https://openlibrary.org/works/OL27482W",
+      "cover_url": "https://covers.openlibrary.org/b/id/14627509-M.jpg",
+      "match_tier": "a",
+      "match_tier_label": "Exact title + primary author",
+      "matched_subjects": [],
+      "explanation": "Exact title match; J.R.R. Tolkien is the primary author; first published 1937.",
+      "explanation_source": "llm",
+      "second_opinion": false,
+      "duplicates_folded": 0
+    },
+    {
+      "rank": 2,
+      "work_id": "OL27513W",
+      "title": "The Fellowship of the Ring",
+      "subtitle": null,
+      "author": "J.R.R. Tolkien",
+      "primary_authors": [
+        {
+          "key": "OL26320A",
+          "name": "J.R.R. Tolkien",
+          "url": "https://openlibrary.org/authors/OL26320A"
+        }
+      ],
+      "primary_authors_total": 1,
+      "contributors": [],
+      "contributors_total": 0,
+      "first_publish_year": 1954,
+      "edition_count": 319,
+      "open_library_url": "https://openlibrary.org/works/OL27513W",
+      "cover_url": "https://covers.openlibrary.org/b/id/14627060-M.jpg",
+      "match_tier": "d",
+      "match_tier_label": "Author only",
+      "matched_subjects": [],
+      "explanation": "Author-only match; J.R.R. Tolkien is the primary author; 319 editions.",
+      "explanation_source": "llm",
+      "second_opinion": false,
+      "duplicates_folded": 0
+    }
+  ],
+  "meta": {
+    "request_id": "<scrubbed>",
+    "elapsed_ms": 2140,
+    "timings_ms": {
+      "clean": 0,
+      "interpret": 610,
+      "retrieve": 1830,
+      "rank": 1,
+      "explain": 290,
+      "judge": 0
+    },
+    "open_library": {
+      "calls": 1,
+      "cache_hits": 0,
+      "upstream_requests": 1,
+      "retries": 0,
+      "slow_empty_requeries": 0,
+      "budget": 5,
+      "steps": [
+        {
+          "step": "broad",
+          "outcome": "ok",
+          "cache_hit": false,
+          "attempts": 1,
+          "elapsed_ms": 1830,
+          "results": 20,
+          "num_found": 1503
+        }
+      ]
+    },
+    "llm": {
+      "provider": "gemini",
+      "model": "test-model",
+      "calls": 2,
+      "cache_hits": 0,
+      "input_tokens": 1180,
+      "output_tokens": 210,
+      "est_cost_usd": 0.0008790,
+      "prompt_versions": {
+        "interpret": "interpret.v3",
+        "explain": "explain.v3"
+      },
+      "steps": [
+        {
+          "operation": "interpret",
+          "provider": "gemini",
+          "model": "test-model",
+          "prompt_id": "interpret.v3",
+          "status": "ok",
+          "cache_hit": false,
+          "elapsed_ms": 610,
+          "input_tokens": 412,
+          "output_tokens": 58
+        },
+        {
+          "operation": "explain",
+          "provider": "gemini",
+          "model": "test-model",
+          "prompt_id": "explain.v3",
+          "status": "ok",
+          "cache_hit": false,
+          "elapsed_ms": 290,
+          "input_tokens": 768,
+          "output_tokens": 152
+        }
+      ]
+    },
+    "judge": {
+      "enabled": false,
+      "status": "off",
+      "pick": null,
+      "probability": null,
+      "threshold": 0.9,
+      "agreed": null,
+      "model": null,
+      "latency_ms": null,
+      "input_tokens": null,
+      "est_cost_usd": null,
+      "detail": null
+    }
+  }
+}

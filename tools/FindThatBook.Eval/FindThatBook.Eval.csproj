@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\FindThatBook.Infrastructure\FindThatBook.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Lets the eval (and the golden replay test, which builds into a separate artifacts folder) find eval/ and tests/fixtures/. -->
+    <AssemblyMetadata Include="FindThatBook.RepoRoot" Value="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../../'))" />
+  </ItemGroup>
+</Project>

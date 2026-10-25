@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <!-- XML doc comments on the contract records become OpenAPI schema descriptions. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <UserSecretsId>find-that-book-api</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FindThatBook.Infrastructure\FindThatBook.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Scalar.AspNetCore" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Named OpenAPI examples: shipped inside the assembly, so the doc and the drift test read the same bytes. -->
+    <EmbeddedResource Include="OpenApi\Examples\*.json" LogicalName="examples/%(Filename)%(Extension)" />
+    <Content Remove="OpenApi\Examples\*.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="FindThatBook.Api.Tests" />
+  </ItemGroup>
+</Project>

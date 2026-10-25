@@ -1,0 +1,25 @@
+{
+  "kind": "interpret",
+  "dataset": "Find That Book golden set v2",
+  "held_out": false,
+  "queries": 20,
+  "runs": 3,
+  "provider": "gemini",
+  "models": [
+    "gemini-3.5-flash-lite"
+  ],
+  "code_fingerprint": "sha256:dd58f98dffa8042f (145 files)",
+  "started": "2026-10-25T01:45:54.6010680-06:00",
+  "cache_hits": 0,
+  "non_ok_calls": 0,
+  "title_author_identical": {
+    "hits": 18,
+    "total": 20,
+    "value": 0.9
+  },
+  "whole_hypothesis_identical": {
+    "hits": 12,
+    "total": 20,
+    "value": 0.6
+  }
+}

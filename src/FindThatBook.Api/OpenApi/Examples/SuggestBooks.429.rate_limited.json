@@ -1,0 +1,12 @@
+{
+  "summary": "Rate limited",
+  "description": "Suggest has its own per-client allowance (120 per minute by default).",
+  "value": {
+    "type": "/problems/rate-limited",
+    "title": "Too many requests",
+    "status": 429,
+    "detail": "The suggest limit was reached. Try again in 60 s.",
+    "code": "rate_limited",
+    "trace_id": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
+  }
+}

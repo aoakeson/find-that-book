@@ -1,0 +1,13 @@
+# One command on any machine with Docker: `docker compose up --build`, then open http://localhost:8080.
+# API keys come from the repo-root .env if there is one (optional: without a key, search uses heuristic parsing).
+# The container runs in Production, so the local-only Admin page is off here by design; use npm start for it.
+# Another host port: FTB_DOCKER_PORT=8081 docker compose up --build
+services:
+  app:
+    build: .
+    image: find-that-book:local
+    ports:
+      - "${FTB_DOCKER_PORT:-8080}:8080"
+    env_file:
+      - path: .env
+        required: false

@@ -1,0 +1,641 @@
+{
+  "label": "final3-hard-v1-live-openai-interpret",
+  "command": "dotnet run --project tools/FindThatBook.Eval -- run --set hard --catalog live --provider openai --explain template --max-llm-calls 60 --quiet --label final3-hard-v1-live-openai-interpret",
+  "started": "2026-10-25T04:03:06.8735370-06:00",
+  "wall_seconds": 60.9,
+  "dataset": {
+    "name": "research hard set",
+    "version": 1,
+    "path": "eval/datasets/hard.v1.jsonl",
+    "sha256": "2d6daa40170ce0e6",
+    "held_out": false,
+    "tuning": "in_sample: hand-labelled hard queries the research rules (plan 04 fixes, plan 06 v3) were designed and tuned on; 30 queries overlap golden. Measures regressions/fidelity to the prototype, not generalization.",
+    "cases": 46
+  },
+  "code_fingerprint": "sha256:918d7b88cc5867cf (151 files)",
+  "eval_fingerprint": "sha256:bfa0664db82124b7 (31 files)",
+  "binary_fingerprint": "sha256:bb794a4ff02178f3 (2 files)",
+  "catalog": "live",
+  "provider": "openai",
+  "model": null,
+  "observed_models": [
+    "interpret: openai/gpt-4.1-mini"
+  ],
+  "judge": false,
+  "hypotheses": null,
+  "hypotheses_recorded_on": null,
+  "explain": "template",
+  "ranker": "default",
+  "catalog_cache": null,
+  "label_note": null,
+  "held_out": false,
+  "bypass_caches": false,
+  "stopped": null,
+  "counts": {
+    "cases": 46,
+    "run": 46,
+    "skipped": 0,
+    "rejected": 0,
+    "errors": 0,
+    "replay_miss_rows": 0,
+    "in_sample": 46
+  },
+  "ops": {
+    "searched": 46,
+    "latency_p50_ms": 1074,
+    "latency_p95_ms": 2291,
+    "ol_calls_per_query": 1.5434782608695652,
+    "ol_attempts_per_query": 1.4565217391304348,
+    "paid_llm_calls": 46,
+    "input_tokens": 30754,
+    "output_tokens": 2799,
+    "cost_per_1k_usd": 0.3647826086956521739130435000,
+    "degraded_rows": 46,
+    "degraded_by_settings_rows": 46,
+    "provider_error_rows": 0,
+    "explanations_llm": 0,
+    "explanations_template": 230,
+    "grounding_rejections": 0
+  },
+  "overall": {
+    "rows": 46,
+    "answerable": 46,
+    "top1": {
+      "hits": 46,
+      "total": 46,
+      "value": 1
+    },
+    "top5": {
+      "hits": 46,
+      "total": 46,
+      "value": 1
+    },
+    "status": {
+      "hits": 0,
+      "total": 0,
+      "value": null
+    },
+    "match_precision": {
+      "hits": 38,
+      "total": 38,
+      "value": 1
+    },
+    "coverage": {
+      "hits": 38,
+      "total": 46,
+      "value": 0.8260869565217391
+    },
+    "no_answer_rows": 0,
+    "false_matches": 0,
+    "errors": 0,
+    "severe_matches": 0,
+    "dup_record_matches": 0
+  },
+  "categories": {
+    "abbrev": {
+      "rows": 1,
+      "answerable": 1,
+      "top1": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "top5": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "apostrophe": {
+      "rows": 2,
+      "answerable": 2,
+      "top1": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "top5": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "author_only": {
+      "rows": 4,
+      "answerable": 4,
+      "top1": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "top5": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "coverage": {
+        "hits": 0,
+        "total": 4,
+        "value": 0
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "brief": {
+      "rows": 4,
+      "answerable": 4,
+      "top1": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "top5": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "character": {
+      "rows": 14,
+      "answerable": 14,
+      "top1": {
+        "hits": 14,
+        "total": 14,
+        "value": 1
+      },
+      "top5": {
+        "hits": 14,
+        "total": 14,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 11,
+        "total": 11,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 11,
+        "total": 14,
+        "value": 0.7857142857142857
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "contributor": {
+      "rows": 2,
+      "answerable": 2,
+      "top1": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "top5": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "diacritics": {
+      "rows": 2,
+      "answerable": 2,
+      "top1": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "top5": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "duplicates": {
+      "rows": 1,
+      "answerable": 1,
+      "top1": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "top5": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "noisy": {
+      "rows": 3,
+      "answerable": 3,
+      "top1": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "top5": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "number_title": {
+      "rows": 1,
+      "answerable": 1,
+      "top1": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "top5": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "partial": {
+      "rows": 2,
+      "answerable": 2,
+      "top1": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "top5": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "study_guide": {
+      "rows": 1,
+      "answerable": 1,
+      "top1": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "top5": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "coverage": {
+        "hits": 0,
+        "total": 1,
+        "value": 0
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "subtitle": {
+      "rows": 1,
+      "answerable": 1,
+      "top1": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "top5": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "title_author": {
+      "rows": 1,
+      "answerable": 1,
+      "top1": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "top5": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "title_only": {
+      "rows": 5,
+      "answerable": 5,
+      "top1": {
+        "hits": 5,
+        "total": 5,
+        "value": 1
+      },
+      "top5": {
+        "hits": 5,
+        "total": 5,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 5,
+        "total": 5,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 5,
+        "total": 5,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "typo": {
+      "rows": 2,
+      "answerable": 2,
+      "top1": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "top5": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    }
+  },
+  "excluding_replay_misses": null
+}

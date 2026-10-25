@@ -1,0 +1,49 @@
+name: web
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: web-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck -w web
+      - run: npm run lint -w web
+      - run: npm run format:check -w web
+      - run: npm run test -w web
+      - run: npm run build -w web
+      # Browser smoke tests: every /api call is mocked from the API's example files, so no backend or keys.
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e -w web
+
+  # The reviewer's commands, for real, where this repo can't be run by hand: npm run doctor, then npm start and
+  # npm run dev each come up, answer, stop cleanly and leave no process listening. No keys, no paid calls.
+  run-scripts:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - run: npm ci
+      - run: npm run doctor
+      - run: npm run smoke

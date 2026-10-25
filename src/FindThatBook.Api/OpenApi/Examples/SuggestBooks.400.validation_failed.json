@@ -1,0 +1,16 @@
+{
+  "summary": "Prefix too long",
+  "description": "Prefixes are 0-100 characters; limit is 1-10.",
+  "value": {
+    "type": "/problems/validation-failed",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "errors": {
+      "Prefix": [
+        "The field Prefix must be at most 100 characters."
+      ]
+    },
+    "code": "validation_failed",
+    "trace_id": "00-148821668b859a06b21b035795c92820-052453236532001f-00"
+  }
+}
