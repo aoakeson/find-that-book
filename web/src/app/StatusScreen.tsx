@@ -3,7 +3,6 @@ import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia } from "
 import { MotionProvider } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 import { BrandLink } from "./AppHeader"
-import { MotionToggle } from "./MotionToggle"
 import { PaperBackground } from "./PaperBackground"
 import { useInShell } from "./shell-context"
 
@@ -59,10 +58,6 @@ function MinimalShell({ children }: { children: ReactNode }) {
         <main id="main" tabIndex={-1} className="flex-1">
           {children}
         </main>
-        {/* Placed like RootLayout's. */}
-        <footer className="mx-auto flex w-full max-w-5xl justify-end px-4 pb-4 sm:px-6 lg:p-0">
-          <MotionToggle className="lg:fixed lg:right-5 lg:bottom-5 lg:z-20" />
-        </footer>
       </div>
     </MotionProvider>
   )

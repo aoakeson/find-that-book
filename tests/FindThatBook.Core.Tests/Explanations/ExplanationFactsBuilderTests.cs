@@ -204,6 +204,16 @@ public class ExplanationFactsBuilderTests
         ExplanationFactsBuilder.Build(work, Query("bennet darcy"), null).MatchedCharacters.ShouldBe(["Elizabeth Bennet", "Fitzwilliam Darcy"]);
     }
 
+    [Fact]
+    public void Build_Characters_OneNamePerCharacter_TheShorterListing()
+    {
+        // Measured: Open Library lists both for The Hound of the Baskervilles.
+        var work = Work("OL262421W", "The Hound of the Baskervilles", MatchTier.A, ["Arthur Conan Doyle"],
+            persons: ["Mr. Sherlock Holmes", "Sherlock Holmes", "Dr. Watson"],
+            evidence: new MatchEvidence { MatchedCharacters = ["Mr. Sherlock Holmes", "Sherlock Holmes"] });
+        ExplanationFactsBuilder.Build(work, Query("sherlock baskerville"), null).MatchedCharacters.ShouldBe(["Sherlock Holmes"]);
+    }
+
     [Theory]
     [InlineData(true, EditionIntent.Adaptation)]
     [InlineData(false, null)]

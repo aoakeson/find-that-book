@@ -58,6 +58,8 @@ public class GroundingCheckTests
         { "king_d", "Author-only match on Richard Bachman, an alternative name Open Library lists for Stephen King." },
         { "austen_e", "Character match on Elizabeth Bennet; Jane Austen is the primary author; first published 1813 per Open Library." },
         { "pp_inferred_a", "Interpreted title match; Jane Austen is the primary author; Elizabeth Bennet is a listed character." },
+        { "tkam_inferred_a", "Interpreted title match; Harper Lee is the primary author; Atticus Finch and Scout Finch are listed characters; 213 editions." },
+        { "tkam_inferred_a", "Interpreted title match; Harper Lee is the primary author; Atticus Finch is a listed character." },
         { "fisher_e", "Exact title, but not by the searched author; Jude Fisher is the primary author." },
         { "fisher_e", "Exact title but not by the searched author; Jude Fisher is the primary author." },
         { "heller_c", "Near title match; Joseph Heller is the primary author; no first publish year listed." },
@@ -153,6 +155,9 @@ public class GroundingCheckTests
         { "hobbit_a_plain", "Exact title match; J.R.R. Tolkien is the primary author!", "not_a_statement" },
         { "hobbit_a_plain", "Exact title match; J.R.R. Tolkien is the primary author​.", "format_character" },
         { "hobbit_a_plain", "", "empty" },
+        // The characters the patron typed are the reason for the result: measured, gpt-4.1-mini left them out for "scout atticus".
+        { "tkam_inferred_a", "Interpreted title match; Harper Lee is the primary author; 213 editions.", "matched_character_missing" },
+        { "tkam_inferred_a", "Interpreted title match; Harper Lee is the primary author; Atticus is a listed character.", "matched_character_missing" },
         // Topic requests.
         { "pooh_topic", "Topic match; A. A. Milne is the primary author; 87 editions.", "subject_missing" },
         { "pooh_topic", "Topic match: a story about bears; A. A. Milne is the primary author.", "unknown_word:about" },

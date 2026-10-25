@@ -69,7 +69,9 @@ public static partial class CatalogQueries
         if (words.Count == 0) words = PromotedWords(h);
         var author = AuthorSurname(h);
         if (words.Count == 0 && author is null) return null;
-        return new CatalogQuery { Title = words.Count > 0 ? Join(words) : null, Author = author };
+        // Characters the model kept were typed (the sanitizer drops the rest): ask for the person field so the work's
+        // own character list can back them ("scout atticus" → Atticus Finch); without it nothing could cite them.
+        return new CatalogQuery { Title = words.Count > 0 ? Join(words) : null, Author = author, IncludePersons = h.Characters.Count > 0 };
     }
 
     /// <summary>

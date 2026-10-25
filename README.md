@@ -8,28 +8,24 @@ characters, English and original-language titles) and writes the explanation sen
 Deterministic, tested C# decides which Open Library records come back, in what order, and whether we can honestly say
 `match`. If the LLM is down, slow or out of quota, the search still works (`degraded`), never an error.
 
-> Status: backend and React frontend (`web/`) built and tested, not deployed. See [Frontend](#frontend).
+## Quick start
 
-**Run the whole app (API + web UI)** on macOS, Windows or Linux with the .NET 10 SDK and Node.js 24 LTS:
+1. Install [Node.js 24](https://nodejs.org).
+2. From the repo root:
 
 ```
-npm install
-npm run dev          # open http://localhost:5173
+npm run dev
 ```
 
-Only Docker installed? `docker compose up --build`, then open http://localhost:8080. `npm run doctor` checks your
-machine; ports, Windows notes and troubleshooting are in [docs/RUNNING.md](docs/RUNNING.md).
+3. Open http://localhost:5173
 
-**AI keys are optional.** Without one the app still searches (basic matching, standard explanations) and says so.
-To turn the AI on, use either way ([free Gemini key](https://aistudio.google.com/apikey)):
+The first run installs the web packages and the .NET 10 SDK if they are missing. Same command on macOS and Windows.
+Ctrl+C stops the app.
 
-| | How | Lasts |
-|---|---|---|
-| **In the app** | Open http://localhost:5173/admin, paste the key, **Save key** | Until you stop the app (local runs only; not in Docker) |
-| **In `.env`** | `cp .env.example .env` (Windows: `copy .env.example .env`), set `GEMINI_API_KEY=your-key`, restart | Across restarts; Docker uses it too |
+An AI key is optional. Paste a [free Gemini key](https://aistudio.google.com/apikey) at http://localhost:5173/admin, or
+copy `.env.example` to `.env` and set `GEMINI_API_KEY`.
 
-Anthropic or OpenAI instead? Use `ANTHROPIC_API_KEY` or `OPENAI_API_KEY` (or that provider's row in the app): the app
-uses the first provider that has a key.
+Ports, Docker, and troubleshooting: [docs/RUNNING.md](docs/RUNNING.md).
 
 ## Contents
 - [Quick start](#quick-start) · [AI setup and model choice](#ai-setup-and-model-choice) · [Configuration](#configuration-and-keys)
@@ -38,40 +34,19 @@ uses the first provider that has a key.
 - [Testing](#testing) · [Evaluation results](#evaluation-results) · [Known misses](#known-misses)
 - [How I used AI tools](#how-i-used-ai-tools) · [What I'd do with more time](#what-id-do-with-more-time) · [Docs map](#docs-map) · [Frontend](#frontend)
 
-## Quick start
+## API only
 
-**Prerequisite:** the .NET 10 SDK (any 10.0.1xx–4xx; `global.json` pins `10.0.100` with `rollForward: latestFeature`).
+`npm run dev` starts the web app and the API. To run the API by itself:
 
-| OS | Install |
-|---|---|
-| macOS | `brew install --cask dotnet-sdk` or the installer from <https://dotnet.microsoft.com/download/dotnet/10.0> |
-| Windows | `winget install Microsoft.DotNet.SDK.10` or the installer from the same page |
-| Either (optional, preview) | [`dotnetup`](https://devblogs.microsoft.com/dotnet/introducing-dotnetup/) installs the SDK this repo's `global.json` asks for, per user, without admin: `curl -fsSL https://aka.ms/dotnetup/get-dotnetup.sh \| zsh` (PowerShell: `irm https://aka.ms/dotnetup/get-dotnetup.ps1 \| iex`), then `dotnetup init`. It is a public preview (Oct 2026), so the standard installers above remain the supported path. |
-
-```bash
-# macOS / Linux
-cp .env.example .env            # then put a key after GEMINI_API_KEY= (free: https://aistudio.google.com/apikey)
-dotnet restore
-dotnet build
-dotnet test                     # ~3,100 cases, no network, no keys
-dotnet run --project src/FindThatBook.Api
 ```
-```powershell
-# Windows PowerShell
-Copy-Item .env.example .env     # then edit .env, or: $env:GEMINI_API_KEY = "<your key>"
-dotnet restore; dotnet build; dotnet test
+dotnet test
 dotnet run --project src/FindThatBook.Api
 ```
 
-Then open <http://localhost:5080/scalar> (interactive API docs) or:
+Open http://localhost:5080/scalar, or:
 
-```bash
+```
 curl "http://localhost:5080/api/books/search?q=tolkien%20hobbit%20illustrated%20deluxe%201937"
-curl "http://localhost:5080/api/suggest?prefix=harry"
-curl "http://localhost:5080/api/health"
-```
-```powershell
-Invoke-RestMethod "http://localhost:5080/api/books/search?q=hobbit dixon" | ConvertTo-Json -Depth 8
 ```
 
 - **No key?** It still runs: the heuristic arm searches with the cleaned words, explanations come from templates, and
@@ -104,7 +79,7 @@ gates status (`match` vs `ambiguous`) and never reorders results ([ADR 0004](doc
 
 ## Configuration and keys
 
-The simplest ways to add a key are in the [top block](#find-that-book): paste it on the Admin page of the app (lasts
+The simplest ways to add a key are in the [Quick start](#quick-start): paste it on the Admin page of the app (lasts
 until restart) or put it in `.env` (lasts). Precedence, lowest to highest: `appsettings.json` → `appsettings.{Environment}.json` → user secrets (Development) →
 repo-root `.env` → environment variables (well-known names like `GEMINI_API_KEY`, then `AI__Gemini__ApiKey` style) →
 command line → runtime admin changes. `.env.example` lists every setting.
@@ -442,7 +417,8 @@ Playwright. npm workspaces, one lockfile at the repo root.
 
 | Command (repo root) | What it does |
 |---|---|
-| `npm run dev` | API (Development) + Vite with hot reload at http://localhost:5173; `/api` is proxied to the API |
+| `npm run dev` | Installs dependencies if needed, then API (Development) + Vite with hot reload at http://localhost:5173 |
+| `npm run setup` | Checks the machine and installs the web packages, the .NET 10 SDK if needed, and the NuGet packages, without starting the app |
 | `npm start` | Builds the app into the API's `wwwroot` and serves both from http://localhost:5080 |
 | `docker compose up --build` | Production image at http://localhost:8080 (Admin is off there by design) |
 | `npm test` · `npm run test:e2e -w web` | Unit/component tests · browser smoke tests; both use recorded API examples, no backend or keys |

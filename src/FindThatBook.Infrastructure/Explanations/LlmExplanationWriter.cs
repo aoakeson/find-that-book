@@ -10,14 +10,14 @@ using Microsoft.Extensions.Options;
 namespace FindThatBook.Infrastructure.Explanations;
 
 /// <summary>
-/// One batched explain call (prompt explain.v4) over validated facts only. There is no "Search:" line and no raw
+/// One batched explain call (prompt explain.v5) over validated facts only. There is no "Search:" line and no raw
 /// query (AI-29), so two queries with the same facts send byte-identical prompts and share one cache entry safely (AI-30).
 /// The output is untrusted: <see cref="ExplanationService"/> grounds every sentence. Unknown, blank and repeated ids are
 /// dropped here (AI-33).
 /// </summary>
 public sealed class LlmExplanationWriter(IStructuredLlm llm, IOptions<AiOptions> options) : IExplanationWriter
 {
-    public const string PromptId = "explain.v4";
+    public const string PromptId = "explain.v5";
 
     /// <summary>Deterministic and compact: declaration order, nulls omitted, non-Latin names unescaped (三体, not 三).</summary>
     private static readonly JsonSerializerOptions UserJson = new()
@@ -92,8 +92,9 @@ internal sealed record ExplainInputItem(
         f.AuthorAlias?.Alias,
         f.Contributors.Count == 0 ? null : [.. f.Contributors.Select(c => new ExplainContributor(c.Name, c.Role))],
         f.MatchedContributor,
-        // When the whole title matched, its words add nothing ("matched terms about and boy" for About a Boy).
-        f.MatchedTerms.Count == 0 || f.Kind is MatchKind.ExactTitle or MatchKind.OriginalTitle or MatchKind.TitleOnly ? null : f.MatchedTerms,
+        // Title words explain only a partial or interpreted title, as in the template: for an exact title they add
+        // nothing ("matched terms about and boy"), and beside "Author-only match" they read as a title claim.
+        f.MatchedTerms.Count > 0 && f.Kind is MatchKind.NearTitle or MatchKind.PartialTitle or MatchKind.InferredTitle ? f.MatchedTerms : null,
         f.MatchedCharacters.Count == 0 ? null : f.MatchedCharacters,
         f.MatchedSubjects.Count == 0 ? null : f.MatchedSubjects,
         f.FirstPublishYear,

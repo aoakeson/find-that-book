@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type FormEvent, type RefObject } from "react"
 import { useSearch } from "@tanstack/react-router"
-import { CircleAlertIcon, InfoIcon, SearchIcon, SquareIcon } from "lucide-react"
+import { CircleAlertIcon, InfoIcon, SearchIcon, SquareIcon, XIcon } from "lucide-react"
 import type { SuggestionItem } from "@/api/types"
 import {
   Autocomplete,
@@ -109,6 +109,23 @@ export function Composer({ compact }: { compact: boolean }) {
               compact ? "h-10 pointer-coarse:h-11" : "h-12 pointer-coarse:h-12"
             )}
           />
+          {draft.length > 0 && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Clear"
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => {
+                setDraft("")
+                setSuggesting(false)
+                inputRef.current?.focus()
+              }}
+              className="shrink-0 text-ink-secondary hover:bg-mist hover:text-ink"
+            >
+              <XIcon aria-hidden />
+            </Button>
+          )}
           {/* Separate keys: one reused <button> would turn into type="submit" while its Stop click is still being
               handled, and the browser would then submit the form, starting a new search. */}
           {pending ? (

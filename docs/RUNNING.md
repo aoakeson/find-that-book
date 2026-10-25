@@ -6,24 +6,26 @@ Everything here works the same on macOS, Windows and Linux. The short version is
 
 | | Version | macOS | Windows |
 |---|---|---|---|
-| [.NET SDK](https://dotnet.microsoft.com/download/dotnet/10.0) | 10.0 (any 10.0.1xx or later; `global.json` rolls forward within 10.0, not to 11) | the `.pkg` installer, or `brew install --cask dotnet-sdk` | the installer, or `winget install Microsoft.DotNet.SDK.10` |
+| [.NET SDK](https://dotnet.microsoft.com/download/dotnet/10.0) | 10.0 (any 10.0.1xx or later; `global.json` rolls forward within 10.0, not to 11). `npm run dev` installs it when it is missing | Microsoft's per-user installer. Fallback: the `.pkg`, or `brew install --cask dotnet-sdk` | winget, so it sits beside an older SDK. Fallback: Microsoft's per-user installer |
 | [Node.js](https://nodejs.org/en/download) | 24 LTS recommended (`.nvmrc`). 20.19+ or 22.12+ runs the app; the unit tests need 22.22.2+, 24.15+ or 26+ | the installer, `nvm install` / `fnm use` (reads `.nvmrc`), or `brew install node@24` (then follow brew's PATH note) | the installer, `winget install OpenJS.NodeJS.LTS`, or `nvm install 24` (nvm-windows) |
 | [Docker](https://docs.docker.com/get-started/get-docker/) | optional, only for the container run | Docker Desktop | Docker Desktop |
 
-Homebrew and winget are conveniences, not requirements. Nothing is installed globally by this repo: no global npm
-packages, no shell or PowerShell scripts, no HTTPS dev certificate. Linux works the same way (CI runs these commands
-on Ubuntu and Windows).
+Node.js is the one thing to install by hand. Homebrew is a convenience, not a requirement. The repo ships no global
+npm packages, no shell or PowerShell scripts, and no HTTPS dev certificate. On Windows, a missing .NET 10 SDK is
+installed with winget for the machine, because an older `dotnet` in Program Files would otherwise stay first on PATH.
+Everywhere else the SDK install is per user. Linux works the same way (CI runs these commands on Ubuntu and Windows).
 
-## Quick start: two commands
+## Quick start
+
+Install [Node.js 24](https://nodejs.org). From the repo root:
 
 ```
-npm install
 npm run dev
 ```
 
-Open **http://localhost:5173**. The first run restores NuGet packages and builds the API, which takes about a minute.
-After that it starts in a few seconds. The web app hot-reloads as you edit. Ctrl+C stops everything. (If you skip
-`npm install`, `npm run dev` runs it for you.)
+Open **http://localhost:5173**. The first run installs missing dependencies, including the .NET 10 SDK. Ctrl+C stops the app.
+
+`npm run setup` installs without starting. `npm run doctor` only prints status.
 
 Production-like, on one origin:
 
@@ -100,7 +102,8 @@ If an API already answers `/api/health` on the API port, `npm run dev` reuses it
 
 | Command | What it does |
 |---|---|
-| `npm run dev` | Checks Node, the web dependencies (installs them if missing), the .NET SDK, `.env` and the ports. Starts `dotnet run --project src/FindThatBook.Api --launch-profile http` (Development) and waits for `/api/health`. Then starts Vite with hot reload, which proxies `/api`, `/openapi` and `/scalar` to the API, and prints the URL to open. Both processes' output is shown with `[api]` / `[web]` prefixes. Ctrl+C, a closed terminal or either process exiting stops both process trees. |
+| `npm run setup` | Prints the machine status, installs the web packages, installs the .NET 10 SDK if it is missing, restores the .NET solution, then stops. `npm run dev` and `npm start` do this themselves. |
+| `npm run dev` | Checks Node, installs the web dependencies when they are missing or the lockfile changed, checks `.env` and the ports, installs the .NET 10 SDK when it is missing, then restores the .NET packages. Starts `dotnet run --project src/FindThatBook.Api --launch-profile http` (Development) and waits for `/api/health`. Then starts Vite with hot reload, which proxies `/api`, `/openapi` and `/scalar` to the API, and prints the URL to open. Both processes' output is shown with `[api]` / `[web]` prefixes. Ctrl+C, a closed terminal or either process exiting stops both process trees. |
 | `npm start` | Runs `vite build` into `src/FindThatBook.Api/wwwroot`, then `dotnet run` (Release build, Development environment). One origin: the app, deep links like `/admin`, and `/api` (unknown `/api/*` routes are JSON 404s, never the app's HTML). |
 | `npm run build` | Typechecks and builds the web app into `wwwroot`. |
 | `npm test` | The web unit tests (Vitest). Backend tests: `dotnet test`. |
@@ -117,13 +120,13 @@ no `.cmd` shims), so paths with spaces and Windows work the same as macOS.
 Start with `npm run doctor`.
 
 - **Port already in use.** The message names the port, a command to find the program using it (`lsof -nP -iTCP:5080 -sTCP:LISTEN`, or `netstat -ano | findstr :5080` on Windows) and the flag for another port. On Windows, Hyper-V and WSL reserve some port ranges, which fails with "access permissions" errors. List them with `netsh interface ipv4 show excludedportrange protocol=tcp` and pick a port outside them.
-- **.NET SDK not found, or the wrong version.** `dotnet --list-sdks` must show a 10.0 SDK; a newer major alone (11.x) isn't used. After installing, open a new terminal so `dotnet` is on PATH.
+- **.NET SDK not found, or the wrong version.** `npm run dev` installs the .NET 10 SDK. On Windows it uses winget so the SDK lands next to an older one already in Program Files (Windows may ask for permission). If that cannot run, it installs a per-user copy and the project's commands use that copy. On macOS and Linux it installs for the user with Microsoft's script and adds it to the shell profile. `dotnet --list-sdks` must show a 10.0 SDK; a newer major alone (11.x) isn't used.
 - **Node too old.** Vite 8 needs 20.19+ or 22.12+, and the unit tests need 22.22.2+, 24.15+ or 26+. Use Node 24 LTS (`nvm install` / `fnm use` read `.nvmrc`).
-- **Windows: "running scripts is disabled on this system".** This repo ships no PowerShell scripts, so its execution policy doesn't matter here. If PowerShell blocks `npm` itself (`npm.ps1`), use `npm.cmd run dev`, run from Command Prompt, or allow local scripts with `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+- **Windows: "running scripts is disabled on this system".** This repo ships no PowerShell scripts. The .NET installer, when it is needed, is Microsoft's script launched with `ExecutionPolicy Bypass` for that one process, so the machine policy stays as it is. If PowerShell blocks `npm` itself (`npm.ps1`), use `npm.cmd run dev`, run from Command Prompt, or allow local scripts with `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 - **Windows: "Terminate batch job (Y/N)?" after Ctrl+C.** That's `npm.cmd` asking. The app has already stopped, so answer Y.
 - **Windows build error "being used by another process".** An API from an earlier run is still running: `taskkill /im FindThatBook.Api.exe /f` (macOS/Linux: `pkill -f FindThatBook.Api`).
 - **Corporate proxy or TLS inspection.** npm reads `HTTPS_PROXY` / `npm config set https-proxy`, and NuGet reads `HTTPS_PROXY`. If Node rejects your company's certificate, set `NODE_EXTRA_CA_CERTS` to its PEM file. Docker builds use the proxy set in Docker Desktop (Settings > Resources > Proxies).
-- **The first run seems stuck.** `npm run dev` prints a progress line every 20 seconds while NuGet restores and the API builds, and gives up after 5 minutes with the build output above it.
+- **The first run seems stuck.** `npm run dev` restores .NET packages before the API starts, then prints a progress line every 20 seconds while the API builds, and gives up after 5 minutes with the build output above it.
 - **"AI: off".** No key was found. Put `GEMINI_API_KEY` in `.env` at the repo root (next to `FindThatBook.slnx`), then restart.
-- **After `git pull`.** If doctor says `package-lock.json` changed, run `npm install`.
+- **After `git pull`.** `npm run dev` installs again when `package-lock.json` is newer than the last install. `npm run doctor` reports the same thing and changes nothing.
 - **A `VBCSCompiler` process stays after Ctrl+C.** That's the C# compiler server, which .NET keeps warm for a few minutes and then exits. The API and Vite processes are always stopped.

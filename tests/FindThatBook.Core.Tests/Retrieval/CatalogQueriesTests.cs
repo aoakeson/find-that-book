@@ -114,6 +114,14 @@ public class CatalogQueriesTests
     }
 
     [Fact]
+    public void HypothesisTitle_AsksForCharacterNames_WhenTheModelKeptTypedCharacters()
+    {
+        var withCharacters = new QueryHypothesis("To Kill a Mockingbird", "Harper Lee", ["Scout Finch", "Atticus Finch"], [], null, null);
+        CatalogQueries.HypothesisTitle(withCharacters)!.ToString().ShouldBe("title=kill mockingbird&author=lee&limit=20&person");
+        CatalogQueries.HypothesisTitle(Hyp("To Kill a Mockingbird", "Harper Lee"))!.IncludePersons.ShouldBeFalse();
+    }
+
+    [Fact]
     public void HypothesisTitle_PromotesTheOriginalThenTheEnglishTitle_WhenTheLlmGaveNoTitle()
     {
         CatalogQueries.HypothesisTitle(Hyp(null, "Liu Cixin", english: "The Three-Body Problem", original: "三体"))!

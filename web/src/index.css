@@ -179,13 +179,9 @@
 
 /*
  * App shell (S1). Decorative motion only: the paper background drift + pointer parallax and the page-turn book.
- * Both stop when `prefers-reduced-motion` is set (kill-switch above, plus `animation: none` below), when the tab is
- * hidden, and when the user pauses motion (MotionProvider sets html[data-motion="paused"]).
+ * Both stop when `prefers-reduced-motion` is set (kill-switch above, plus `animation: none` below) and when the tab
+ * is hidden.
  */
-html {
-  /* Keyboard focus never lands under the fixed motion control in the bottom corner. */
-  scroll-padding-bottom: 4.5rem;
-}
 
 /* Programmatic focus targets after route changes: not controls, so no focus ring. */
 #main:focus-visible,
@@ -273,9 +269,3 @@ html {
   }
 }
 
-/* The in-app pause also stills the Trace's running shimmer (reduced motion already does, via the utility). */
-:root[data-motion="paused"] [data-slot="trace-title"] {
-  --shimmer-image: none;
-  --shimmer-text-fill: currentColor;
-  animation: none;
-}

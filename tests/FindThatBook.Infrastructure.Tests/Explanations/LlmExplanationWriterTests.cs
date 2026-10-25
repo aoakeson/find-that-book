@@ -54,11 +54,11 @@ public class LlmExplanationWriterTests
     private static IReadOnlyList<ExplanationFacts> Facts(string query, params RankedWork[] works) => ExplanationFactsBuilder.Build(works, Query(query), null);
 
     [Fact]
-    public void BuildCall_ExplainOperationPromptV4_5SecondTimeout()
+    public void BuildCall_ExplainOperationPromptV5_5SecondTimeout()
     {
         var call = LlmExplanationWriter.BuildCall(Facts("hobbit", Hobbit()), Options);
         call.Operation.ShouldBe("explain");
-        call.PromptId.ShouldBe("explain.v4");
+        call.PromptId.ShouldBe("explain.v5");
         call.Timeout.ShouldBe(TimeSpan.FromSeconds(5));
         call.MaxOutputTokens.ShouldBe(600);
     }
@@ -100,6 +100,8 @@ public class LlmExplanationWriterTests
         var partial = Hobbit() with { Tier = MatchTier.E, Evidence = new MatchEvidence { MatchedTitleTerms = ["hobbit"], TitleScore = 0.5 } };
         LlmExplanationWriter.UserContent(Facts("hobbit sequel", partial)).ShouldContain("\"matched_terms\":[\"hobbit\"]");
         LlmExplanationWriter.UserContent(Facts("hobbit", Hobbit())).ShouldNotContain("matched_terms");
+        var authorOnly = Hobbit() with { Tier = MatchTier.D, Evidence = new MatchEvidence { MatchedTitleTerms = ["hobbit"], Role = AuthorRole.Primary } };
+        LlmExplanationWriter.UserContent(Facts("tolkien hobbit", authorOnly)).ShouldNotContain("matched_terms");
     }
 
     [Fact]
@@ -196,7 +198,7 @@ public class LlmExplanationWriterTests
         var result = await writer.WriteAsync(Facts("hobbit", Hobbit()), CancellationToken.None);
 
         result.Call.Status.ShouldBe(LlmCallStatus.Ok);
-        result.Call.PromptId.ShouldBe("explain.v4");
+        result.Call.PromptId.ShouldBe("explain.v5");
         result.Value!["OL27482W"].ShouldBe("Exact title match; J.R.R. Tolkien is the primary author.");
         var sent = client.LastMessages!.Select(m => m.Text).ToList();
         sent[1].ShouldBe(LlmExplanationWriter.UserContent(Facts("hobbit", Hobbit())));

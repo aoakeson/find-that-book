@@ -41,7 +41,7 @@ The check caught three real contract changes during the build (`query_rejected` 
 
 | Requirement (brief / frontend guide) | Screen behaviour | Code | Tests |
 |---|---|---|---|
-| Messy plain-text query | One composer, free text, any script, IME-safe Enter, examples from the brief fill (never search) | `composer/Composer.tsx`, `ExampleQueries.tsx`, `components/ui/autocomplete.tsx` | `composer/Composer.test.tsx`, `ExampleQueries.test.tsx`, e2e `search.spec.ts` |
+| Messy plain-text query | One composer, free text, any script, IME-safe Enter, examples from the brief fill (never search). "More things you can search for" opens the rest, grouped, with Needs AI on the ones that require a provider | `composer/Composer.tsx`, `ExampleQueries.tsx`, `example-catalog.ts`, `components/ui/autocomplete.tsx` | `composer/Composer.test.tsx`, `ExampleQueries.test.tsx`, e2e `search.spec.ts` |
 | Autocomplete | `/api/suggest` only, 150 ms debounce, superseded requests aborted, late answers dropped, the last list stays (busy) until the new one arrives, failures silent | `composer/use-suggestions.ts` | `composer/Composer.test.tsx` |
 | Ordered list, up to 5, server order | Rendered exactly as returned; no re-ranking or confidence | `results/ResultList.tsx` | `results/ResultsRegion.test.tsx` (every API example) |
 | match / ambiguous / none | "Best match" + "Other possibilities" · "A few books fit your clues" + hint · "No book matched" + hint | `results/ResultList.tsx` | same, parameterised |
