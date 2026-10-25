@@ -211,7 +211,7 @@ never estimates presented as measurements.
 | Return title, primary authors, year, OL ids/links, cover, explanation | `SearchResponse` |
 | README, AI setup, Gemini default | this file |
 | Simple modern UI | React app in `web/` (see [Frontend](#frontend) and [docs/FRONTEND.md](docs/FRONTEND.md)) |
-| Live demo | not deployed in this build |
+| Live demo | [books.andrewoakeson.com](https://books.andrewoakeson.com/) (Fly.io; see [deployment](docs/DEPLOYMENT.md)) |
 
 Traceability (brief → code → tests) and the edge-case ledger: [docs/TRACEABILITY.md](docs/TRACEABILITY.md),
 [docs/FINDINGS-STATUS.md](docs/FINDINGS-STATUS.md).
@@ -403,6 +403,7 @@ Measured on this build (details per row in `eval/results/`; the edge-case ledger
 - [docs/API.md](docs/API.md): frontend contract · [docs/adr/](docs/adr/): 7 short ADRs · [eval/README.md](eval/README.md): datasets and how to run the eval
 - [docs/TRACEABILITY.md](docs/TRACEABILITY.md) · [docs/FINDINGS-STATUS.md](docs/FINDINGS-STATUS.md) · [docs/ai-smoke.md](docs/ai-smoke.md)
 - Frontend: [docs/FRONTEND.md](docs/FRONTEND.md) · [docs/DESIGN.md](docs/DESIGN.md) · [docs/RUNNING.md](docs/RUNNING.md) (full cross-platform run guide)
+- Production: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) (Fly.io release and verification)
 
 ## Frontend
 

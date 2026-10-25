@@ -6,8 +6,9 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: pipeline-${{ github.ref }}
+  # Keep main deployments serial; newer PR commits can replace obsolete checks.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   build-test:
     runs-on: ubuntu-latest
@@ -33,3 +34,65 @@ jobs:
       - uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  web-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck -w web
+      - run: npm run lint -w web
+      - run: npm run format:check -w web
+      - run: npm run test -w web
+      - run: npm run build -w web
+      # Browser smoke tests use mocked API examples; no production calls or keys.
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e -w web
+
+  run-scripts:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - run: npm ci
+      - run: npm run doctor
+      - run: npm run smoke
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [build-test, secret-scan, web-check, run-scripts]
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://books.andrewoakeson.com/
+    steps:
+      - uses: actions/checkout@v7
+      - name: Set up flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1
+        with:
+          version: 0.4.122
+      - name: Deploy to Fly.io
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          test -n "$FLY_API_TOKEN" || { echo 'FLY_API_TOKEN is missing'; exit 1; }
+          flyctl deploy --remote-only --app find-that-book --config fly.toml
+      - name: Verify public health
+        run: |
+          curl --fail --silent --show-error --retry 5 --retry-delay 5 \
+            https://books.andrewoakeson.com/api/health \
+            | jq --exit-status '.status == "ok" and .environment == "Production"'
