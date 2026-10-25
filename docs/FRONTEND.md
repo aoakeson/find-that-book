@@ -105,8 +105,9 @@ The check caught three real contract changes during the build (`query_rejected` 
   `judge`), then the normal JSON body. The UI's Trace already renders those stages.
 - **Cancel stops waiting, not necessarily spending.** Aborting cancels the API's pipeline token, but an LLM call
   already in flight may still be billed upstream.
-- **Admin exists only in Development on the API's own machine.** In Docker/Production it shows an "unavailable" state
-  by design (no authentication is in scope; a hidden link is not access control).
+- **Admin exists only in Development on the API's own machine.** In Docker/Production, including the
+  [live demo](https://books.andrewoakeson.com/), it shows an "unavailable" state by design (no authentication is in
+  scope; a hidden link is not access control).
 - **Screen readers and the open suggestion list.** Base UI 1.9 hides the rest of the page from assistive technology
   while the list is open (axe `aria-hidden-focus`); keyboard use is unaffected because leaving the field closes the
   list. Documented in `components/ui/autocomplete.tsx`; no supported option changes it.
@@ -128,6 +129,7 @@ The check caught three real contract changes during the build (`query_rejected` 
 | Live smoke against the local API (Development, Gemini) | Through `npm run dev` itself (02:42 MT): banner "AI on (gemini)"; `/api/health` 200; suggest "har" 200 from the real index; `GET /api/admin/ai` 200 (`provider_selection: auto`); `/api/nope` → JSON 404; "mark huckleberry" → Best match, Adventures of Huckleberry Finn; Admin then Back made no extra request; Ctrl+C left no listeners. Earlier runs: "tolkien hobbit illustrated deluxe 1937" → match, The Hobbit (2 LLM calls, 1 Open Library call, 2.6 s); "find me a book about bears" → topic_search, 5 books with matched subjects; history restore, Back and return from Admin made 0 extra requests; a disposable second-opinion key set and removed through the proxy; `/nope` → 404 page. 4 paid searches in total |
 | `npm run smoke` (runs `npm start` and `npm run dev` for real, checks pages, deep links, JSON 404 for unknown `/api`, clean Ctrl+C, no leftover listeners) | macOS 18/18; Linux (Docker, fresh clone, Node 24, .NET 10.0.402) 18/18 plus the whole unit suite |
 | `docker compose` image | Builds; serves the app, deep links and `/api` in Production; unknown `/api` and `/api/admin` → JSON 404 |
+| Deployed site, <https://books.andrewoakeson.com/> (22:30 UTC) | `/api/health` 200 (`environment: Production`, AI configured, judge off); `/api/admin/ai` → 404; `/scalar` 200. No search was run, to spare the demo's LLM budget. The deployed build predated the How it works page, so `/how-it-works` needs the next deploy |
 | Not run here | Real Windows (the `web.yml` `run-scripts` job runs doctor and smoke on `windows-latest`), a real phone's software keyboard, real screen readers |
 
 ## 6. Backend files changed by the frontend work

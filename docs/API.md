@@ -5,7 +5,8 @@ The live, complete contract is the OpenAPI 3.1 document at `/openapi/v1.json`, b
 
 - JSON is **snake_case**; enums are **snake_case strings**. Every field is always present; unknown values are `null`.
 - Every response carries `X-Request-Id`. The same value is `meta.request_id` on a search and `trace_id` on an error.
-- Run locally: `dotnet run --project src/FindThatBook.Api` → <http://localhost:5080/scalar>.
+- Live: <https://books.andrewoakeson.com/scalar> (Production). Run locally: `dotnet run --project src/FindThatBook.Api` →
+  <http://localhost:5080/scalar>.
 
 ## GET /api/books/search?q=&limit=
 
@@ -28,7 +29,7 @@ The live, complete contract is the OpenAPI 3.1 document at `/openapi/v1.json`, b
 (a later Open Library call failed), `deadline_reached`. The LLM never causes an error status.
 
 ```jsonc
-// GET /api/books/search?q=hobbit%20dixon (recorded on build 918d7b88 with gpt-4.1-mini, judge off; with Gemini, the default, the meta.llm provider/model differ and the LLM-written parts may too; first candidate shown)
+// GET /api/books/search?q=hobbit%20dixon (recorded on build 918d7b88 with gpt-4.1-mini, judge off; with Gemini, the default, the meta.llm provider/model differ and the LLM-written parts may too; the current build sends explain.v5; first candidate shown)
 {
   "query": "hobbit dixon",
   "status": "match",   // match | ambiguous | none
@@ -205,8 +206,8 @@ title, no author typed) · `b` exact title + contributor-only author · `c` near
 **meta numbers are measured, never estimated** (except `est_cost_usd`, a paid-tier estimate even on a free tier).
 `null` = not known: e.g. tokens when a provider request reported no usage, cost for a model missing from the price
 table. `llm.calls` counts provider requests (cache hits and calls skipped for no key/budget are excluded; a 429
-costs nothing). `open_library.retries` counts requests repeated after a timeout/429/5xx; a slow empty answer asked once more is
-`slow_empty_requeries`, not a retry. `judge.status`: `off` (switched off, the default; `enabled: false`) · `skipped` (on, but not meaningful for this ranking, e.g. author-only or none) · `agreed` ·
+costs nothing). `open_library.retries` counts requests repeated after a 408/429/5xx; the one lighter request sent after
+an attempt timed out or answered 0 hits slowly is counted in `slow_empty_requeries`, not as a retry. `judge.status`: `off` (switched off, the default; `enabled: false`) · `skipped` (on, but not meaningful for this ranking, e.g. author-only or none) · `agreed` ·
 `disagreed` · `chose_none` · `refused` · `unavailable`. The judge only gates `status`; it never reorders.
 When the judge is enabled, a badge could read "Second opinion agreed (0.99)" on `agreed`, or "Second opinion disagreed:
 see ★" on the `second_opinion` card.
@@ -228,8 +229,11 @@ a normal search with the chosen title + author.
 ## GET /api/health
 
 Never calls Open Library or an LLM. `{ "status": "ok", "version", "environment", "ai_provider", "ai_configured",
-"judge_enabled", "suggest_index": { "version", "count" } }`. `ai_configured: false` → expect `degraded` answers
-(heuristic parse + template sentences).
+"judge_enabled", "suggest_index": { "version", "count" }, "upstream" }`. `ai_configured: false` → expect `degraded`
+answers (heuristic parse + template sentences). `upstream` reports what this process has seen, without details that
+could leak a query or key: `open_library_circuit` (`closed`, `open`, `half_open`), `llm_status` (`ok`, `cooldown`
+after a 429, `error`; `null` before any LLM call), and the time and short reason of the last failure for each
+(`open_library_last_failure`, `…_reason`, `llm_last_failure`, `…_reason`).
 
 ## Errors (RFC 9457, `application/problem+json`, whatever the `Accept` header)
 

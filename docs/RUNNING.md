@@ -2,6 +2,10 @@
 
 Everything here works the same on macOS, Windows and Linux. The short version is in the [README](../README.md).
 
+To try the app without installing anything, use the live demo at <https://books.andrewoakeson.com/> (walkthrough at
+[/how-it-works](https://books.andrewoakeson.com/how-it-works)). It runs the Docker image below in Production on Fly.io,
+so it has no Admin page.
+
 ## What you need
 
 | | Version | macOS | Windows |
@@ -75,8 +79,8 @@ so keys are never built into the image. Docker has no Admin page, so `.env` is t
 
 `/admin` (add or replace keys in memory, switch the AI provider, test a connection, turn the second opinion on or off)
 exists only in Development, and only for callers on the same machine. `npm run dev` and `npm start` both run Development, so it works at
-http://localhost:5173/admin and http://localhost:5080/admin. The Docker image runs Production: there `/admin` shows
-the app's page, but the `/api/admin` endpoints answer 404 by design.
+http://localhost:5173/admin and http://localhost:5080/admin. The Docker image, and so the live demo, runs Production:
+there `/admin` shows the app's page, but the `/api/admin` endpoints answer 404 by design.
 
 ## Ports and settings
 

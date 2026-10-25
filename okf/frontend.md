@@ -4,7 +4,7 @@ title: Frontend
 description: Render the API honestly in one accessible, responsive search interface.
 tags: [frontend, ui, accessibility]
 status: stable
-generated: { by: codex/gpt-6.1-sol, at: 2026-10-25T21:35:55Z }
+generated: { by: cursor/claude-opus-5.5, at: 2026-10-25T22:40:00Z }
 sources:
   - resource: ../docs/DESIGN.md
     title: Visual and interaction rules
@@ -16,7 +16,7 @@ sources:
 
 # Ownership
 
-`web/src` is the React/Vite client. `web/src/api/types.ts` mirrors the API; `web/src/features/search` owns the composer and result states. Change server contracts in both layers and their contract tests.
+`web/src` is the React/Vite client. `web/src/api/types.ts` mirrors the API; `web/src/features/search` owns the composer and result states; `web/src/features/how-it-works` is the `/how-it-works` explainer, built only from real recorded pipeline output in `examples.ts` and making no API calls. Change server contracts in both layers and their contract tests.
 
 # Invariants
 

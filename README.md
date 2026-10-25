@@ -8,6 +8,17 @@ characters, English and original-language titles) and writes the explanation sen
 Deterministic, tested C# decides which Open Library records come back, in what order, and whether we can honestly say
 `match`. If the LLM is down, slow or out of quota, the search still works (`degraded`), never an error.
 
+## Live demo
+
+**[books.andrewoakeson.com](https://books.andrewoakeson.com/)**: nothing to install. For a step-by-step, illustrated
+walkthrough of how a search works, open **[/how-it-works](https://books.andrewoakeson.com/how-it-works)**. The API
+reference is live at [/scalar](https://books.andrewoakeson.com/scalar).
+
+The demo is this repo's Docker image on Fly.io (`fly.toml`), running in Production with an AI key set. Because it is
+Production, the Admin page is off by design; [`/api/health`](https://books.andrewoakeson.com/api/health) shows which AI
+provider is active. The machine stops when idle, so the first search after a quiet spell can take a few extra seconds.
+The usual [rate limits](docs/RUNNING.md#rate-limits-and-concurrency) apply.
+
 ## Quick start
 
 1. Install [Node.js 24](https://nodejs.org).
@@ -28,7 +39,7 @@ copy `.env.example` to `.env` and set `GEMINI_API_KEY`.
 Ports, Docker, and troubleshooting: [docs/RUNNING.md](docs/RUNNING.md).
 
 ## Contents
-- [Quick start](#quick-start) · [AI setup and model choice](#ai-setup-and-model-choice) · [Configuration](#configuration-and-keys)
+- [Live demo](#live-demo) · [Quick start](#quick-start) · [AI setup and model choice](#ai-setup-and-model-choice) · [Configuration](#configuration-and-keys)
 - [How it works](#how-it-works) · [Topic requests](#natural-sentence-and-topic-requests) · [The matching hierarchy](#the-matching-hierarchy) · [Failures and unclear results](#failures-and-unclear-results)
 - [API](#api) · [Features vs the brief](#features-vs-the-brief) · [Assumptions and trade-offs](#assumptions-and-trade-offs)
 - [Testing](#testing) · [Evaluation results](#evaluation-results) · [Known misses](#known-misses)
@@ -93,6 +104,10 @@ command line → runtime admin changes. `.env.example` lists every setting.
   any provider 429, a daily estimated-cost cap ($0.50 LLM, $0.50 judge), per-IP and global rate limits on search.
 
 ## How it works
+
+The friendliest explanation is the app's own [How it works page](https://books.andrewoakeson.com/how-it-works) (also at
+`/how-it-works` when you run it locally): each step illustrated with real recorded examples. This section is the
+technical version.
 
 ```
 GET /api/books/search?q=…
@@ -185,13 +200,14 @@ Princess*).
 | Too many requests | 429 `rate_limited` + Retry-After (see [Rate limits](docs/RUNNING.md#rate-limits-and-concurrency)) |
 
 Open Library calls: a 3 req/s token bucket inside the retry handler, 8 s per attempt, 15 s per call, 2 retries with
-jitter only for timeouts/408/429/5xx (400/404/422 are sent once), a circuit breaker, and a slow empty answer (a 200 with
-0 hits after 6 s, which Open Library sometimes returns under load) is re-asked once and never cached.
+jitter only for 408/429/5xx (400/404/422 are sent once), and a circuit breaker. An attempt that times out, or a slow
+empty answer (a 200 with 0 hits after 6 s, which Open Library sometimes returns under load), is asked once more as a
+lighter request (fewer fields and rows) instead of being retried as-is, and that answer is never cached.
 
 ## API
 
 `GET /api/books/search?q=&limit=` · `GET /api/suggest?prefix=&limit=` · `GET /api/health` · OpenAPI 3.1 at
-`/openapi/v1.json`, Scalar UI at `/scalar`. Field-by-field contract for the frontend: [docs/API.md](docs/API.md). The
+`/openapi/v1.json`, Scalar UI at `/scalar` ([live](https://books.andrewoakeson.com/scalar)). Field-by-field contract for the frontend: [docs/API.md](docs/API.md). The
 brief's fields (`title`, `author`, `first_publish_year`, `explanation`) appear byte-for-byte; `meta` reports what the
 request actually did (stage timings, Open Library calls/cache hits/HTTP attempts, LLM calls/tokens/estimated cost),
 never estimates presented as measurements.
@@ -211,7 +227,7 @@ never estimates presented as measurements.
 | Return title, primary authors, year, OL ids/links, cover, explanation | `SearchResponse` |
 | README, AI setup, Gemini default | this file |
 | Simple modern UI | React app in `web/` (see [Frontend](#frontend) and [docs/FRONTEND.md](docs/FRONTEND.md)) |
-| Live demo | not deployed in this build |
+| Live demo | [books.andrewoakeson.com](https://books.andrewoakeson.com/), with the walkthrough at [/how-it-works](https://books.andrewoakeson.com/how-it-works) |
 
 Traceability (brief → code → tests) and the edge-case ledger: [docs/TRACEABILITY.md](docs/TRACEABILITY.md),
 [docs/FINDINGS-STATUS.md](docs/FINDINGS-STATUS.md).
@@ -239,10 +255,11 @@ Traceability (brief → code → tests) and the edge-case ledger: [docs/TRACEABI
 The frontend has its own unit, contract and Playwright tests (`npm test`, see [docs/FRONTEND.md](docs/FRONTEND.md)); its
 contract test checks the TypeScript types against `/openapi/v1.json` and runs the OpenAPI examples through the UI.
 
-Run: `dotnet test` (no network, no keys; ~30 s). On the final build: 3,103 cases, 3,098 passed, 0 failed, 5 skipped.
-The skipped ones are opt-in live checks. In a checkout without the optional research archive one more skips: the
-battle-round loader. The cases come from about 690 test methods, and most cases are rows of a few data-driven replays
-over recorded Open Library pools.
+Run: `dotnet test` (no network, no keys; under a minute). It runs 3,167 cases from about 710 test methods; most cases
+are rows of a few data-driven replays over recorded Open Library pools. Seven skip by default: opt-in live Open Library
+and LLM checks and the suggest-index regeneration tools, plus the battle-round loader, which needs the optional research
+archive. A few resilience tests measure real time (a burst of slow Open Library calls, the slow-empty re-query, a judge
+cooldown); on a busy machine they can fail and then pass when re-run alone.
 
 CI doesn't test live Open Library or LLM quality, since they're non-deterministic and need keys. The eval tool measures
 them instead ([ADR 0005](docs/adr/0005-fixtures-and-eval-not-live-tests.md)). Its offline check needs no keys or
@@ -261,10 +278,18 @@ Each number comes from an `eval/results/<run>/summary.md` written by the eval to
 `918d7b88`, pipeline binaries `bb794a4f`) unless a row says otherwise. Latency, call counts and cost for every run are
 in [eval/RESULTS.md](eval/RESULTS.md).
 
-Two things changed after these runs, and neither affects retrieval, ranking or status:
+Changes made after these runs, not yet re-measured live:
 - The OpenAPI examples were re-recorded.
 - The facts sent to the LLM for an exact-title match no longer list the title's words, because "matched terms about
   and boy" read badly.
+- QA fixes that touch ranking: a typed exact title by its primary author with at least 10 editions moves ahead of
+  near-title and author-only results (`ExactPrimaryPrecedence`); a folded duplicate keeps its best record's score
+  (`BestDuplicateScore`); only a phrase such as "study guide" marks a study guide, not a bare "study" or "guide"
+  (`StudyGuideOnly`). Smaller fixes went into the grounding check, the query cleaner ("sink or swim" is one title), the
+  lighter re-query after an Open Library timeout, and the suggest index (print-on-demand stubs removed).
+
+These are covered by unit tests, and the offline golden replay still meets its floors with no false matches. The
+held-out set was not re-run, because it is run once per arm.
 
 The eval runs scored template explanations, not LLM-written ones.
 
@@ -351,7 +376,7 @@ subject heading that matches the topic.
 
 ## Known misses
 
-Measured on this build (details per row in `eval/results/`; the edge-case ledger is [docs/FINDINGS-STATUS.md](docs/FINDINGS-STATUS.md)):
+Measured on the eval build `918d7b88` (details per row in `eval/results/`; the edge-case ledger is [docs/FINDINGS-STATUS.md](docs/FINDINGS-STATUS.md)):
 
 | Query | What happens | Why |
 |---|---|---|
@@ -388,14 +413,14 @@ Measured on this build (details per row in `eval/results/`; the edge-case ledger
 
 ## What I'd do with more time
 
-1. Deploy a live demo (the container is ready: `docker compose up --build`) with a paid Gemini key or a stricter per-visitor budget.
-2. Re-measure the ranking rules on fresh adversarial rounds against live Open Library (the battle-test rounds used a
-   local mirror that lacks some live fields), and retire any rule whose ablation shows no effect.
-3. ISBN, Open Library id and URL routing (`9780261102217`, `OL27482W`) as direct lookups.
-4. Prefer a Latin-script author name when the query is Latin (the canonical *三体* record lists 刘慈欣 first).
-5. Export the per-request measurements as OpenTelemetry (the same numbers `meta` reports) and add a distributed cache
+1. Re-run the eval on the current build (including the post-eval QA fixes), then re-measure the ranking rules on fresh
+   adversarial rounds against live Open Library (the battle-test rounds used a local mirror that lacks some live
+   fields), and retire any rule whose ablation shows no effect.
+2. ISBN, Open Library id and URL routing (`9780261102217`, `OL27482W`) as direct lookups.
+3. Prefer a Latin-script author name when the query is Latin (the canonical *三体* record lists 刘慈欣 first).
+4. Export the per-request measurements as OpenTelemetry (the same numbers `meta` reports) and add a distributed cache
    for more than one instance.
-6. Stream or defer the explanation call so the ranked list can render before the sentences arrive.
+5. Stream or defer the explanation call so the ranked list can render before the sentences arrive.
 
 
 ## Docs map
@@ -407,10 +432,10 @@ Measured on this build (details per row in `eval/results/`; the edge-case ledger
 ## Frontend
 
 A small React app in `web/`: one search box, readable results, a "Search activity" trace of what the API measured,
-local search history and a local-only Admin page. It shows the API's decisions as they are: server order, `match` /
-`ambiguous` / `none` (and "Books about …" for topic requests), primary authors apart from contributors, and the
-grounded explanation for each book. It never
-re-ranks, guesses confidence or invents a year.
+local search history, an illustrated How it works page (`/how-it-works`) and a local-only Admin page. It shows the
+API's decisions as they are: server order, `match` / `ambiguous` / `none` (and "Books about …" for topic requests),
+primary authors apart from contributors, and the grounded explanation for each book. It never re-ranks, guesses
+confidence or invents a year.
 
 **Stack:** React 19, TypeScript, Vite, Tailwind CSS 4, shadcn/ui on Base UI, TanStack Query and Router, Vitest and
 Playwright. npm workspaces, one lockfile at the repo root.
@@ -420,7 +445,7 @@ Playwright. npm workspaces, one lockfile at the repo root.
 | `npm run dev` | Installs dependencies if needed, then API (Development) + Vite with hot reload at http://localhost:5173 |
 | `npm run setup` | Checks the machine and installs the web packages, the .NET 10 SDK if needed, and the NuGet packages, without starting the app |
 | `npm start` | Builds the app into the API's `wwwroot` and serves both from http://localhost:5080 |
-| `docker compose up --build` | Production image at http://localhost:8080 (Admin is off there by design) |
+| `docker compose up --build` | Production image at http://localhost:8080 (Admin is off there by design); the same image runs the live demo |
 | `npm test` · `npm run test:e2e -w web` | Unit/component tests · browser smoke tests; both use recorded API examples, no backend or keys |
 | `npm run check` | Typecheck, lint, unit tests and build (what CI runs for the web app) |
 
