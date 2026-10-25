@@ -63,6 +63,15 @@ describe("direct entry", () => {
     expect(api.count("GET", "/api/books/search")).toBe(0)
   })
 
+  it("/how-it-works renders the How it works page", async () => {
+    const api = quietApi()
+    await renderApp("/how-it-works")
+    expect(await heading("How Find That Book works")).toHaveAttribute("id", "page-heading")
+    expect(screen.getByRole("link", { name: "How it works" })).toHaveAttribute("aria-current", "page")
+    await waitFor(() => expect(document.title).toBe("How it works – Find That Book"))
+    expect(api.count("GET", "/api/books/search")).toBe(0)
+  })
+
   it("an unknown path renders the 404 page, and Back to search works", async () => {
     quietApi()
     const { router } = await renderApp("/no/such/page")
@@ -158,6 +167,19 @@ describe("client-side navigation", () => {
     await userEvent.click(screen.getByRole("link", { name: "Back to search" }))
     await waitFor(() => expect(focusedHeading()).toBe(HOME_HEADING))
     await waitFor(() => expect(document.title).toBe("Find That Book"))
+  })
+
+  it("the header's How it works tab opens the page, and its Back to search returns home", async () => {
+    quietApi()
+    await renderApp("/")
+    await heading(HOME_HEADING)
+
+    await userEvent.click(screen.getByRole("link", { name: "How it works" }))
+    await waitFor(() => expect(focusedHeading()).toBe("How Find That Book works"))
+    await waitFor(() => expect(document.title).toBe("How it works – Find That Book"))
+
+    await userEvent.click(screen.getByRole("link", { name: "Back to search" }))
+    await waitFor(() => expect(focusedHeading()).toBe(HOME_HEADING))
   })
 
   it("moves focus to the 404 heading when a link leads nowhere", async () => {

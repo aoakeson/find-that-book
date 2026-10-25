@@ -5,21 +5,21 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { useMediaQuery } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 
-/** Tailwind's `sm`: from here the label is visible, so the tooltip would only repeat it. */
-const LABEL_VISIBLE = "(min-width: 40rem)"
+/** Tailwind's `md`: from here the label is visible, so the tooltip would only repeat it. */
+const LABEL_VISIBLE = "(min-width: 48rem)"
 
 const actionClass =
-  "px-3 text-ink-secondary hover:text-foreground aria-[current=page]:bg-muted aria-[current=page]:text-foreground max-sm:w-10 max-sm:px-0 max-sm:pointer-coarse:w-11 [&_svg:not([class*='size-'])]:size-[1.125rem]"
+  "px-3 text-ink-secondary hover:text-foreground aria-[current=page]:bg-muted aria-[current=page]:text-foreground max-md:w-10 max-md:px-0 max-md:pointer-coarse:w-11 [&_svg:not([class*='size-'])]:size-[1.125rem]"
 
 interface ActionContentProps {
   icon: ReactNode
-  /** Always the accessible name; visible from `sm` up. */
+  /** Always the accessible name; visible from `md` up. */
   label: string
 }
 
 /**
  * A header action button: icon-only on phones (tooltip as a supplementary label for pointer users), icon + label
- * from `sm` up; 44px tall on touch. Extra props and the ref go to the button, so it can be a trigger itself, e.g.
+ * from `md` up; 44px tall on touch. Extra props and the ref go to the button, so it can be a trigger itself, e.g.
  * `<SheetTrigger render={<HeaderActionButton icon={<HistoryIcon />} label="History" />} />`.
  */
 export function HeaderActionButton({
@@ -33,7 +33,7 @@ export function HeaderActionButton({
     <Tooltip disabled={labelVisible}>
       <TooltipTrigger render={<Button variant="ghost" className={cn(actionClass, className)} {...props} />}>
         {icon}
-        <span className="sr-only sm:not-sr-only">{label}</span>
+        <span className="sr-only md:not-sr-only">{label}</span>
       </TooltipTrigger>
       <TooltipContent side="bottom">{label}</TooltipContent>
     </Tooltip>
@@ -46,7 +46,7 @@ export function HeaderActionLink({
   label,
   to,
   className,
-}: ActionContentProps & { to: "/" | "/admin"; className?: string }) {
+}: ActionContentProps & { to: "/" | "/how-it-works" | "/admin"; className?: string }) {
   const labelVisible = useMediaQuery(LABEL_VISIBLE)
   return (
     <Tooltip disabled={labelVisible}>
@@ -54,7 +54,7 @@ export function HeaderActionLink({
         render={<Link to={to} className={cn(buttonVariants({ variant: "ghost" }), actionClass, className)} />}
       >
         {icon}
-        <span className="sr-only sm:not-sr-only">{label}</span>
+        <span className="sr-only md:not-sr-only">{label}</span>
       </TooltipTrigger>
       <TooltipContent side="bottom">{label}</TooltipContent>
     </Tooltip>

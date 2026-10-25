@@ -51,6 +51,19 @@ lifts the worst case to 4.60:1 without changing its character.
 | Warning (degraded answer, history unavailable) | `text-warning` `#7A5200` | `bg-warning-surface` `#FBF3E2` | `border-warning-line` `#ECD9AD` | 6.27:1 (ink 10.34, ink-secondary 4.71) |
 | Success / match | teal | sage | none | 4.98:1 |
 
+### How it works only
+
+The How it works page tells the AI's steps apart from the code's. It is the only place these tokens appear.
+
+| Token | Hex | Role | Contrast |
+|---|---|---|---|
+| `ai` (`text-ai`, `bg-ai`) | `#6B4E8C` | AI badge text, AI timing bars, sparkle icons | 6.59 paper / 6.79 surface / 6.04 ai-surface / 6.00 sage |
+| `ai-surface` | `#F4F0F9` | AI boxes and the AI badge | ink on it 10.16 |
+| `ai-line` | `#DDD1EC` | AI box borders (decorative, 1.46) | n/a |
+
+The code's steps use teal on sage. Each is always paired with its icon (sparkles or cog) and the word "AI" or
+"Code".
+
 **Never colour alone.** Every state pairs its colour with an icon and words ("Best match", "Search stopped",
 "Open Library is unavailable"). A red border without a sentence is a bug. The state lines are decorative (1.3:1).
 
@@ -71,7 +84,8 @@ input. Only the programmatic route-focus targets (`#main`, `#page-heading`) supp
   the Braille Institute for low-vision readers: distinct `Il1`, `O0`, open apertures, which helps with messy
   half-remembered queries, ISBN-like numbers and author initials. Non-Latin text (CJK, Cyrillic, Greek, Arabic…) falls
   through to the system stacks listed in `--font-sans` (system-ui, Noto Sans, Hiragino/PingFang/YaHei, Apple SD Gothic
-  Neo), so titles in any script render without tofu. One family for everything; mono only for reference ids.
+  Neo), so titles in any script render without tofu. One family for everything; mono only for reference ids and,
+  on How it works, the literal Open Library requests, field names and typed words being compared.
 - **Scale:**
 
   | Use | Class | Size / line-height | Weight |
@@ -93,7 +107,8 @@ input. Only the programmatic route-focus targets (`#main`, `#page-heading`) supp
   fluid top offset `pt-[clamp(2.5rem,14vh,9rem)]`, shared by the home and full-page status screens.
 - **Gutters:** 16px on phones (`px-4`), 24px from `sm` (`sm:px-6`). Header and content use the same gutter.
 - **Columns:** content `max-w-3xl` (768px) centred; the header row is wider (`max-w-5xl`) so actions sit outside the
-  reading column on large screens.
+  reading column on large screens. How it works uses `max-w-4xl` so its illustrations have room; its prose keeps
+  `max-w-measure`.
 - **Layout:** header (64px) → `main#main` (flex-1). The paper background is
   `position: fixed` behind everything (`z-0`); page content is `relative z-10`. One document scroll; no nested
   fixed-height scroll panes. The search page switches from the centred home layout to a compact composer-on-top layout
@@ -120,13 +135,19 @@ gradient-like surface, and it is flat fills with hairline edges.
 | Paper pointer parallax | Two CSS variables written at most once per animation frame; layers move ≤ 6px × 3px with a 1.2s ease | Fine pointers only: `(hover: hover) and (pointer: fine)` |
 | Page-turn book | CSS keyframes on one leaf of a 20px open-book icon, only while a search runs | 1.6s loop |
 | Trace shimmer | The Trace component's own running shimmer on the activity title | Component default |
+| How it works illustrations | Step sequences (`features/how-it-works/use-sequence.ts`): opacity, small translates and bar widths change per step | 1.1–3.4s per step, 300–700ms transitions |
 
 Rules:
 - Nothing else moves: no entrance animations on result lists, no hover lift, no skeleton shimmer, no spinners
   competing with the book. Real results are never delayed for an animation.
+- **The one exception is How it works,** a teaching page where showing a process step by step is the point. Each
+  illustration plays once, when it is mostly on screen, and never loops. It has Pause/Play/Replay (WCAG 2.2.2), every
+  step is a button that jumps there, and every word of the illustration is in the DOM from the start, so assistive
+  technology reads the whole picture whatever step is showing. The search page itself gains no motion.
 - **Reduced motion** (`prefers-reduced-motion: reduce`): a global kill-switch in `index.css` collapses every animation
   and transition; the paper layers get `animation: none`, parallax is not attached, the book is a still icon and the
-  shimmer is off.
+  shimmer is off. How it works shows each illustration's last step at once, with no play control; picking a step or
+  an example still works.
 - **Hidden tabs:** the paper stops (`animation-play-state: paused`) and the pointer listener is removed while
   `document.visibilityState` is `hidden`.
 - Cheap by construction: no animation library, compositor-only transforms, listeners and frames cleaned up on unmount.
@@ -136,14 +157,15 @@ Rules:
 - Supported: 320px to 1440px+ wide, phone landscape, 200% zoom (behaves like a 640px → 320px viewport). No horizontal
   page overflow at any width: `min-w-0` on flex children, `wrap-break-word`/`break-words` on every user- or API-supplied
   string (titles, authors, queries, ids), `truncate` only where the full text is available elsewhere.
-- **Breakpoints actually used:** `sm` (640px): header action labels appear, gutters grow to 24px, the Search button
-  shows its word; `md` (768px): the Turn on AI panel puts its two ways side by side. Layout otherwise flows because
-  the column caps at 768px. Short viewports
+- **Breakpoints actually used:** `sm` (640px): gutters grow to 24px, the Search button shows its word; `md` (768px):
+  header action labels appear (four labelled actions and the full name need about 690px), the Turn on AI panel puts
+  its two ways side by side. Layout otherwise flows because the column caps at 768px. Short viewports
   (`max-height: 32rem`: phone landscape, 200% zoom) get the quiet paper background.
-- **Header at 320px:** mark + name (150px) and three 44px icon actions fit with 6px to spare; the name truncates
-  rather than wrapping or overflowing if a font fallback is wider.
+- **Header on narrow phones:** four 44px icon actions (How it works, History, New search, Admin) and the full name
+  need about 364px, so below 23rem (368px) the header shows the book mark alone and keeps "Find That Book" as the
+  link's accessible name. From 23rem the name shows; it truncates rather than wrapping if a font fallback is wider.
 - **Touch targets:** ≈ 44px on coarse pointers (`pointer-coarse:` variants already in `button`/`input`), 40px with a
-  mouse. Header actions are icon-only below `sm` with the label kept as the accessible name and a Tooltip as a
+  mouse. Header actions are icon-only below `md` with the label kept as the accessible name and a Tooltip as a
   supplementary hint for pointer users; the tooltip is disabled once the label is visible.
 - No autofocus on initial mobile load. Toasts sit at the bottom (`bottom-center`, safe-area aware) because the
   composer lives in the top half of the page, so they never cover it with the keyboard open.
@@ -167,7 +189,8 @@ at call sites. One primitive family, no second state or form framework.
 | Loading | Skeleton (results), the page-turn book (activity) | No Spinner next to the book. |
 | Secondary confirmations | Toast (sonner) | "History cleared"-type messages only; nothing that needs action. |
 | Supplementary labels | Tooltip | Never the only place information lives. |
-| Header actions | `HeaderActionButton` / `HeaderActionLink` (`app/HeaderAction.tsx`) | Ghost style, icon-only below `sm`, `aria-current="page"` on the active route. |
+| Header actions | `HeaderActionButton` / `HeaderActionLink` (`app/HeaderAction.tsx`) | Ghost style, icon-only below `md`, `aria-current="page"` on the active route. |
+| How it works illustrations | `Figure`, `ExamplePicker`, `Actor` (`features/how-it-works/figure.tsx`), Button | Stage track, drawing, caption with Pause/Play/Replay. Examples live in `examples.ts` and are real pipeline output, never hand-made numbers. |
 
 ## 9. States catalogue
 
@@ -189,6 +212,7 @@ at call sites. One primitive family, no second state or form framework.
 | Missing saved entry | h2 "This saved search isn't on this device" and **Back to search**. |
 | History empty / unavailable / full | Empty state in the sheet; warning text when this browser can't keep history; search still works. |
 | Admin failure | Error next to the provider or field; never a fake success. |
+| How it works | h1 "How Find That Book works", the "AI interprets, code decides" legend, then nine numbered sections in pipeline order, each with an illustration of real examples. Title "How it works – Find That Book". Makes no API calls. |
 | Unknown route (404) | Header, paper and type as everywhere; h1 "Page not found", one sentence, **Back to search**. Title "Page not found – Find That Book". |
 | Unexpected render error | h1 "Something went wrong", "This page stopped working. Try again, or go back to search.", **Try again** and **Back to search**, and a short reference (`FTB-XXXXXXXX`) that is also `console.error`ed with the error. Never the error message or stack. If the layout itself failed, a minimal shell (mark and paper) is drawn instead. |
 

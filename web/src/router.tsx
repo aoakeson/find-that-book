@@ -40,7 +40,14 @@ const adminRoute = createRoute({
   component: lazyRouteComponent(() => import("@/features/admin/AdminPage"), "AdminPage"),
 })
 
-const routeTree = rootRoute.addChildren([searchRoute, adminRoute])
+const howItWorksRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/how-it-works",
+  // Illustration-heavy and read once: keep it out of the search page's bundle too.
+  component: lazyRouteComponent(() => import("@/features/how-it-works/HowItWorksPage"), "HowItWorksPage"),
+})
+
+const routeTree = rootRoute.addChildren([searchRoute, howItWorksRoute, adminRoute])
 
 /** Tests pass a memory history; the app uses the browser's. */
 export function createAppRouter(history?: RouterHistory) {

@@ -54,6 +54,30 @@ test.describe("Admin", () => {
   })
 })
 
+test("How it works: the header tab opens it; a figure plays when scrolled to, pauses, and replays with another example", async ({
+  page,
+}) => {
+  await page.goto("/")
+  await page.getByRole("link", { name: "How it works" }).click()
+  await expect(page.getByRole("heading", { level: 1, name: "How Find That Book works" })).toBeVisible()
+  await expect(page).toHaveTitle("How it works – Find That Book")
+  await expect(page).toHaveURL(/\/how-it-works$/)
+
+  const figure = page.locator("#explain figure")
+  const current = figure.getByRole("list", { name: "Explanation stages" }).locator("[aria-current=step]")
+  await expect(current).toHaveText(/Facts/)
+  await figure.scrollIntoViewIfNeeded()
+  await expect(current).toHaveText(/AI writes/, { timeout: 5000 })
+  await figure.getByRole("button", { name: "Pause animation" }).click()
+  await expect(figure.getByRole("button", { name: "Play animation" })).toBeVisible()
+
+  await figure.getByRole("button", { name: "Injected text" }).click()
+  await expect(current).toHaveText(/Facts/)
+  await expect(current).toHaveText(/Shown/, { timeout: 15_000 })
+  await expect(figure.getByText("What you see instead", { exact: false })).toBeVisible()
+  await expect(figure.getByRole("button", { name: "Replay animation" })).toBeVisible()
+})
+
 test("an unknown address shows the 404 page, and Back to search goes home", async ({ page }) => {
   await page.goto("/nope")
   await expect(page.getByRole("heading", { level: 1, name: "Page not found" })).toBeVisible()

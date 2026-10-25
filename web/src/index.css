@@ -31,6 +31,11 @@
   --success: #3d706a;
   --success-surface: #eaf3ef;
 
+  /* "How it works" only: marks what the AI model does, as teal marks what code does (6.79:1 on surface, 6.04:1 on ai-surface) */
+  --ai: #6b4e8c;
+  --ai-surface: #f4f0f9;
+  --ai-line: #ddd1ec;
+
   /* shadcn semantic tokens, mapped from the palette */
   --background: var(--paper);
   --foreground: var(--ink);
@@ -79,6 +84,9 @@
   --color-warning-line: var(--warning-line);
   --color-success: var(--success);
   --color-success-surface: var(--success-surface);
+  --color-ai: var(--ai);
+  --color-ai-surface: var(--ai-surface);
+  --color-ai-line: var(--ai-line);
 
   --color-ring: var(--ring);
   --color-input: var(--input);
@@ -266,5 +274,38 @@
   100% {
     transform: scaleX(-1);
     opacity: 0;
+  }
+}
+
+/* How it works illustrations. The caret and the thinking dots only run while their step is on screen. */
+.hiw-caret {
+  animation: hiw-blink 1s steps(1) infinite;
+}
+.hiw-dot {
+  animation: hiw-pulse 1s ease-in-out infinite;
+}
+.hiw-stripes {
+  background: repeating-linear-gradient(135deg, var(--danger) 0 4px, var(--danger-surface) 4px 8px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hiw-caret,
+  .hiw-dot {
+    animation: none;
+  }
+}
+@keyframes hiw-blink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes hiw-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-2px);
   }
 }
