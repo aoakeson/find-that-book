@@ -50,10 +50,13 @@ export class ApiError extends Error {
 export function parseRetryAfter(value: string | null, now = Date.now()): number | null {
   if (!value) return null
   const trimmed = value.trim()
-  if (/^\d+$/.test(trimmed)) return Number(trimmed)
+  if (/^\d+$/.test(trimmed)) {
+    const seconds = Number(trimmed)
+    return Number.isFinite(seconds) ? Math.min(seconds, 86_400) : null
+  }
   const date = Date.parse(trimmed)
   if (Number.isNaN(date)) return null
-  return Math.max(0, Math.ceil((date - now) / 1000))
+  return Math.min(86_400, Math.max(0, Math.ceil((date - now) / 1000)))
 }
 
 interface RequestOptions {

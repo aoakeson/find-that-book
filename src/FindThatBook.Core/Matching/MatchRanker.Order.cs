@@ -26,6 +26,21 @@ public static partial class MatchRanker
         return list;
     }
 
+    private static void LiftExactPrimaryAboveNearAndAuthorOnly(List<Candidate> ranked)
+    {
+        var exact = ranked.Where(w => w.Tier == MatchTier.A && w.Role == AuthorRole.Primary && w.Editions >= 10
+            && w.Exact && w.AuthorTokens.Count > 0 && !w.AuthorFromHypothesis && !w.ExcludedByContributor).ToList();
+        if (exact.Count == 0) return;
+        foreach (var work in exact)
+        {
+            var current = ranked.IndexOf(work);
+            var firstWeaker = ranked.FindIndex(w => w.Tier is MatchTier.C or MatchTier.D && w.OrderGroup == work.OrderGroup && w.IntentHit == work.IntentHit);
+            if (firstWeaker < 0 || current <= firstWeaker) continue;
+            ranked.RemoveAt(current);
+            ranked.Insert(firstWeaker, work);
+        }
+    }
+
     /// <summary>
     /// Folds duplicate records of one work into a single row. Group key: the title key (or that of a larger same-author
     /// record whose edition title this record's title is: "Vegetarian" → 채식주의자), the primary authors (or inherited

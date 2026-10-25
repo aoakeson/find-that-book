@@ -46,7 +46,9 @@ it("keeps the longer catalog closed, then fills from a chip without searching", 
   await waitFor(() => expect(composer).toHaveFocus())
   expect(screen.getByRole("heading", { name: "Characters" })).toBeVisible()
 
-  await user.click(within(screen.getByRole("group", { name: "Other languages and scripts" })).getByRole("button", { name: "三体" }))
+  await user.click(
+    within(screen.getByRole("group", { name: "Other languages and scripts" })).getByRole("button", { name: "三体" })
+  )
   expect(composer).toHaveValue("三体")
 
   await act(() => new Promise<void>((resolve) => setTimeout(resolve, 250)))
@@ -63,7 +65,7 @@ it("marks only the searches that need the AI, and does not offer the known misse
     const region = screen.getByRole("group", { name: group.title })
     for (const example of group.queries) {
       const name = example.needsAi ? `${example.query}, Needs AI` : example.query
-      const button = within(region).getByRole("button", { name, exact: true })
+      const button = within(region).getByRole("button", { name })
       if (example.needsAi) expect(button).toHaveTextContent("Needs AI")
       else expect(button).not.toHaveTextContent("Needs AI")
     }
@@ -72,6 +74,6 @@ it("marks only the searches that need the AI, and does not offer the known misse
   const missed = screen.getByText(/These still miss, even with the AI on/)
   for (const query of STILL_MISSED_TOPICS) {
     expect(missed).toHaveTextContent(query)
-    expect(screen.queryByRole("button", { name: query, exact: true })).not.toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: query })).not.toBeInTheDocument()
   }
 })

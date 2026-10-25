@@ -1,4 +1,4 @@
-import { apiRequest } from "./client"
+import { ApiError, apiRequest } from "./client"
 import type {
   AdminAiStatus,
   AdminAiUpdate,
@@ -11,8 +11,43 @@ import type {
 } from "./types"
 
 /** No `limit`: the API's default (5) is the brief's "up to 5 ordered candidates". */
-export function searchBooks(query: string, signal?: AbortSignal): Promise<SearchResponse> {
-  return apiRequest<SearchResponse>(`/api/books/search?${new URLSearchParams({ q: query })}`, { signal })
+export async function searchBooks(query: string, signal?: AbortSignal): Promise<SearchResponse> {
+  const response = await apiRequest<unknown>(`/api/books/search?${new URLSearchParams({ q: query })}`, { signal })
+  if (!isSearchResponse(response)) throw new ApiError("unexpected", "The API sent an invalid search response.")
+  return response
+}
+
+const record = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value)
+
+function isSearchResponse(value: unknown): value is SearchResponse {
+  if (!record(value) || !record(value.interpretation) || !Array.isArray(value.candidates)) return false
+  if (
+    typeof value.query !== "string" ||
+    !["match", "ambiguous", "none"].includes(String(value.status)) ||
+    !(value.hint === null || typeof value.hint === "string") ||
+    !Array.isArray(value.degraded_reasons) ||
+    !value.degraded_reasons.every((reason: unknown) => typeof reason === "string") ||
+    !["book", "topic"].includes(String(value.interpretation.intent)) ||
+    !Array.isArray(value.interpretation.topics) ||
+    !value.interpretation.topics.every((topic: unknown) => typeof topic === "string")
+  )
+    return false
+  return value.candidates.every(
+    (candidate: unknown) =>
+      record(candidate) &&
+      typeof candidate.rank === "number" &&
+      typeof candidate.work_id === "string" &&
+      typeof candidate.title === "string" &&
+      (candidate.author === null || typeof candidate.author === "string") &&
+      Array.isArray(candidate.primary_authors) &&
+      candidate.primary_authors.every((author: unknown) => record(author) && typeof author.name === "string") &&
+      Array.isArray(candidate.contributors) &&
+      candidate.contributors.every((credit: unknown) => record(credit) && typeof credit.name === "string") &&
+      Array.isArray(candidate.matched_subjects) &&
+      candidate.matched_subjects.every((subject: unknown) => typeof subject === "string") &&
+      typeof candidate.explanation === "string"
+  )
 }
 
 export const SUGGEST_LIMIT = 6

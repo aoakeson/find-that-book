@@ -82,6 +82,7 @@ interface Run {
   controller: AbortController
   /** Restored if the API rejects the text itself (400): an invalid query must not wipe what was on screen. */
   previous: SearchView
+  draftVersion: number
 }
 
 interface SearchVariables {
@@ -106,6 +107,7 @@ export function SearchSessionProvider({ children }: { children: ReactNode }) {
   const lastSeenEntry = useRef<{ id: string | undefined } | null>(null)
   /** The API's Retry-After from the last failure (429, 503, 504): no new search before this time, from any button. */
   const waitUntil = useRef(0)
+  const draftVersion = useRef(0)
 
   // A mutation, not a query: a paid search must never re-run on focus, reconnect, remount or StrictMode re-renders.
   const { mutate } = useMutation<SearchResponse, ApiError, SearchVariables>({
@@ -122,6 +124,7 @@ export function SearchSessionProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const setDraft = useCallback((value: string) => {
+    draftVersion.current++
     setDraftState(value)
     setFieldError(null)
   }, [])
@@ -150,7 +153,13 @@ export function SearchSessionProvider({ children }: { children: ReactNode }) {
       const previous = running ? running.previous : viewRef.current
       abortRun()
 
-      const run: Run = { id: nextRunId.current++, query, controller: new AbortController(), previous }
+      const run: Run = {
+        id: nextRunId.current++,
+        query,
+        controller: new AbortController(),
+        previous,
+        draftVersion: draftVersion.current,
+      }
       runRef.current = run
       unsyncedEntry.current = null
       setFieldError(null)
@@ -161,9 +170,24 @@ export function SearchSessionProvider({ children }: { children: ReactNode }) {
         {
           onSuccess: (response) => {
             if (runRef.current?.id !== run.id) return
+            let snapshot: ResultSnapshot
+            let entry: HistoryEntry
+            try {
+              snapshot = toSnapshot(response)
+              entry = historyStore.add(response.query || query, snapshot)
+            } catch (error) {
+              runRef.current = null
+              setView({
+                kind: "failed",
+                runId: run.id,
+                query,
+                error: new ApiError("unexpected", "The API sent an invalid search response.", { cause: error }),
+                retryAt: null,
+                previous: answerOf(run.previous),
+              })
+              return
+            }
             runRef.current = null
-            const snapshot = toSnapshot(response)
-            const entry = historyStore.add(response.query || query, snapshot)
             setView({ kind: "success", runId: run.id, query, response, snapshot, entryId: entry.id })
             // Only move the URL when the user is still on the search page (they may have opened Admin meanwhile).
             if (router.state.location.pathname === "/") {
@@ -178,12 +202,13 @@ export function SearchSessionProvider({ children }: { children: ReactNode }) {
             const apiError = error instanceof ApiError ? error : new ApiError("unexpected", String(error))
             if (apiError.kind === "aborted") return
             if (apiError.status === 400 && apiError.code !== null && FIELD_ERROR_CODES.has(apiError.code)) {
-              setFieldError(
-                apiError.fieldErrors("Q")[0] ??
-                  apiError.problem?.hint ??
-                  apiError.problem?.detail ??
-                  "Check the search text and try again."
-              )
+              if (draftVersion.current === run.draftVersion)
+                setFieldError(
+                  apiError.fieldErrors("Q")[0] ??
+                    apiError.problem?.hint ??
+                    apiError.problem?.detail ??
+                    "Check the search text and try again."
+                )
               setView(run.previous)
               return
             }
@@ -228,6 +253,7 @@ export function SearchSessionProvider({ children }: { children: ReactNode }) {
 
   const reset = useCallback(() => {
     abortRun()
+    draftVersion.current++
     unsyncedEntry.current = null
     setDraftState("")
     setFieldError(null)
@@ -251,6 +277,7 @@ export function SearchSessionProvider({ children }: { children: ReactNode }) {
       setFieldError(null)
       const entry = historyStore.get(entryId)
       if (entry) {
+        draftVersion.current++
         setDraftState(entry.query)
         setView({ kind: "restored", entry })
       } else {

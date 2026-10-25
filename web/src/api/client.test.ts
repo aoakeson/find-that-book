@@ -43,6 +43,7 @@ describe("api client", () => {
     ["0", 0],
     [null, null],
     ["soon", null],
+    ["9".repeat(309), null],
   ])("parses Retry-After %s", (value, expected) => {
     expect(parseRetryAfter(value)).toBe(expected)
   })

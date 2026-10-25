@@ -30,6 +30,8 @@ internal sealed record RankerOptions
         SubtitleWorks = false,
         SameTitleRival = false,
         Topics = false,
+        ExplicitContributorRole = false,
+        ExactPrimaryPrecedence = false,
     };
 
     /// <summary>IN-044: soft (kept) year tokens are optional for title exactness and can earn the year bonus.</summary>
@@ -90,4 +92,10 @@ internal sealed record RankerOptions
 
     /// <summary>Topic requests ("find me a book about bears"): subject evidence, topic order and status, request words optional.</summary>
     public bool Topics { get; init; } = true;
+
+    /// <summary>An explicit contributor credit cannot become primary merely because no other author is listed.</summary>
+    public bool ExplicitContributorRole { get; init; } = true;
+
+    /// <summary>A typed exact title by its primary author precedes near-title and author-only works.</summary>
+    public bool ExactPrimaryPrecedence { get; init; } = true;
 }

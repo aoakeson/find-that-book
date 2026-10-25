@@ -7,7 +7,8 @@ public static partial class MatchRanker
     /// <list type="bullet">
     /// <item>A work's canonical is the same-title work (same title key) that shares an author and has more editions; the
     /// work's primaries are the authors it shares with that canonical, minus anyone labelled as a contributor
-    /// ("Charles Dixon (Adapter)"). A work with no such canonical keeps every unlabelled author.</item>
+    /// ("Charles Dixon (Adapter)"). A work with no such canonical keeps every unlabelled author. An explicit contributor
+    /// never becomes primary solely because the record has no other listed author.</item>
     /// <item>Inside a same-title group, an author who is a contributor on any member and not a primary of the group's
     /// canonical becomes a contributor everywhere in the group; a work left with no primary inherits the canonical's
     /// (a "The Hobbit" record listing only Charles Dixon → Dixon contributor, Tolkien inherited).</item>
@@ -44,12 +45,12 @@ public static partial class MatchRanker
                 var canonical = Candidate.MostEdited(largerPeers);
                 var shared = authors.Where(k => canonical.Author(k) is not null).ToHashSet(StringComparer.Ordinal);
                 var primary = shared.Where(k => !labelledContributors.Contains(k)).ToHashSet(StringComparer.Ordinal);
-                work.Primary = primary.Count > 0 ? primary : shared;
+                work.Primary = primary.Count > 0 || (options.ExplicitContributorRole && labelledContributors.Count > 0) ? primary : shared;
             }
             else
             {
                 var primary = authors.Where(k => !labelledContributors.Contains(k)).ToHashSet(StringComparer.Ordinal);
-                work.Primary = primary.Count > 0 ? primary : authors.ToHashSet(StringComparer.Ordinal);
+                work.Primary = primary.Count > 0 || (options.ExplicitContributorRole && labelledContributors.Count > 0) ? primary : authors.ToHashSet(StringComparer.Ordinal);
             }
             work.Contributors = authors.Where(k => !work.Primary.Contains(k)).ToHashSet(StringComparer.Ordinal);
             work.InheritedFrom = null;

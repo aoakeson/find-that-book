@@ -5,7 +5,7 @@ namespace FindThatBook.Core.Matching;
 /// <summary>
 /// Ranks the catalog pool for one query: resolve each work's primary authors and contributors → classify (tier and
 /// evidence) → score → order → fold duplicates → post-sort rules → code status. Tiers label the evidence; one score orders
-/// every work (a work's tier is never a hard sort key). Deterministic: the same query, hypothesis and pool always give the
+/// every work, with a guarded exact-primary precedence after scoring. Deterministic: the same query, hypothesis and pool always give the
 /// same result, whatever the pool order; ties fall to edition count, then work id (ordinal).
 /// <para>
 /// <b>Score</b> (weights in <see cref="RankingWeights"/>):
@@ -25,6 +25,7 @@ namespace FindThatBook.Core.Matching;
 /// exact title above a much more popular partial title by another author (IN-050 "it") ·
 /// a work naming a typed contributor above the same-title work that leaves that name unexplained (golden contrib-03) ·
 /// a ≤ 2-edition top gives way to a same-title work with 10× its editions (DA-009) ·
+/// a typed exact primary title with at least 10 editions precedes near-title and author-only hits ·
 /// a title mashed from two works by one author shows both first (R3-0195).
 /// </para>
 /// Rules added on top of the measured baseline can each be switched off through <see cref="RankerOptions"/>.
@@ -69,6 +70,7 @@ public static partial class MatchRanker
             if (options.ExactOverPartial) LiftExactTitlesOverPartialTitles(ranked);
             if (options.NamedContributor) LiftWorksNamingTypedContributors(ranked);
             PromoteLargerSameTitlePeer(ranked, options);
+            if (options.ExactPrimaryPrecedence) LiftExactPrimaryAboveNearAndAuthorOnly(ranked);
             mashup = options.Mashup ? Mashup.Find(ranked, context) : null;
         }
         if (mashup?.Sibling is { } sibling && ranked.IndexOf(sibling) > 1)

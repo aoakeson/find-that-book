@@ -60,6 +60,7 @@ public sealed class SearchService
         private readonly CandidatePool _pool = new();
         private int _callsIssued;
         private bool _anyFailed;
+        private bool _retrievalDeadline;
         private CatalogException? _lastFailure;
 
         private SearchOptions Options => svc._options;
@@ -107,7 +108,7 @@ public sealed class SearchService
             if (_pool.Count == 0 && broad.Outcome == CatalogCallOutcome.Failed && broad.Error is { } broadError
                 && earlyResults.All(r => r.Outcome != CatalogCallOutcome.Ok))
                 throw broadError;
-            if (_pool.Count == 0 && broad.Outcome == CatalogCallOutcome.Deadline)
+            if (_pool.Count == 0 && (broad.Outcome == CatalogCallOutcome.Deadline || earlyResults.Any(r => r.Outcome == CatalogCallOutcome.Deadline)))
                 throw new SearchTimeoutException(Options.RequestDeadline);
 
             // Stage 2: calls that needed call 1's pool (a focused retry when nothing in it is the hypothesis title).
@@ -134,6 +135,8 @@ public sealed class SearchService
             var source = hypothesis is null ? InterpretationSource.Heuristic : InterpretationSource.Llm;
             if (ranking.Ranked.Count == 0 && _lastFailure is not null)
                 throw _lastFailure; // nothing retrieved and Open Library failed: an outage, not "no such book"
+            if (ranking.Ranked.Count == 0 && (retrieval.IsCancellationRequested || _retrievalDeadline))
+                throw new SearchTimeoutException(Options.RequestDeadline);
             if (ranking.Ranked.Count == 0)
             {
                 var noJudge = svc._judge.IsEnabled ? JudgeVerdict.Skipped("no_candidates") : JudgeVerdict.Off;
@@ -257,7 +260,11 @@ public sealed class SearchService
                 _anyFailed = true;
                 _lastFailure = result.Error;
             }
-            else if (result.Outcome == CatalogCallOutcome.Deadline) Degrade(DegradedReason.DeadlineReached);
+            else if (result.Outcome == CatalogCallOutcome.Deadline)
+            {
+                _retrievalDeadline = true;
+                Degrade(DegradedReason.DeadlineReached);
+            }
         }
 
         /// <summary>Takes one call from the budget for a step not issued yet. The step's result count is filled in by Merge.</summary>

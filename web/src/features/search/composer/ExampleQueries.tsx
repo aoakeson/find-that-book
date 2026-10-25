@@ -59,18 +59,20 @@ function MoreSearchExamples({ onPick }: { onPick: (query: string) => void }) {
       <CollapsibleTrigger
         className={cn(
           buttonVariants({ variant: "link", size: "sm" }),
-          "h-auto min-h-9 max-w-full self-center gap-1 px-2 text-center font-normal whitespace-normal underline underline-offset-4 pointer-coarse:min-h-11"
+          "h-auto min-h-9 max-w-full gap-1 self-center px-2 text-center font-normal whitespace-normal underline underline-offset-4 pointer-coarse:min-h-11"
         )}
       >
         More things you can search for
-        <ChevronDownIcon aria-hidden className="transition-transform duration-200 ease-(--ease-out-soft) group-aria-expanded/button:rotate-180" />
+        <ChevronDownIcon
+          aria-hidden
+          className="transition-transform duration-200 ease-(--ease-out-soft) group-aria-expanded/button:rotate-180"
+        />
       </CollapsibleTrigger>
       <CollapsibleContent className="h-(--collapsible-panel-height) w-full min-w-0 overflow-visible transition-[height] duration-200 ease-(--ease-out-soft) data-ending-style:h-0 data-ending-style:overflow-hidden data-starting-style:h-0 data-starting-style:overflow-hidden">
         <div className="flex w-full min-w-0 flex-col gap-4 pt-4 text-left">
           <p className="max-w-measure text-sm text-pretty text-ink-secondary">
             Choosing one fills the search box, and you start the search. Plain examples work with the AI off. Ones
-            marked Needs AI need Gemini, OpenAI or Anthropic turned on. The search box also suggests titles as you
-            type.
+            marked Needs AI need Gemini, OpenAI or Anthropic turned on. The search box also suggests titles as you type.
           </p>
           <div className="flex flex-col">
             {SEARCH_EXAMPLE_GROUPS.map((group, index) => {
