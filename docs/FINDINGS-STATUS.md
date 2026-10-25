@@ -8,9 +8,9 @@ twice, `GoldenReplayTests`, is told apart by its methods (`Golden_case_meets_its
 `Golden_matches_are_precise` replay the recorded golden pools in `FindThatBook.Core.Tests`;
 `GoldenV2_ReplayLlmOffJudgeOff_MeetsFloorsWithNoFalseMatches` runs the whole API in `FindThatBook.Api.Tests`).
 
-**Test suite on the final source (2026-10-25):** `dotnet test` ran 3,100 tests: 3,095 passed, 0 failed, 5 skipped
-(live Open Library and LLM smoke checks that only run when explicitly enabled, plus the suggest-index regeneration
-tool). The one frontend test file cited, `web/src/features/search/results/ResultsRegion.test.tsx`, passed 31 of 31 with `npx vitest run`.
+**Test suite on the current source (2026-10-25):** `dotnet test` runs 3,167 tests; 7 skip by default (live Open
+Library and LLM smoke checks that only run when explicitly enabled, the suggest-index regeneration tools, and the
+battle-round loader when the research archive is absent). The one frontend test file cited, `web/src/features/search/results/ResultsRegion.test.tsx`, passed 40 of 40 with `npx vitest run`.
 
 **Status vocabulary**
 
@@ -310,7 +310,7 @@ The LLM interpreter, the explanation writer and its grounding check, the optiona
 | **AI-56** | **P1** | Gemini free-tier 429 → a cooldown that skips the LLM at once; per-provider request limits | fixed+verified (`StructuredLlmTests.Provider_429_starts_a_cooldown_that_skips_the_LLM_at_once_AI56`; `StructuredLlmTests.Gemini_retry_delay_sets_the_cooldown_length`; `AiBudgetAndPricingTests.Defaults_fit_the_measured_gemini_free_tier`) |
 | AI-57 | P2 | no key → 200, `degraded`, `ai_not_configured`; health says so | fixed+verified (`PipelineTests.LlmDown_IsA200_Degraded_WithTheHeuristicAndTemplates`; `StructuredLlmTests.Missing_provider_or_key_is_not_configured_without_a_call`; `AiAdminTests.Auto_picks_the_first_provider_that_has_a_key`; `HealthTests.Health_ReportsConfiguration_WithoutCallingOpenLibraryOrTheLlm`) |
 | AI-58 | P3 | the provider can be switched at runtime (Development admin API); caches never mix providers | fixed+verified (`AdminTests.UpdateSettings_SwitchesProviderModelAndJudge`; `AiAdminTests.Admin_can_switch_to_an_explicit_provider_and_back_to_auto`; `AiAdminTests.Runtime_keys_feed_auto_selection_in_priority_order`; `StructuredLlmTests.Same_user_text_with_another_model_is_a_separate_cache_entry`) |
-| AI-59 | P3 | Gemini free-tier region and data-use note for a hosted demo | deferred (not deployed) |
+| AI-59 | P3 | Gemini free-tier region and data-use note for a hosted demo | deferred (R7: on 2026-10-25 the hosted demo's active provider was Anthropic, not the Gemini free tier; `/api/health` shows the current one) |
 | AI-60 | P2 | `scout atticus` with the LLM on: the explanation names the typed characters ("Atticus Finch and Scout Finch are listed characters"), not only "Interpreted title match" | fixed+verified (the likely-title call asks for the person field when the model kept typed characters: `CatalogQueriesTests.HypothesisTitle_AsksForCharacterNames_WhenTheModelKeptTypedCharacters`; a sentence that leaves them out fails: `GroundingCheckTests` "matched_character_missing"; prompt `explain.v5`; eval `eval/results/2026-10-25-fix4-golden-v2-live-openai-explain`: 0 grounding rejections of 284 shown, `main` had 17 of 284 on the same set) |
 | AI-61 | P2 | keywords the patron never typed (`scout atticus` → "racial injustice, coming of age, southern United States") are not shown as their clues | fixed+verified (`HypothesisSanitizerTests.Keywords_the_patron_never_typed_are_dropped`) |
 | AI-62 | P3 | a character is matched only on a typed word; a typo counts on 5+ letters (`frodo ring` never names King Thranduil, DA-052) and one name per character (`Sherlock Holmes`, not also `Mr. Sherlock Holmes`) | fixed+verified (`MatchRankerTests.Evidence_characters_need_a_typed_word_and_allow_a_typo_only_on_five_letters`; `ExplanationFactsBuilderTests.Build_Characters_OneNamePerCharacter_TheShorterListing`) |
@@ -358,7 +358,7 @@ Failures, concurrency, caching, the HTTP contract, security and cost.
 | SY-34 | P3 | health is honest during outages and never calls upstream | fixed+verified (`HealthTests.Health_ReportsConfiguration_WithoutCallingOpenLibraryOrTheLlm`; `HealthTests.Health_StillAnswers_WhenAComponentThrows`; `HealthTests.Health_SY34_ReportsUpstreamStatus`; HealthResponse includes `upstream` with circuit breaker state and last failure info) |
 | SY-35 | P3 | `nosniff`, no `Server` header | fixed+verified (`HealthTests.Health_ReportsConfiguration_WithoutCallingOpenLibraryOrTheLlm`) |
 | SY-36 | P3 | bad configuration fails at startup, not on the first request | fixed+verified (`StartupTests.BadConfiguration_FailsAtStartup`; `OpenLibraryOptionsTests.SY_36_bad_config_fails_at_startup`; `AiBudgetAndPricingTests.Bad_configuration_fails_validation_SY36`) |
-| SY-37 | P2 | cold start of a hosted demo | deferred (not deployed) |
+| SY-37 | P2 | cold start of a hosted demo | deferred (R7: Fly.io stops the machine when idle, so the first request after a quiet spell includes a start; not measured) |
 | SY-38 | P3 | OpenAPI lists only real endpoints; admin endpoints never appear and are 404 outside Development | fixed+verified (`OpenApiDocumentTests.AdminEndpoints_AreNeverDocumented_EvenInDevelopment`; `AdminTests.OutsideDevelopment_EveryAdminRouteIs404`; `AdminTests.InDevelopment_ABrowserRequestFromAnotherSite_Gets404_AndSpendsNothing`) |
 | SY-39 | P3 | no CORS (same origin) | already satisfied (no CORS is registered) |
 

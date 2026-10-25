@@ -13,5 +13,5 @@ designs (CQRS, buses, microservices) read as poor judgement.
 No MediatR, repositories, CQRS, message bus or Aspire.
 
 ## Consequences
-The React app will be served from the API's `wwwroot` (one deployable). Repository workflow: GitHub Flow (`main` always
+The React app is served from the API's `wwwroot` (one deployable: the Docker image that runs the live demo). Repository workflow: GitHub Flow (`main` always
 deployable, short feature branches, CI on every pull request).
