@@ -25,6 +25,13 @@ public class TextFoldingTests
     [InlineData("Thai SARA AM is not split by NFKD", "น้ำ", "น้ำ")]
     [InlineData("voiced kana keep their marks", "ドラゴンボール", "ドラゴンボール")]
     [InlineData("IN-033 Arabic hamza folds", "ألف ليلة وليلة", "الف ليلة وليلة")]
+    // Unicode decimal digits normalize to ASCII for consistent year/number detection
+    [InlineData("Arabic-Indic digits", "١٩٨٤", "1984")]
+    [InlineData("Eastern Arabic digits", "۱۹۸۴", "1984")]
+    [InlineData("Devanagari digits", "१९८४", "1984")]
+    [InlineData("Bengali digits", "১৯৮৪", "1984")]
+    [InlineData("Thai digits", "๑๙๘๔", "1984")]
+    [InlineData("mixed text with Arabic-Indic year", "orwell ١٩٨٤", "orwell 1984")]
     // Compatibility forms and invisible characters (IN-018, IN-019)
     [InlineData("IN-018 full-width", "ｔｈｅ ｈｏｂｂｉｔ", "the hobbit")]
     [InlineData("IN-018 ligature", "ﬁnal", "final")]

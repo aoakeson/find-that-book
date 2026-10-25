@@ -241,8 +241,8 @@ public sealed class MatchRankerTests
     }
 
     [Theory]
-    [InlineData("hobbit vol\u0662", null)] // Arabic-Indic digit: used to crash (int.Parse on a \d match)
-    [InlineData("hobbit #\u0662", null)]
+    [InlineData("hobbit vol\u0662", "2")] // Arabic-Indic digit: used to crash before normalization
+    [InlineData("hobbit #\u0662", "2")]
     [InlineData("hobbit vol 2", "2")]
     [InlineData("hobbit vol2", "2")]
     [InlineData("nausicaa volume one", "1")]

@@ -53,6 +53,16 @@ public class QueryCleanerTests
     [InlineData("DE-05 Han", "三体", "三体", null)]
     [InlineData("DE-07 Cyrillic", "Анна Каренина", "анна каренина", null)]
     [InlineData("Hangul", "채식주의자", "채식주의자", null)]
+    // Unicode decimal digit years
+    [InlineData("Arabic-Indic year", "Tolkien Hobbit ١٩٣٧", "tolkien hobbit", 1937)]
+    [InlineData("Eastern Arabic year", "Tolkien Hobbit ۱۹۳۷", "tolkien hobbit", 1937)]
+    [InlineData("Devanagari year", "Tolkien Hobbit १९३७", "tolkien hobbit", 1937)]
+    [InlineData("fullwidth year", "Tolkien Hobbit １９３７", "tolkien hobbit", 1937)]
+    [InlineData("Bengali year", "Tolkien Hobbit ১৯৩৭", "tolkien hobbit", 1937)]
+    [InlineData("Thai year", "Tolkien Hobbit ๑๙๓๗", "tolkien hobbit", 1937)]
+    [InlineData("Arabic-Indic bare year stays in search", "١٩٨٤", "1984", null)]
+    [InlineData("out-of-range Unicode year not extracted", "Tolkien Hobbit ٠٥٠٠", "tolkien hobbit 0500", null)]
+    [InlineData("future Unicode year not extracted", "Tolkien Hobbit ۲۱۵۰", "tolkien hobbit 2150", null)]
     public void Clean_SearchTokensAndYear(string @case, string raw, string search, int? year)
     {
         _ = @case;

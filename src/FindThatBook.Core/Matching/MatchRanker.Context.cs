@@ -183,7 +183,7 @@ public static partial class MatchRanker
             if (joined.Success) return VolumeNumber(joined.Groups[1].Value);
             if (i + 1 < all.Count && VolumeWords.Contains(all[i]) && VolumeNumber(all[i + 1]) is { } next) return next;
         }
-        var hash = HashVolume().Match(query.Text);
+        var hash = HashVolume().Match(TextFolding.Fold(query.Text));
         return hash.Success ? VolumeNumber(hash.Groups[1].Value) : null;
     }
 
