@@ -1,5 +1,7 @@
+using FindThatBook.Infrastructure.Health;
 using Microsoft.Extensions.Http.Resilience;
 using Polly;
+using Polly.CircuitBreaker;
 
 namespace FindThatBook.Infrastructure.OpenLibrary;
 
@@ -13,7 +15,7 @@ namespace FindThatBook.Infrastructure.OpenLibrary;
 internal static class OpenLibraryResilience
 {
     public static void Build(ResiliencePipelineBuilder<HttpResponseMessage> pipeline, OpenLibraryOptions o, OpenLibraryRateLimiter limiter,
-        TimeProvider time)
+        TimeProvider time, UpstreamHealthMonitor? healthMonitor = null)
     {
         pipeline
             .AddTimeout(o.TotalTimeout)
@@ -32,6 +34,24 @@ internal static class OpenLibraryResilience
                 FailureRatio = o.BreakerFailureRatio,
                 SamplingDuration = o.BreakerSamplingDuration,
                 BreakDuration = o.BreakerDuration,
+                OnOpened = args =>
+                {
+                    healthMonitor?.RecordOpenLibraryCircuitState("open");
+                    healthMonitor?.RecordOpenLibraryFailure(
+                        args.Outcome.Exception?.GetType().Name ?? "http_error",
+                        time.GetUtcNow());
+                    return default;
+                },
+                OnClosed = _ =>
+                {
+                    healthMonitor?.RecordOpenLibraryCircuitState("closed");
+                    return default;
+                },
+                OnHalfOpened = _ =>
+                {
+                    healthMonitor?.RecordOpenLibraryCircuitState("half_open");
+                    return default;
+                },
             })
             .AddRateLimiter(limiter.Limiter)                 // full queue → RateLimiterRejectedException: not retried
             .AddTimeout(o.AttemptTimeout);

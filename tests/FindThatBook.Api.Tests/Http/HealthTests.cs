@@ -30,6 +30,25 @@ public sealed class HealthTests
     }
 
     [Fact]
+    public async Task Health_SY34_ReportsUpstreamStatus()
+    {
+        await using var api = new ApiFactory();
+        var response = await api.Client().GetAsync("/api/health", TestContext.Current.CancellationToken);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var health = await response.Read<HealthResponse>();
+
+        // Upstream health is present and starts with default values (no failures recorded)
+        health.Upstream.ShouldNotBeNull();
+        health.Upstream.OpenLibraryCircuit.ShouldBe("closed");
+        health.Upstream.OpenLibraryLastFailure.ShouldBeNull();
+        health.Upstream.OpenLibraryLastFailureReason.ShouldBeNull();
+        // LLM status may be null if not configured, or "ok" otherwise
+        health.Upstream.LlmLastFailure.ShouldBeNull();
+        health.Upstream.LlmLastFailureReason.ShouldBeNull();
+    }
+
+    [Fact]
     public async Task Health_StillAnswers_WhenAComponentThrows()
     {
         await using var api = new ApiFactory

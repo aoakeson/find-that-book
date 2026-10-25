@@ -338,7 +338,7 @@ Failures, concurrency, caching, the HTTP contract, security and cost.
 | SY-14 | P3 | NUL and zero-width characters removed before echo and the LLM | fixed+verified (`ValidationTests.ValidQuery_ReachesThePipeline_Normalized` "IN-015 NUL removed", "IN-019 …") |
 | SY-15 | P3 | a 9,000-character URL gets Kestrel's 414 | deferred (documented only; `q` is limited to 300 characters) |
 | SY-16 | P2 | an unknown `/api/*` path → 404 ProblemDetails, never the frontend's HTML | fixed+verified (`RoutingTests.SY16_UnknownApiRoute_Is404ProblemJson`; `SpaHostingTests.UnknownApiRoutes_AreStillJson404s`) |
-| SY-17 | P3 | HEAD/OPTIONS/POST on the search route → a JSON 405/404 | open (only the `GET`-only `Allow` header is asserted in `RoutingTests`) |
+| SY-17 | P3 | HEAD/OPTIONS/POST on the search route → a JSON 405/404 (OPTIONS returns 204 with Allow header per RFC 7231) | fixed+verified (`RoutingTests.SY17_WrongMethodOnAKnownRoute_Is405_WithAllow`; `RoutingTests.SY17_OptionsOnAKnownRoute_Is204_WithAllow`; `RoutingTests.SY17_OptionsOnUnknownRoute_Is404`) |
 | SY-18 | P3 | trailing slash, parameter case and unknown parameters are tolerated | fixed+verified (`RoutingTests.SY18_TrailingSlash_StillSearches`; `ValidationTests.ValidQuery_ReachesThePipeline_Normalized` "SY-18 …") |
 | SY-19 | P3 | errors are ProblemDetails JSON whatever the `Accept` header | fixed+verified (`ErrorMappingTests.SY19_ErrorsAreProblemJson_EvenForAnXmlClient`; `ValidationTests.SY19_NonJsonAccept_StillGetsTheSameProblemJson`) |
 | SY-20 | P3 | identical concurrent requests share one upstream call | fixed+verified (`OpenLibraryCatalogTests.SY_20_identical_concurrent_searches_share_one_request`; `StructuredLlmTests.Concurrent_identical_calls_share_one_provider_call_SY20`) |
@@ -355,7 +355,7 @@ Failures, concurrency, caching, the HTTP contract, security and cost.
 | SY-31 | P3 | an unhandled exception in Production is a generic 500, no details or secrets | fixed+verified (`ErrorMappingTests.SY31_Unhandled_Is500_WithoutLeakingDetails_InProduction`) |
 | SY-32 | P3 | the contract: snake_case, enums as strings, nulls present | fixed+verified (`SearchContractTests.Response_MatchesApprovedJson`; `OpenApiDocumentTests.Enums_AreSnakeCaseStrings`) |
 | SY-33 | P3 | the query text never reaches Information-level logs | fixed+verified (`ObservabilityTests.SY33_TheQueryText_NeverReachesInformationLevel`) |
-| SY-34 | P3 | health is honest during outages and never calls upstream | open (never calling upstream is verified: `HealthTests.Health_ReportsConfiguration_WithoutCallingOpenLibraryOrTheLlm`, `HealthTests.Health_StillAnswers_WhenAComponentThrows`; health does not report the circuit state or the last LLM error) |
+| SY-34 | P3 | health is honest during outages and never calls upstream | fixed+verified (`HealthTests.Health_ReportsConfiguration_WithoutCallingOpenLibraryOrTheLlm`; `HealthTests.Health_StillAnswers_WhenAComponentThrows`; `HealthTests.Health_SY34_ReportsUpstreamStatus`; HealthResponse includes `upstream` with circuit breaker state and last failure info) |
 | SY-35 | P3 | `nosniff`, no `Server` header | fixed+verified (`HealthTests.Health_ReportsConfiguration_WithoutCallingOpenLibraryOrTheLlm`) |
 | SY-36 | P3 | bad configuration fails at startup, not on the first request | fixed+verified (`StartupTests.BadConfiguration_FailsAtStartup`; `OpenLibraryOptionsTests.SY_36_bad_config_fails_at_startup`; `AiBudgetAndPricingTests.Bad_configuration_fails_validation_SY36`) |
 | SY-37 | P2 | cold start of a hosted demo | deferred (not deployed) |

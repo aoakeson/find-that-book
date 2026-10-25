@@ -115,6 +115,39 @@ If an API already answers `/api/health` on the API port, `npm run dev` reuses it
 The scripts live in `scripts/` and use plain Node with no dependencies. Each process is started directly (no shell,
 no `.cmd` shims), so paths with spaces and Windows work the same as macOS.
 
+## Rate limits and concurrency
+
+The API protects itself from overload with three layers of rate limiting, all configurable in `appsettings.json` or via
+environment variables (prefix `RateLimit__`).
+
+**Per-IP limits (fixed window)**
+
+| Endpoint | Default | Config key |
+|---|---|---|
+| `/api/books/search` | 20 per minute per IP | `RateLimit:SearchPermitsPerIp` |
+| `/api/suggest` | 120 per minute per IP | `RateLimit:SuggestPermitsPerIp` |
+| `/api/admin/*` | 30 per minute per IP | `RateLimit:AdminPermitsPerIp` |
+
+**Global search limit**: Even if many IPs each stay under their per-IP limit, searches are capped at 60 per minute
+globally (`RateLimit:SearchPermitsGlobal`). This prevents distributed attacks from exhausting LLM quota.
+
+**Concurrency limit**: At most 6 searches run at once (`RateLimit:SearchConcurrency`), with up to 16 more waiting
+(`RateLimit:SearchQueue`). Beyond that, new requests are rejected immediately. This protects Open Library from bursts.
+
+**What a client sees when rate-limited**
+
+All rate limit responses are **HTTP 429 Too Many Requests** with:
+- Content-Type: `application/problem+json`
+- Error code: `rate_limited`
+- A `Retry-After` header indicating how many seconds to wait
+- A `detail` field naming which limit was hit (e.g., "The search limit was reached. Try again in 12 s.")
+
+The per-IP and global limits report a window-based Retry-After (time until the window resets, up to 60 s by default).
+The concurrency limit reports a shorter Retry-After (~1 s) since slots free up quickly.
+
+Currently, per-IP and global 429 responses are indistinguishable by error code alone; both return `rate_limited`. The
+`detail` field says which bucket triggered it ("The search limit was reached").
+
 ## Troubleshooting
 
 Start with `npm run doctor`.

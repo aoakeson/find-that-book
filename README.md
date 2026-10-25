@@ -182,7 +182,7 @@ Princess*).
 | A later Open Library call fails or the deadline passes | 200 with what was found, `degraded_reasons: ["catalog_partial" / "deadline_reached"]` |
 | Open Library down and nothing retrieved | 503 `catalog_unavailable` (Retry-After) · 504 `catalog_timeout` / `search_timeout` · 502 `catalog_bad_response` |
 | Bad input | 400 `validation_failed` / `no_searchable_terms`, `errors.Q` |
-| Too many requests | 429 `rate_limited` + Retry-After |
+| Too many requests | 429 `rate_limited` + Retry-After (see [Rate limits](docs/RUNNING.md#rate-limits-and-concurrency)) |
 
 Open Library calls: a 3 req/s token bucket inside the retry handler, 8 s per attempt, 15 s per call, 2 retries with
 jitter only for timeouts/408/429/5xx (400/404/422 are sent once), a circuit breaker, and a slow empty answer (a 200 with
