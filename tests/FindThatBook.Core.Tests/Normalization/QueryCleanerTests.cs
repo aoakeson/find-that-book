@@ -106,6 +106,7 @@ public class QueryCleanerTests
 
     [Theory]
     [InlineData("head before bare or", "the hobbit or there and back again", "hobbit")]
+    [InlineData("two single words are one title", "sink or swim", "")]
     [InlineData("leading or gives no head", "or the hobbit or there", "")]
     [InlineData("no or", "the hobbit", "")]
     public void Clean_Head(string @case, string raw, string head)

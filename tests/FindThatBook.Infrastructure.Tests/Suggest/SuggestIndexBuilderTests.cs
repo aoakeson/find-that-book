@@ -65,6 +65,16 @@ public sealed class SuggestIndexBuilderTests
     public void Low_content_print_on_demand_is_dropped(string title, int? year, bool dropped) =>
         SuggestIndexBuilder.IsLowContent(new SuggestRow("OL1W", title, "X", year, null, 500)).ShouldBe(dropped);
 
+    [Theory]
+    [InlineData("Cat", "Pussycat Journal", 2017, true)]
+    [InlineData("2018", "Planner N. Planner N Journal", 2017, true)]
+    [InlineData("Cat", "The Little The Little Cat", 2017, true)]
+    [InlineData("Cat", "BabyCat", 2017, true)]
+    [InlineData("Cat", "Dr. Seuss", 2017, false)]
+    [InlineData("Cat", "Pussycat Journal", 1990, false)]
+    public void Modern_single_word_stubs_are_filtered_by_author(string title, string author, int year, bool dropped) =>
+        SuggestIndexBuilder.IsLowContent(new SuggestRow("OL1W", title, author, year, null, 87)).ShouldBe(dropped);
+
     [Fact]
     public void Report_counts_what_was_dropped()
     {

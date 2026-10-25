@@ -132,4 +132,11 @@ public sealed class ProviderHealth
     {
         lock (_gate) return _disabled.GetValueOrDefault(target.Identity);
     }
+
+    public void Clear(string provider)
+    {
+        lock (_gate)
+            foreach (var identity in _disabled.Keys.Where(k => k.StartsWith(provider + "|", StringComparison.Ordinal)).ToList())
+                _disabled.Remove(identity);
+    }
 }

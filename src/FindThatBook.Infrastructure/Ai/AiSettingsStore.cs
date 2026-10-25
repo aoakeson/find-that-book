@@ -8,7 +8,7 @@ namespace FindThatBook.Infrastructure.Ai;
 /// Effective provider settings: configuration plus in-memory runtime overrides from the admin API (lost on restart,
 /// ADR 0007). Runtime values win over every configuration source.
 /// </summary>
-public sealed class AiSettingsStore(IOptions<AiOptions> options, IOptions<JudgeOptions> judge, IConfiguration configuration)
+public sealed class AiSettingsStore(IOptions<AiOptions> options, IOptions<JudgeOptions> judge, IConfiguration configuration, ProviderHealth health)
 {
     public const string JudgeKeyName = "judge";
 
@@ -28,7 +28,7 @@ public sealed class AiSettingsStore(IOptions<AiOptions> options, IOptions<JudgeO
         {
             var setting = ProviderSetting;
             return setting == AiProviders.Auto
-                ? AiProviders.All.FirstOrDefault(p => KeyFor(p).IsSet) ?? AiProviders.None
+                ? AiProviders.All.FirstOrDefault(p => Target(p) is { } target && health.DisabledReason(target) is null) ?? AiProviders.None
                 : setting;
         }
     }
@@ -117,6 +117,7 @@ public sealed class AiSettingsStore(IOptions<AiOptions> options, IOptions<JudgeO
         if (string.IsNullOrEmpty(key) || key.Length > 512 || key.Any(c => char.IsWhiteSpace(c) || char.IsControl(c)))
             throw new ArgumentException("API key is empty, too long or contains whitespace.", nameof(apiKey));
         lock (_gate) _keys[p] = key;
+        health.Clear(p);
     }
 
     /// <summary>Drops the runtime key; the configured value (if any) applies again.</summary>

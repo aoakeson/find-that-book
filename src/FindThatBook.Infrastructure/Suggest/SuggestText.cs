@@ -18,6 +18,8 @@ internal static partial class SuggestText
     public static string PrefixKey(string? prefix)
     {
         var tokens = TextFolding.Tokens(prefix);
+        if (prefix is not null && tokens.TakeWhile(t => t.Length == 1).Count() >= 2)
+            return PersonNames.Key(prefix);
         var start = tokens.Count > 1 && Articles.Contains(tokens[0]) ? 1 : 0;
         return string.Join(' ', tokens.Skip(start));
     }

@@ -28,6 +28,7 @@ public static partial class GroundingCheck
         public List<FactText> Texts { get; } = [];
         public HashSet<string> Vocabulary { get; } = new(StringComparer.Ordinal);
         public HashSet<string> TitleWords { get; } = new(StringComparer.Ordinal);
+        public HashSet<string> MatchedWords { get; } = new(StringComparer.Ordinal);
         public HashSet<string> Numbers { get; } = new(StringComparer.Ordinal);
         public HashSet<string> Roles { get; } = new(StringComparer.Ordinal);
         public HashSet<string> FactCharacters { get; } = new(StringComparer.Ordinal);
@@ -59,7 +60,11 @@ public static partial class GroundingCheck
             // Subject headings, like titles, count only when quoted whole: a crafted heading cannot lend its words to a new claim.
             foreach (var subject in f.MatchedSubjects) m.AddText(subject, FactKind.Subject, title: true);
             m.AddWords(f.MatchPhrase);
-            foreach (var t in f.MatchedTerms) m.AddWords(t);
+            foreach (var t in f.MatchedTerms)
+            {
+                m.MatchedWords.UnionWith(ExplanationText.Tokens(t));
+                m.AddWords(t);
+            }
             foreach (var c in f.Contributors)
             {
                 m.Roles.Add(c.Role);

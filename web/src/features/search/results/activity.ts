@@ -108,7 +108,12 @@ function interpretStep(
     if (i.english_title) details.push({ text: `English title: ${i.english_title}` })
     if (i.author) details.push({ text: `Author: ${i.author}` })
     if (i.characters.length > 0) details.push({ text: `Characters: ${i.characters.join(", ")}` })
-    if (i.keywords.length > 0) details.push({ text: `Other clues: ${i.keywords.join(", ")}` })
+    const ignoredWords = new Set(i.removed_noise.flatMap((noise) => noise.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []))
+    const clues = i.keywords.filter((keyword) => {
+      const words = keyword.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []
+      return words.some((word) => !ignoredWords.has(word) && !["edition", "book"].includes(word))
+    })
+    if (clues.length > 0) details.push({ text: `Other clues: ${clues.join(", ")}` })
   } else if (i.keywords.length > 0) {
     details.push({ text: `Searched for: ${i.keywords.join(", ")}` })
   }

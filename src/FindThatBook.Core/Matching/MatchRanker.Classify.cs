@@ -90,11 +90,11 @@ public static partial class MatchRanker
         else if (role is not null && (nonAuthorTokens.Count == 0 || title.Best.Score < 0.34 || !near)) tier = MatchTier.D;
         else tier = MatchTier.E;
 
-        work.Penalties = WorkMarkers.Penalties(work.FoldedTitle, work.Authors.Select(a => TextFolding.Fold(a.Display)), query.All);
+        work.Penalties = WorkMarkers.Penalties(work.FoldedTitle, work.Authors.Select(a => TextFolding.Fold(a.Display)), query.All,
+            !context.Options.StudyGuideOnly);
         work.VolumePart = context.Options.VolumeMarkers && WorkMarkers.HasVolumeMarker(work.FoldedTitle);
         if (work.VolumePart && context.TypedVolumeNumber is null) work.Penalties.Add(WorkMarkers.Volume);
-        var year = context.YearFor(work);
-        work.YearMatched = year is { } wanted && work.Year is { } published && Math.Abs(published - wanted) <= 1;
+        work.YearMatched = context.YearMatches(work);
         work.MatchedContributors = matchedAuthorKeys.Where(k => work.Contributors.Contains(k)).OrderBy(k => k, StringComparer.Ordinal).ToList();
 
         // A typed surname credited on a same-title rival record, and not this work's own author or alias, is a named
@@ -119,7 +119,7 @@ public static partial class MatchRanker
         }
         if (tier == MatchTier.A && role == AuthorRole.Primary && work.NamedRivals.Count > 0) tier = MatchTier.C;
 
-        work.IntentHit = SatisfiesEditionIntent(work, query, hypothesis, nonAuthorTokens);
+        work.IntentHit = SatisfiesEditionIntent(work, query, hypothesis, nonAuthorTokens, !context.Options.StudyGuideOnly);
         work.Score = Score(work, title.Best.Score, role, namesOtherAuthor);
         work.Tier = tier;
         work.Exact = exact;
@@ -132,10 +132,12 @@ public static partial class MatchRanker
     /// A work that satisfies the query's edition intent (graphic novel, study guide): it is of that kind (title, subtitle
     /// or an adapter credit) and the rest of the query, minus the intent and author words, still matches its title.
     /// </summary>
-    private static bool SatisfiesEditionIntent(Candidate work, CleanedQuery query, NormalizedHypothesis? hypothesis, List<string> nonAuthorTokens)
+    private static bool SatisfiesEditionIntent(Candidate work, CleanedQuery query, NormalizedHypothesis? hypothesis, List<string> nonAuthorTokens,
+        bool bareStudyWords)
     {
         if (query.Intents.Count == 0) return false;
-        var kinds = WorkMarkers.Kinds(work.FoldedTitle, work.FoldedSubtitle, work.Authors.Select(a => TextFolding.Fold(a.Display)), work.Roles.Values);
+        var kinds = WorkMarkers.Kinds(work.FoldedTitle, work.FoldedSubtitle, work.Authors.Select(a => TextFolding.Fold(a.Display)), work.Roles.Values,
+            bareStudyWords);
         if (!query.Intents.Any(i => kinds.Contains(KindOf(i)))) return false;
         var rest = nonAuthorTokens.Where(t => !Vocabulary.AllIntentWords.Contains(t)).ToList();
         var forms = new List<IReadOnlyList<string>> { rest };

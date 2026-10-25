@@ -82,7 +82,9 @@ public static partial class QueryCleaner
         }
 
         var orAt = IndexOfOr(all);
-        var head = orAt > 0 ? all.Take(orAt).Where(content.Contains).ToList() : [];
+        // A short alternative such as "sink or swim" is one title, not an exact match for "Sink".
+        var afterOr = orAt >= 0 ? all.Skip(orAt + 1).Where(content.Contains).ToList() : [];
+        var head = orAt > 0 && afterOr.Count >= 2 ? all.Take(orAt).Where(content.Contains).ToList() : [];
         // Repeated words are sent once (IN-011), after numerals so "twenty-six sixty-six" still reads 2666.
         var search = Distinct(Numerals.ToDigitsForSearch(content));
 

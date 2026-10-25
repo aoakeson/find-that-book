@@ -264,7 +264,7 @@ describe("errors", () => {
   it.each([
     ["no_searchable_terms", fixtures.noSearchableTerms, "Add a title or author."],
     ["validation_failed", fixtures.validationFailed, "The query must be at most 300 characters."],
-  ])("a 400 %s sets the field error and puts the previous answer back", async (_code, body, message) => {
+  ])("a 400 %s clears the previous answer and its URL entry", async (_code, body, message) => {
     const api = fakeApi({
       "GET /api/books/search": (url) =>
         url.searchParams.get("q") === "the"
@@ -274,17 +274,15 @@ describe("errors", () => {
     const { router } = await renderApp("/")
     typeAndSubmit("tolkien hobbit")
     await waitFor(() => expect(view().kind).toBe("success"))
-    const before = view()
     await waitFor(() => expect(router.state.location.search).toHaveProperty("entry"))
-    const url = router.state.location.href
 
     typeAndSubmit("the")
     await waitFor(() => expect(session().fieldError).toBe(message))
 
-    expect(view()).toBe(before)
+    expect(view().kind).toBe("home")
     expect(session().draft).toBe("the")
     expect(savedQueries()).toEqual(["tolkien hobbit"])
-    expect(router.state.location.href).toBe(url)
+    await waitFor(() => expect(router.state.location.search).not.toHaveProperty("entry"))
     expect(searchCount(api)).toBe(2)
 
     // Editing the text clears the message.

@@ -59,6 +59,12 @@ public static partial class GroundingCheck
             foreach (var segment in segments)
                 if (segment.Items.Any(i => i.Kind == ItemKind.Negation) && segment.Items.Any(i => i.Kind == ItemKind.Mention))
                     problems.Add("negated_claim");
+            if (model.Facts.PrimaryAuthors.Count > 0)
+                foreach (var segment in segments)
+                    if (segment.Items.Any(i => i is { Kind: ItemKind.Claim, Claim: ClaimKind.Author })
+                        && segment.Items.Any(i => i.Word is "is" or "was")
+                        && !segment.Items.Any(i => i.Kind == ItemKind.Mention && i.Persons is not null))
+                        problems.Add("author_claim_without_author");
             return result;
         }
 

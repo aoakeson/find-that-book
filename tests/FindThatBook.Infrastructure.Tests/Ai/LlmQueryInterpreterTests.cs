@@ -93,6 +93,15 @@ public sealed class LlmQueryInterpreterTests
         new InterpretOutput(null, null, [], [], null, null, intent, [], []).ToHypothesis().Intent.ShouldBe(expected);
 
     [Fact]
+    public void Null_suggestion_does_not_discard_the_interpreted_title()
+    {
+        var output = new InterpretOutput("The Hobbit", "J.R.R. Tolkien", [], [], null, null, "book", [], [null!, new("The Fellowship of the Ring", null)]);
+        var hypothesis = output.ToHypothesis();
+        hypothesis.Title.ShouldBe("The Hobbit");
+        hypothesis.Suggestions.ShouldBe([new BookSuggestion("The Fellowship of the Ring", null)]);
+    }
+
+    [Fact]
     public async Task Topic_answer_maps_subjects_and_suggestions()
     {
         var client = FakeChatClient.Json("""

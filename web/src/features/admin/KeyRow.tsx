@@ -83,6 +83,7 @@ export function KeyRow({ name, keyState, model, active = false, sameAsOpenAi = f
   }
 
   function keySaved() {
+    probeFlight.end()
     probe.reset() // a result for the previous key would be misleading
     closeForm()
   }
@@ -92,6 +93,7 @@ export function KeyRow({ name, keyState, model, active = false, sameAsOpenAi = f
     if (!removeFlight.start()) return
     remove.mutate(undefined, {
       onSuccess: () => {
+        probeFlight.end()
         probe.reset()
         toast.success(`${labels.short} key removed`)
       },
@@ -112,7 +114,7 @@ export function KeyRow({ name, keyState, model, active = false, sameAsOpenAi = f
   }
 
   const { configured, key_source: source, key_fingerprint: fingerprint } = keyState
-  const canRemove = source === "runtime"
+  const canRemove = source === "runtime" && !sameAsOpenAi
   const canTest = isChatProvider(name) && configured
   const hasOwnKey = configured && !sameAsOpenAi
 

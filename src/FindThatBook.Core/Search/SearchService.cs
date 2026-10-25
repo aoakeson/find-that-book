@@ -60,6 +60,7 @@ public sealed class SearchService
         private readonly CandidatePool _pool = new();
         private int _callsIssued;
         private bool _anyFailed;
+        private bool _anyCatalogSucceeded;
         private bool _retrievalDeadline;
         private CatalogException? _lastFailure;
 
@@ -128,12 +129,12 @@ public sealed class SearchService
                 if (result.Outcome is CatalogCallOutcome.Failed or CatalogCallOutcome.Deadline) break; // keep what we have
                 ranking = Rank(query, hypothesis);
             }
-            if (_anyFailed && _pool.Count > 0) Degrade(DegradedReason.CatalogPartial);
+            if (_anyFailed && _anyCatalogSucceeded) Degrade(DegradedReason.CatalogPartial);
             if (retrieval.IsCancellationRequested && !requestAborted.IsCancellationRequested) Degrade(DegradedReason.DeadlineReached);
             lock (_gate) _timings["retrieve"] = ElapsedMs(retrieveStarted);
 
             var source = hypothesis is null ? InterpretationSource.Heuristic : InterpretationSource.Llm;
-            if (ranking.Ranked.Count == 0 && _lastFailure is not null)
+            if (ranking.Ranked.Count == 0 && !_anyCatalogSucceeded && _lastFailure is not null)
                 throw _lastFailure; // nothing retrieved and Open Library failed: an outage, not "no such book"
             if (ranking.Ranked.Count == 0 && (retrieval.IsCancellationRequested || _retrievalDeadline))
                 throw new SearchTimeoutException(Options.RequestDeadline);
@@ -254,7 +255,11 @@ public sealed class SearchService
         private void Merge(StepResult result)
         {
             _steps[result.Request.Step] = result.Outcome == CatalogCallOutcome.Ok ? result.Works.Count : null;
-            if (result.Outcome == CatalogCallOutcome.Ok) _pool.Add(result.Works);
+            if (result.Outcome == CatalogCallOutcome.Ok)
+            {
+                _anyCatalogSucceeded = true;
+                _pool.Add(result.Works);
+            }
             else if (result.Outcome == CatalogCallOutcome.Failed)
             {
                 _anyFailed = true;

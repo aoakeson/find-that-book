@@ -22,24 +22,26 @@ internal static partial class WorkMarkers
 
 
     /// <summary>Classes this work belongs to regardless of the query, for edition-intent hits.</summary>
-    public static HashSet<string> Kinds(string foldedTitle, string foldedSubtitle, IEnumerable<string> foldedAuthorNames, IEnumerable<string> roles)
+    public static HashSet<string> Kinds(string foldedTitle, string foldedSubtitle, IEnumerable<string> foldedAuthorNames, IEnumerable<string> roles,
+        bool bareStudyWords = false)
     {
         var kinds = new HashSet<string>(StringComparer.Ordinal);
         if (OmnibusPattern().IsMatch(foldedTitle)) kinds.Add(Omnibus);
         var blob = foldedTitle + " " + string.Join(' ', foldedAuthorNames) + " " + foldedSubtitle;
-        if (StudyPattern().IsMatch(blob)) kinds.Add(Study);
+        if (StudyPattern().IsMatch(blob) || (bareStudyWords && BareStudyPattern().IsMatch(blob))) kinds.Add(Study);
         if (AdaptPattern().IsMatch(foldedTitle + " " + foldedSubtitle) || roles.Any(r => r.Contains(Adapt, StringComparison.Ordinal)))
             kinds.Add(Adapt);
         return kinds;
     }
 
     /// <summary>Penalised classes: the class matches the title and the query has no word of that class.</summary>
-    public static List<string> Penalties(string foldedTitle, IEnumerable<string> foldedAuthorNames, IReadOnlyList<string> queryTokens)
+    public static List<string> Penalties(string foldedTitle, IEnumerable<string> foldedAuthorNames, IReadOnlyList<string> queryTokens,
+        bool bareStudyWords = false)
     {
         var penalties = new List<string>();
         if (OmnibusPattern().IsMatch(foldedTitle) && !Mentions(queryTokens, Omnibus)) penalties.Add(Omnibus);
         var blob = foldedTitle + " " + string.Join(' ', foldedAuthorNames);
-        if (StudyPattern().IsMatch(blob) && !Mentions(queryTokens, Study)) penalties.Add(Study);
+        if ((StudyPattern().IsMatch(blob) || (bareStudyWords && BareStudyPattern().IsMatch(blob))) && !Mentions(queryTokens, Study)) penalties.Add(Study);
         if (AdaptPattern().IsMatch(foldedTitle) && !Mentions(queryTokens, Adapt)) penalties.Add(Adapt);
         return penalties;
     }
@@ -61,8 +63,11 @@ internal static partial class WorkMarkers
     [GeneratedRegex(@"\[collection/set\]|\bcollection\b|\bbox(ed)? set\b|\bomnibus\b|\bcomplete (works|novels)\b|\btrilogy\b|\(series\)|\bseries\b|\s/\s|^(the )?(works|novels|selected works)\b|\b\d+\s*-\s*\d+\b", RegexOptions.CultureInvariant)]
     private static partial Regex OmnibusPattern();
 
-    [GeneratedRegex(@"sparknotes|spark notes|cliffs?notes|cliffs notes|study guide|york notes|literature guide|reader.?s guide|teaching guide|lesson plan|\bsummary\b|\banalysis\b|\bcompanion\b|\bnotes on\b|guide to\b|monarch notes|bookrags|gradesaver|critical (essays|interpretations)|casebook|\bstudy\b|\bguide\b|\bworkbook\b", RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"sparknotes|spark notes|cliffs?notes|cliffs notes|study guide|york notes|literature guide|reader.?s guide|teaching guide|lesson plan|\bsummary\b|\banalysis\b|\bcompanion\b|\bnotes on\b|guide to\b|monarch notes|bookrags|gradesaver|critical (essays|interpretations)|casebook|\bworkbook\b", RegexOptions.CultureInvariant)]
     private static partial Regex StudyPattern();
+
+    [GeneratedRegex(@"\bstudy\b|\bguide\b", RegexOptions.CultureInvariant)]
+    private static partial Regex BareStudyPattern();
 
     [GeneratedRegex(@"\[adaptation\]|\(adaptation\)|graphic novel|\bretold\b|\badapted\b|\bmanga\b|\bcomic\b|movie book|screenplay|young readers|coloring|activity book|\bpicture book\b|\bplay\b", RegexOptions.CultureInvariant)]
     private static partial Regex AdaptPattern();

@@ -32,6 +32,8 @@ internal sealed record RankerOptions
         Topics = false,
         ExplicitContributorRole = false,
         ExactPrimaryPrecedence = false,
+        BestDuplicateScore = false,
+        StudyGuideOnly = false,
     };
 
     /// <summary>IN-044: soft (kept) year tokens are optional for title exactness and can earn the year bonus.</summary>
@@ -98,4 +100,10 @@ internal sealed record RankerOptions
 
     /// <summary>A typed exact title by its primary author precedes near-title and author-only works.</summary>
     public bool ExactPrimaryPrecedence { get; init; } = true;
+
+    /// <summary>When duplicate records fold, the representative keeps the best member's score.</summary>
+    public bool BestDuplicateScore { get; init; } = true;
+
+    /// <summary>Measured baseline counted bare study and guide as study-guide markers; production requires a phrase.</summary>
+    public bool StudyGuideOnly { get; init; } = true;
 }
