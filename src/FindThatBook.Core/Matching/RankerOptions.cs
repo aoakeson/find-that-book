@@ -33,7 +33,7 @@ internal sealed record RankerOptions
         ExplicitContributorRole = false,
         ExactPrimaryPrecedence = false,
         BestDuplicateScore = false,
-        BareStudyWords = true,
+        StudyGuideOnly = false,
     };
 
     /// <summary>IN-044: soft (kept) year tokens are optional for title exactness and can earn the year bonus.</summary>
@@ -105,5 +105,5 @@ internal sealed record RankerOptions
     public bool BestDuplicateScore { get; init; } = true;
 
     /// <summary>Measured baseline counted bare study and guide as study-guide markers; production requires a phrase.</summary>
-    public bool BareStudyWords { get; init; } = false;
+    public bool StudyGuideOnly { get; init; } = true;
 }

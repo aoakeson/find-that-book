@@ -91,7 +91,7 @@ public static partial class MatchRanker
         else tier = MatchTier.E;
 
         work.Penalties = WorkMarkers.Penalties(work.FoldedTitle, work.Authors.Select(a => TextFolding.Fold(a.Display)), query.All,
-            context.Options.BareStudyWords);
+            !context.Options.StudyGuideOnly);
         work.VolumePart = context.Options.VolumeMarkers && WorkMarkers.HasVolumeMarker(work.FoldedTitle);
         if (work.VolumePart && context.TypedVolumeNumber is null) work.Penalties.Add(WorkMarkers.Volume);
         work.YearMatched = context.YearMatches(work);
@@ -119,7 +119,7 @@ public static partial class MatchRanker
         }
         if (tier == MatchTier.A && role == AuthorRole.Primary && work.NamedRivals.Count > 0) tier = MatchTier.C;
 
-        work.IntentHit = SatisfiesEditionIntent(work, query, hypothesis, nonAuthorTokens, context.Options.BareStudyWords);
+        work.IntentHit = SatisfiesEditionIntent(work, query, hypothesis, nonAuthorTokens, !context.Options.StudyGuideOnly);
         work.Score = Score(work, title.Best.Score, role, namesOtherAuthor);
         work.Tier = tier;
         work.Exact = exact;
