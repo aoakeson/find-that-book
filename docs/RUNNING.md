@@ -1,6 +1,7 @@
 # Running Find That Book
 
 Everything here works the same on macOS, Windows and Linux. The short version is in the [README](../README.md).
+Production releases and the live Fly.io address are documented in [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## What you need
 
