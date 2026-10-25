@@ -169,6 +169,38 @@ to the template, by design.
 
 Explanation smoke total: 13 calls (9 Gemini, 4 Anthropic), 65 / 65 sentences grounded at the time of each run.
 
+### Revision 4: prompt `explain.v5`, typed characters (2026-10-25)
+
+**The problem.** For `scout atticus`, gpt-4.1-mini wrote "Interpreted title match; Harper Lee is the primary author;
+213 editions." It never said why. There were two causes:
+- The likely-title search didn't ask Open Library for character names.
+- `explain.v4` made mentioning characters optional.
+
+**Fixes in code.**
+- That search now asks for the person field whenever the model kept a typed character.
+- The grounding check rejects a sentence that leaves out a matched character (`matched_character_missing`), and the
+  template always names one.
+
+**Prompt changes in `explain.v5`.** The v4 line "Mention matched_characters or matched_terms only as given" becomes two
+instructions:
+- Always name the matched characters ("<name> is a listed character").
+- Matched words may be given as "on the words …", and field names must never be written.
+
+The earlier wording with real example names raised rejections, and every remaining rejection was the model copying
+`matched_terms` into the sentence.
+
+**Measured** on golden v2 against live Open Library, with gpt-4.1-mini for both interpretation and explanation:
+
+| Build | Grounding rejections (template shown) | Ranking |
+|---|---|---|
+| `main` (`explain.v4`) | 17 of 284 shown, all `disallowed_character:_` | top-1 57/57, status 59/60 |
+| this change (`explain.v5`) | **0 of 284** | top-1 57/57, status 59/60 |
+| this change, hard v1 | **0 of 230** | top-1 46/46, 38 `match` @ 1.000 |
+
+`scout atticus` now reads "Interpreted title match; Harper Lee is the primary author; Atticus Finch and Scout Finch are
+listed characters; 213 editions." Run folders are `eval/results/2026-10-25-fix4-*`. The `main` baseline was a one-off
+run from a separate checkout and isn't kept.
+
 ## Topic requests (interpret.v4)
 
 2026-10-25. Same test with `FTB_SMOKE_SET=topic`; prompt `interpret.v4` (v3 unchanged + intent, subjects, suggestions).

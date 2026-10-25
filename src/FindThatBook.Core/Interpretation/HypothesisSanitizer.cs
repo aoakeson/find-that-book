@@ -93,7 +93,9 @@ public static partial class HypothesisSanitizer
             .Where(c => Mentioned(c, rawKey, rawTokens))
             .Take(MaxListItems)
             .ToList();
-        var keywords = CleanList(raw.Keywords, MaxKeywordChars).Take(MaxListItems).ToList();
+        // Same rule as characters: measured, gpt-4.1-mini answered "scout atticus" with keywords racial injustice, coming
+        // of age and southern United States, which the UI then showed as the patron's own clues.
+        var keywords = CleanList(raw.Keywords, MaxKeywordChars).Where(k => Mentioned(k, rawKey, rawTokens)).Take(MaxListItems).ToList();
 
         return new QueryHypothesis(title, author, characters, keywords, english, original)
         {

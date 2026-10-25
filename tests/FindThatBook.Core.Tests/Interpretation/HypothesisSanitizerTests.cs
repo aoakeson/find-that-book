@@ -55,7 +55,8 @@ public sealed class HypothesisSanitizerTests
             title: new string('t', 500),
             author: new string('a', 500),
             characters: [.. Enumerable.Range(1, 20).Select(i => $"Character {i}")], // "character" is typed below
-            keywords: [.. Enumerable.Range(1, 20).Select(i => $"kw{i} " + new string('k', 100))]), raw: "character");
+            keywords: [.. Enumerable.Range(1, 20).Select(i => $"kw{i} " + new string('k', 100))]),
+            raw: "character " + string.Join(' ', Enumerable.Range(1, 20).Select(i => $"kw{i}")));
         h.Title!.Length.ShouldBe(HypothesisSanitizer.MaxTitleChars);
         h.Author!.Length.ShouldBe(HypothesisSanitizer.MaxAuthorChars);
         h.Characters.Count.ShouldBe(HypothesisSanitizer.MaxListItems);
@@ -74,9 +75,19 @@ public sealed class HypothesisSanitizerTests
     [Fact]
     public void Lists_drop_blanks_and_case_duplicates()
     {
-        var h = Sanitize(H(characters: ["Scout", " scout ", "", "Atticus", "ATTICUS"], keywords: ["alabama", "Alabama", " "]), raw: "scout atticus");
+        var h = Sanitize(H(characters: ["Scout", " scout ", "", "Atticus", "ATTICUS"], keywords: ["alabama", "Alabama", " "]), raw: "scout atticus alabama");
         h.Characters.ShouldBe(["Scout", "Atticus"]);
         h.Keywords.ShouldBe(["alabama"]);
+    }
+
+    [Fact]
+    public void Keywords_the_patron_never_typed_are_dropped()
+    {
+        // Measured (gpt-4.1-mini): the UI showed these as the patron's "other clues". A spelling fix survives.
+        var h = Sanitize(H(title: "To Kill a Mockingbird", characters: ["Scout Finch", "Atticus Finch"],
+            keywords: ["racial injustice", "coming of age", "southern United States"]), raw: "scout atticus");
+        h.Keywords.ShouldBeEmpty();
+        Sanitize(H(keywords: ["dystopia", "fahrenheit"]), raw: "farenheit bradbury").Keywords.ShouldBe(["fahrenheit"]);
     }
 
     [Theory]
