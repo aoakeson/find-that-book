@@ -32,6 +32,7 @@ interface Objects {
   SuggestionItem: T.SuggestionItem
   HealthResponse: T.HealthResponse
   SuggestIndexInfo: T.SuggestIndexInfo
+  UpstreamHealth: T.UpstreamHealth
   AdminAiStatus: T.AdminAiStatus
   AdminProviderStatus: T.AdminProviderStatus
   AdminJudgeStatus: T.AdminJudgeStatus
@@ -219,8 +220,17 @@ const objects: { [N in keyof Objects]: Spec<Objects[N]> } = {
     ai_configured: "boolean|null",
     judge_enabled: "boolean|null",
     suggest_index: "SuggestIndexInfo|null",
+    upstream: "UpstreamHealth|null",
   },
   SuggestIndexInfo: { version: "string", count: "number" },
+  UpstreamHealth: {
+    open_library_circuit: "string|null",
+    open_library_last_failure: "string|null",
+    open_library_last_failure_reason: "string|null",
+    llm_status: "string|null",
+    llm_last_failure: "string|null",
+    llm_last_failure_reason: "string|null",
+  },
   AdminAiStatus: {
     active_provider: "string",
     provider_selection: "string",

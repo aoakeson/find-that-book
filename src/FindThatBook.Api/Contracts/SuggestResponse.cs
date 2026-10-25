@@ -41,6 +41,31 @@ public sealed record HealthResponse
     public required bool? AiConfigured { get; init; }
     public required bool? JudgeEnabled { get; init; }
     public required SuggestIndexInfo? SuggestIndex { get; init; }
+
+    /// <summary>Upstream service health status (Open Library circuit, LLM status) without sensitive details.</summary>
+    public required UpstreamHealth? Upstream { get; init; }
+}
+
+/// <summary>Upstream service health indicators exposed at /api/health (SY-34).</summary>
+public sealed record UpstreamHealth
+{
+    /// <summary>Open Library circuit breaker state: "closed" (normal), "open" (blocking calls), "half_open" (testing).</summary>
+    public required string? OpenLibraryCircuit { get; init; }
+
+    /// <summary>ISO 8601 timestamp of the last Open Library failure, or null if none recorded.</summary>
+    public required DateTimeOffset? OpenLibraryLastFailure { get; init; }
+
+    /// <summary>High-level reason for the last failure (e.g., "timeout", "unavailable"), or null.</summary>
+    public required string? OpenLibraryLastFailureReason { get; init; }
+
+    /// <summary>LLM provider state: "ok", "rate_limited", "cooldown", "disabled", or null if not configured.</summary>
+    public required string? LlmStatus { get; init; }
+
+    /// <summary>ISO 8601 timestamp of the last LLM failure, or null if none recorded.</summary>
+    public required DateTimeOffset? LlmLastFailure { get; init; }
+
+    /// <summary>High-level reason for the last LLM failure (e.g., "rate_limited", "timeout"), or null.</summary>
+    public required string? LlmLastFailureReason { get; init; }
 }
 
 public sealed record SuggestIndexInfo

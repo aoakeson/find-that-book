@@ -1,5 +1,6 @@
 using System.Net;
 using FindThatBook.Core.Ports;
+using FindThatBook.Infrastructure.Health;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -36,7 +37,8 @@ public static class OpenLibraryRegistration
         client.AddResilienceHandler("open-library", (pipeline, context) => OpenLibraryResilience.Build(pipeline,
             context.ServiceProvider.GetRequiredService<IOptions<OpenLibraryOptions>>().Value,
             context.ServiceProvider.GetRequiredService<OpenLibraryRateLimiter>(),
-            context.ServiceProvider.GetRequiredService<TimeProvider>()));
+            context.ServiceProvider.GetRequiredService<TimeProvider>(),
+            context.ServiceProvider.GetService<UpstreamHealthMonitor>()));
         client.AddHttpMessageHandler<OpenLibraryAttemptCounter>();
         return services;
     }

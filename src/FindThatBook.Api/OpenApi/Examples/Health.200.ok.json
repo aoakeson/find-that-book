@@ -11,6 +11,7 @@
     "suggest_index": {
       "version": "1-2026-09-30",
       "count": 50000
-    }
+    },
+    "upstream": null
   }
 }

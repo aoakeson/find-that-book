@@ -2303,7 +2303,8 @@
                       "suggest_index": {
                         "version": "1-2026-09-30",
                         "count": 50000
-                      }
+                      },
+                      "upstream": null
                     }
                   }
                 }
@@ -2460,7 +2461,8 @@
           "ai_provider",
           "ai_configured",
           "judge_enabled",
-          "suggest_index"
+          "suggest_index",
+          "upstream"
         ],
         "type": "object",
         "properties": {
@@ -2501,6 +2503,17 @@
               },
               {
                 "$ref": "#/components/schemas/SuggestIndexInfo"
+              }
+            ]
+          },
+          "upstream": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Upstream service health status (Open Library circuit, LLM status) without sensitive details.",
+                "$ref": "#/components/schemas/UpstreamHealth"
               }
             ]
           }
@@ -3438,6 +3451,64 @@
           }
         },
         "description": "Autocomplete from a prebuilt local index of real works: no Open Library or LLM call per keystroke."
+      },
+      "UpstreamHealth": {
+        "required": [
+          "open_library_circuit",
+          "open_library_last_failure",
+          "open_library_last_failure_reason",
+          "llm_status",
+          "llm_last_failure",
+          "llm_last_failure_reason"
+        ],
+        "type": "object",
+        "properties": {
+          "open_library_circuit": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Open Library circuit breaker state: \"closed\" (normal), \"open\" (blocking calls), \"half_open\" (testing)."
+          },
+          "open_library_last_failure": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "ISO 8601 timestamp of the last Open Library failure, or null if none recorded.",
+            "format": "date-time"
+          },
+          "open_library_last_failure_reason": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "High-level reason for the last failure (e.g., \"timeout\", \"unavailable\"), or null."
+          },
+          "llm_status": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "LLM provider state: \"ok\", \"rate_limited\", \"cooldown\", \"disabled\", or null if not configured."
+          },
+          "llm_last_failure": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "ISO 8601 timestamp of the last LLM failure, or null if none recorded.",
+            "format": "date-time"
+          },
+          "llm_last_failure_reason": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "High-level reason for the last LLM failure (e.g., \"rate_limited\", \"timeout\"), or null."
+          }
+        },
+        "description": "Upstream service health indicators exposed at /api/health (SY-34)."
       }
     }
   },

@@ -237,11 +237,21 @@ export interface HealthResponse {
   ai_configured: boolean | null
   judge_enabled: boolean | null
   suggest_index: SuggestIndexInfo | null
+  upstream: UpstreamHealth | null
 }
 
 export interface SuggestIndexInfo {
   version: string
   count: number
+}
+
+export interface UpstreamHealth {
+  open_library_circuit: string | null
+  open_library_last_failure: string | null
+  open_library_last_failure_reason: string | null
+  llm_status: string | null
+  llm_last_failure: string | null
+  llm_last_failure_reason: string | null
 }
 
 /* Development-only admin API (/api/admin/ai). Keys go in and never come out. */

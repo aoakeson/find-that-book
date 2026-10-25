@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Anthropic.Exceptions;
 using FindThatBook.Core.Ports;
+using FindThatBook.Infrastructure.Health;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
@@ -27,7 +28,8 @@ public sealed partial class StructuredLlm(
     AiPricing pricing,
     HybridCache cache,
     TimeProvider time,
-    ILogger<StructuredLlm> log) : IStructuredLlm
+    ILogger<StructuredLlm> log,
+    UpstreamHealthMonitor? upstreamHealth = null) : IStructuredLlm
 {
     internal const int MaxPromptChars = 32_000;
 
@@ -84,6 +86,7 @@ public sealed partial class StructuredLlm(
             var value = JsonSerializer.Deserialize<T>(answer.Json, Json);
             if (value is null) return Result<T>(call, target, LlmCallStatus.MalformedOutput, started, detail: "null_json");
             var hit = !attempt.Ran;
+            if (!hit) upstreamHealth?.ClearLlmFailure(); // successful call clears any recorded failure state
             return Result(call, target, LlmCallStatus.Ok, started, value, hit,
                 hit ? 0 : answer.InputTokens, hit ? 0 : answer.OutputTokens, hit ? "cache_hit" : null);
         }
@@ -165,6 +168,7 @@ public sealed partial class StructuredLlm(
     private LlmFailure Fail(ProviderTarget target, Exception ex)
     {
         var (status, retryAfter) = HttpStatusOf(ex);
+        var now = time.GetUtcNow();
         switch (status)
         {
             case 429:
@@ -174,28 +178,35 @@ public sealed partial class StructuredLlm(
                 log.LogWarning("LLM rate limited by {Provider}/{Model}: quota {QuotaId} = {QuotaValue}, retry after {RetryAfterSeconds}s, cooldown {CooldownSeconds}s",
                     target.Provider, target.Model, quotaId ?? "unknown", quotaValue ?? "unknown",
                     retryAfter is { } ra ? Math.Round(ra.TotalSeconds, 1) : null, cooldown.TotalSeconds);
+                upstreamHealth?.RecordLlmFailure("rate_limited", now);
                 return new LlmFailure(LlmCallStatus.RateLimited, $"http 429, cooldown {cooldown.TotalSeconds:0}s");
             case 401 or 403:
                 health.Disable(target, $"http {status}");
+                upstreamHealth?.RecordLlmFailure("auth_error", now);
                 return new LlmFailure(LlmCallStatus.ProviderError, $"http {status}");
             case 404:
                 health.Disable(target, "http 404 (model?)");
+                upstreamHealth?.RecordLlmFailure("not_found", now);
                 return new LlmFailure(LlmCallStatus.ProviderError, "http 404");
             case 400:
                 // A request the API rejects is our bug (schema, option): loud, but still no exception for the user.
                 // The redacted excerpt says which option the API rejected (AI-09).
                 log.LogError("LLM request rejected by {Provider}/{Model}: HTTP 400 ({ExceptionType}): {Excerpt}",
                     target.Provider, target.Model, ex.GetType().Name, SecretRedaction.Excerpt(ex.Message));
+                upstreamHealth?.RecordLlmFailure("bad_request", now);
                 return new LlmFailure(LlmCallStatus.ProviderError, "http 400");
             case { } code:
+                upstreamHealth?.RecordLlmFailure($"http_{code}", now);
                 return new LlmFailure(LlmCallStatus.ProviderError, $"http {code}");
         }
-        return ex switch
+        var failure = ex switch
         {
             OperationCanceledException or TimeoutException => new LlmFailure(LlmCallStatus.Timeout, "sdk_timeout"),
             JsonException or InvalidOperationException => new LlmFailure(LlmCallStatus.MalformedOutput, ex.GetType().Name),
             _ => new LlmFailure(LlmCallStatus.ProviderError, ex.GetType().Name),
         };
+        upstreamHealth?.RecordLlmFailure(failure.Detail ?? "unknown", now);
+        return failure;
     }
 
     /// <summary>HTTP status and Retry-After from each SDK's exception type. Raw messages are never logged (they can echo a masked key, AI-49).</summary>

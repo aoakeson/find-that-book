@@ -2,6 +2,7 @@ using System.Reflection;
 using FindThatBook.Api.Contracts;
 using FindThatBook.Core.Ports;
 using FindThatBook.Infrastructure.Ai;
+using FindThatBook.Infrastructure.Health;
 using FindThatBook.Infrastructure.Suggest;
 
 namespace FindThatBook.Api.Endpoints;
@@ -31,6 +32,7 @@ internal static partial class HealthEndpoints
         var index = Try(logger, "suggest", () => services.GetService<ISuggestIndex>() is { } s
             ? new SuggestIndexInfo { Version = s.Version, Count = s.Count }
             : null);
+        var upstream = Try(logger, "upstream", () => services.GetService<IUpstreamHealthMonitor>()?.GetStatus());
         return new HealthResponse
         {
             Status = "ok",
@@ -40,6 +42,15 @@ internal static partial class HealthEndpoints
             AiConfigured = ai?.AiConfigured,
             JudgeEnabled = judge,
             SuggestIndex = index,
+            Upstream = upstream is null ? null : new UpstreamHealth
+            {
+                OpenLibraryCircuit = upstream.OpenLibraryCircuit,
+                OpenLibraryLastFailure = upstream.OpenLibraryLastFailure,
+                OpenLibraryLastFailureReason = upstream.OpenLibraryLastFailureReason,
+                LlmStatus = upstream.LlmStatus,
+                LlmLastFailure = upstream.LlmLastFailure,
+                LlmLastFailureReason = upstream.LlmLastFailureReason,
+            },
         };
     }
 

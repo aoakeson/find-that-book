@@ -4,6 +4,7 @@ using FindThatBook.Core.Normalization;
 using FindThatBook.Core.Search;
 using FindThatBook.Infrastructure.Ai;
 using FindThatBook.Infrastructure.Explanations;
+using FindThatBook.Infrastructure.Health;
 using FindThatBook.Infrastructure.Judge;
 using FindThatBook.Infrastructure.OpenLibrary;
 using FindThatBook.Infrastructure.Suggest;
@@ -23,6 +24,8 @@ public static class DependencyInjection
         var search = (configuration.GetSection("Search").Get<SearchOptions>() ?? new SearchOptions()).Validated();
         services.AddSingleton(search);
         services.AddSingleton(TimeProvider.System);
+        services.AddSingleton<UpstreamHealthMonitor>();
+        services.AddSingleton<IUpstreamHealthMonitor>(sp => sp.GetRequiredService<UpstreamHealthMonitor>());
         // HybridCache sizes each in-memory entry by its payload bytes, so a size limit bounds total cache memory (SY-26).
         var cacheMegabytes = configuration.GetValue("Cache:SizeLimitMegabytes", 64);
         services.AddMemoryCache(o => o.SizeLimit = cacheMegabytes * 1024L * 1024L);
