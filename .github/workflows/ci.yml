@@ -94,6 +94,7 @@ jobs:
           flyctl deploy --remote-only --app find-that-book --config fly.toml
       - name: Verify public health
         run: |
+          set -o pipefail
           curl --fail --silent --show-error --retry 5 --retry-delay 5 \
             https://books.andrewoakeson.com/api/health \
             | jq --exit-status '.status == "ok" and .environment == "Production"'
