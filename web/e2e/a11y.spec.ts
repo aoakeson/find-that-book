@@ -13,7 +13,7 @@ async function expectNoViolations(page: Page, screen: string) {
   expect.soft(found, `axe on ${screen}`).toEqual([])
 }
 
-test("no WCAG 2.2 A/AA violations on home, results with activity open, History, Admin and 404", async ({
+test("no WCAG 2.2 A/AA violations on home, results with activity open, History, Admin, How it works and 404", async ({
   page,
   api,
 }) => {
@@ -38,6 +38,18 @@ test("no WCAG 2.2 A/AA violations on home, results with activity open, History, 
   await page.goto("/admin")
   await expect(page.getByRole("button", { name: "Add key for Anthropic" })).toBeVisible()
   await expectNoViolations(page, "Admin")
+
+  await page.goto("/how-it-works")
+  await expect(page.getByRole("heading", { level: 1, name: "How Find That Book works" })).toBeVisible()
+  await expectNoViolations(page, "How it works")
+  // The other states: a rejected sentence, removed AI values, penalties, a "few books" outcome, skipped steps.
+  await page.locator("#explain figure").getByRole("button", { name: "Invented praise" }).click()
+  await page.locator("#read figure").getByRole("button", { name: "Noisy" }).click()
+  await page.locator("#rank figure").getByRole("button", { name: "hobbit dixon" }).click()
+  await page.locator("#decide figure").getByRole("button", { name: "dickens" }).click()
+  await page.locator("#search figure").getByRole("button", { name: "dickens" }).click()
+  await expect(page.locator("#explain figure").getByText("The check rejects it")).toBeVisible()
+  await expectNoViolations(page, "How it works, other examples")
 
   await page.goto("/nope")
   await expect(page.getByRole("heading", { level: 1, name: "Page not found" })).toBeVisible()

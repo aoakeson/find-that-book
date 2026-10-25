@@ -23,3 +23,11 @@ test("on a phone: no autofocus, search by tapping, read the answer, open History
   expect((await sheet.boundingBox())?.width).toBeGreaterThanOrEqual(380)
   expect(api.count("GET", "/api/books/search")).toBe(1)
 })
+
+test("on a phone, How it works fits the screen with every figure finished", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  await page.goto("/how-it-works")
+  await expect(page.getByRole("heading", { level: 1, name: "How Find That Book works" })).toBeVisible()
+  await expect(page.locator("figure")).toHaveCount(8)
+  expect(await horizontalOverflow(page)).toBe(0)
+})

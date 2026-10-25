@@ -53,9 +53,10 @@ The check caught three real contract changes during the build (`query_rejected` 
 | Cancel | "Stop" aborts (headers and body); "Search stopped" is neutral; late responses ignored | `session.tsx`, `api/client.ts` | `session.test.tsx`, `api/client.test.ts` |
 | Errors | Inline field error for 400s; Alert + explicit "Try again" for 5xx/network; `Retry-After` honoured on 429/503/504 (button and new searches wait, neutral countdown); never shown as "no match" | `session.tsx`, `results/failure.ts`, `Composer.tsx` | `session.test.tsx`, `results/ResultsRegionView.test.tsx`, `composer/Composer.test.tsx`, e2e |
 | History | Sheet; 30 newest searches in this browser; restore without an API call; delete; clear with confirmation; safe when storage is missing, full, corrupt, older or changed in another tab | `features/history/*` | `history/storage.test.ts`, `HistoryButton.test.tsx`, e2e `history.spec.ts` |
-| Routing | `/` (`?entry=` = local history id), `/admin` (lazy), designed 404, error boundary; back/forward/refresh/return from Admin never re-run a search | `router.tsx`, `app/*` | `app/routing.test.tsx`, `session.test.tsx` |
+| Routing | `/` (`?entry=` = local history id), `/how-it-works` (lazy), `/admin` (lazy), designed 404, error boundary; back/forward/refresh/return from Admin never re-run a search | `router.tsx`, `app/*` | `app/routing.test.tsx`, `session.test.tsx` |
 | Keys, the easy way | Runs without a key; the home page says AI is off and how to turn it on: `.env` or the Admin page; Admin's **Turn on AI** offers both | `search/AiOffNote.tsx`, `admin/AiProviderSection.tsx` | `search/AiOffNote.test.tsx`, `admin/TurnOnAi.test.tsx` |
 | Admin | Provider (incl. automatic), keys (write-only), test connection, second opinion; unavailable state outside Development/loopback | `features/admin/*` | `admin/AdminPage.test.tsx`, `AdminKeys.test.tsx`, `TurnOnAi.test.tsx`, e2e `pages.spec.ts` |
+| How it works | Header tab; the pipeline explained for reviewers with step-by-step illustrations of real examples: cleaning, the AI's reading and its checks, the search ladder, typo matching, tiers and scores, the match decision, explanations and their grounding check; failure behaviour and held-out numbers. No API calls | `features/how-it-works/*` (examples in `examples.ts`) | `how-it-works/HowItWorksPage.test.tsx`, `app/routing.test.tsx`, e2e `pages.spec.ts`, `a11y.spec.ts`, `mobile.spec.ts` |
 | Accessibility, responsive, motion | See DESIGN.md | `index.css`, `app/*` | `lib/motion.test.tsx`, e2e `a11y.spec.ts` (axe, WCAG 2.2 AA), `mobile.spec.ts`, `pages.spec.ts` |
 
 ## 3. Decisions
@@ -94,7 +95,7 @@ The check caught three real contract changes during the build (`query_rejected` 
 - **Same origin everywhere.** Dev: Vite proxies `/api` to the API without `X-Forwarded-*`. Production-like: the API
   serves the build from `wwwroot`. No CORS configuration. Because the proxy makes every caller look local, it repeats
   the admin rule itself (loopback socket, same `Origin`); the API also refuses cross-site admin calls.
-- **Small initial download.** Admin is a lazy route; React, Base UI and other libraries are split into long-cached
+- **Small initial download.** Admin and How it works are lazy routes; React, Base UI and other libraries are split into long-cached
   chunks (main app chunk ≈ 28 kB gzipped).
 
 ## 4. Gaps and limitations (honest list)
@@ -123,7 +124,7 @@ The check caught three real contract changes during the build (`query_rejected` 
 | Check | Result |
 |---|---|
 | `npm run check` (typecheck, lint, format, unit/component tests, build) | Green; the unit suite runs every API example file, including `topic_search` and `topic_none` |
-| `npm run test:e2e -w web` (Playwright, every `/api` call mocked from the API's examples; axe WCAG 2.2 AA on home, results with activity open, History, Admin, 404) | 13/13, stable over repeated runs |
+| `npm run test:e2e -w web` (Playwright, every `/api` call mocked from the API's examples; axe WCAG 2.2 AA on home, results with activity open, History, Admin, How it works, 404) | 13/13, stable over repeated runs |
 | Live smoke against the local API (Development, Gemini) | Through `npm run dev` itself (02:42 MT): banner "AI on (gemini)"; `/api/health` 200; suggest "har" 200 from the real index; `GET /api/admin/ai` 200 (`provider_selection: auto`); `/api/nope` → JSON 404; "mark huckleberry" → Best match, Adventures of Huckleberry Finn; Admin then Back made no extra request; Ctrl+C left no listeners. Earlier runs: "tolkien hobbit illustrated deluxe 1937" → match, The Hobbit (2 LLM calls, 1 Open Library call, 2.6 s); "find me a book about bears" → topic_search, 5 books with matched subjects; history restore, Back and return from Admin made 0 extra requests; a disposable second-opinion key set and removed through the proxy; `/nope` → 404 page. 4 paid searches in total |
 | `npm run smoke` (runs `npm start` and `npm run dev` for real, checks pages, deep links, JSON 404 for unknown `/api`, clean Ctrl+C, no leftover listeners) | macOS 18/18; Linux (Docker, fresh clone, Node 24, .NET 10.0.402) 18/18 plus the whole unit suite |
 | `docker compose` image | Builds; serves the app, deep links and `/api` in Production; unknown `/api` and `/api/admin` → JSON 404 |
