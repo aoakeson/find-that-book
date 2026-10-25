@@ -1,3 +1,4 @@
+import type { Ref } from "react"
 import { ExternalLinkIcon, ScaleIcon } from "lucide-react"
 import type { CandidateSnapshot } from "@/features/history/snapshot"
 import { Badge } from "@/components/ui/badge"
@@ -30,10 +31,13 @@ export function Candidate({
   candidate,
   variant,
   newTabNoteId,
+  titleRef,
 }: {
   candidate: CandidateSnapshot
   variant: CandidateVariant
   newTabNoteId: string
+  /** Makes the title a programmatic focus target (the first book "Show more" reveals). */
+  titleRef?: Ref<HTMLHeadingElement>
 }) {
   const c = candidate
   const href = safeExternalUrl(c.open_library_url)
@@ -53,7 +57,13 @@ export function Candidate({
       />
 
       <div className="flex min-w-0 flex-col gap-1">
-        <h3 className="text-title font-semibold wrap-break-word text-ink">{c.title}</h3>
+        <h3
+          ref={titleRef}
+          tabIndex={titleRef ? -1 : undefined}
+          className="text-title font-semibold wrap-break-word text-ink"
+        >
+          {c.title}
+        </h3>
         {c.subtitle && <p className="text-sm wrap-break-word text-ink-secondary">{c.subtitle}</p>}
         <p className="wrap-break-word text-ink">
           {c.author ? (

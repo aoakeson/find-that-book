@@ -10,9 +10,15 @@ import type {
   SuggestResponse,
 } from "./types"
 
-/** No `limit`: the API's default (5) is the brief's "up to 5 ordered candidates". */
+/**
+ * The API's maximum. The results list shows the brief's "up to 5 ordered candidates" first and reveals the rest from
+ * this same answer, because a second search would spend another LLM call and could read the query differently.
+ */
+export const SEARCH_LIMIT = 10
+
 export async function searchBooks(query: string, signal?: AbortSignal): Promise<SearchResponse> {
-  const response = await apiRequest<unknown>(`/api/books/search?${new URLSearchParams({ q: query })}`, { signal })
+  const params = new URLSearchParams({ q: query, limit: String(SEARCH_LIMIT) })
+  const response = await apiRequest<unknown>(`/api/books/search?${params}`, { signal })
   if (!isSearchResponse(response)) throw new ApiError("unexpected", "The API sent an invalid search response.")
   return response
 }

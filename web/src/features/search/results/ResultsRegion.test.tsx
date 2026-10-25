@@ -252,6 +252,75 @@ describe("candidate details", () => {
   })
 })
 
+describe("more than five books", () => {
+  /** A recorded answer extended to `n` books, each a distinct work in rank order. */
+  function longer(response: SearchResponse, n = 8): SearchResponse {
+    const base = response.candidates
+    response.candidates = Array.from({ length: n }, (_, i) => ({
+      ...base[i % base.length],
+      rank: i + 1,
+      work_id: `OL${i + 1}W`,
+      title: `Book ${i + 1}`,
+      second_opinion: false,
+    }))
+    return response
+  }
+  const titles = () => screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent)
+  const book = (n: number) => `Book ${n}`
+  const books = (from: number, to: number) => Array.from({ length: to - from + 1 }, (_, i) => book(from + i))
+
+  it("asks the API for its maximum in one search", async () => {
+    const calls = api(() => json(fixtures.ambiguous()))
+    await search()
+    await screen.findByRole("heading", { name: HEADINGS.ambiguous })
+    expect(calls.calls.find((c) => c.url.pathname === "/api/books/search")!.url.searchParams.get("limit")).toBe("10")
+  })
+
+  it("shows five, then the rest in server order from the same answer, with focus on the first new book", async () => {
+    const calls = api(() => json(longer(fixtures.ambiguous())))
+    const { user } = await search("dickens")
+    await screen.findByRole("heading", { name: HEADINGS.ambiguous })
+    expect(titles()).toEqual(books(1, 5))
+
+    await user.click(screen.getByRole("button", { name: "Show 3 more books" }))
+    expect(titles()).toEqual(books(1, 8))
+    expect(screen.getByRole("heading", { level: 3, name: book(6) })).toHaveFocus()
+    expect(screen.queryByRole("button", { name: /^Show \d+ more/ })).not.toBeInTheDocument()
+    expect(calls.count("GET", "/api/books/search")).toBe(1)
+  })
+
+  it("counts the best match among the first five", async () => {
+    api(() => json(longer(fixtures.match(), 7)))
+    const { user } = await search()
+    const others = (await screen.findByRole("heading", { name: "Other possibilities" })).closest("section")!
+    expect(titles()).toEqual(books(1, 5))
+    await user.click(within(others).getByRole("button", { name: "Show 2 more books" }))
+    expect(titles()).toEqual(books(1, 7))
+  })
+
+  it("never hides the second-opinion pick behind the button", async () => {
+    const response = longer(fixtures.ambiguous())
+    response.candidates[6].second_opinion = true
+    api(() => json(response))
+    await search("dickens")
+    await screen.findByRole("heading", { name: HEADINGS.ambiguous })
+    expect(titles()).toEqual(books(1, 7))
+    expect(screen.getByRole("button", { name: "Show 1 more book" })).toBeVisible()
+  })
+
+  it("collapses again for the next answer", async () => {
+    api(() => json(longer(fixtures.ambiguous())))
+    const { user } = await search("dickens")
+    await user.click(await screen.findByRole("button", { name: "Show 3 more books" }))
+    expect(titles()).toHaveLength(8)
+
+    await user.clear(screen.getByLabelText("Describe the book"))
+    await user.type(screen.getByLabelText("Describe the book"), "dickens novels{Enter}")
+    expect(await screen.findByRole("button", { name: "Show 3 more books" })).toBeVisible()
+    expect(titles()).toHaveLength(5)
+  })
+})
+
 describe("degraded answers", () => {
   it("explains a rate-limited AI quietly and keeps the results", async () => {
     const response = fixtures.degraded()

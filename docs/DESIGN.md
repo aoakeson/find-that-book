@@ -200,7 +200,7 @@ at call sites. One primitive family, no second state or form framework.
 | Suggestions failing | Nothing blocks: the list just doesn't appear; Search still works. |
 | Invalid query (400) | Inline field error under the composer (`aria-invalid` + `aria-describedby`), text kept, previous answer restored. |
 | Searching | Compact composer with **Stop**, the activity line with the turning book, "Searching…" and an elapsed counter (it becomes the "Search activity" summary when the answer arrives), result skeleton of stable height. |
-| Match / ambiguous / none | h2 "Best match", "A few books fit your clues", or "No book matched" plus one useful refinement; server order. |
+| Match / ambiguous / none | h2 "Best match", "A few books fit your clues", or "No book matched" plus one useful refinement; server order. The first five books show; an outline **Show N more books** under the list reveals the rest of the same answer (no new search) and moves focus to the first new title. |
 | Topic request ("a book about bears") | h2 "Books about bears" with the server's hint, all candidates as equals (never one best match), matched subjects as chips; "No books found about bears" when empty. |
 | AI off (no key) | Home shows one quiet line: AI is off, set `GEMINI_API_KEY` in `.env` and restart, or add a key in Admin (the link only where Admin exists). Admin shows **Turn on AI** with both ways side by side. |
 | Degraded (AI fallback) | Valid results stay; a quiet warning notice explains the fallback. Not an error. |
