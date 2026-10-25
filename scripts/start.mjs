@@ -2,7 +2,6 @@
 // Development environment so the local-only Admin page works), which serves the app and /api on one origin.
 // Port: --api-port, or FTB_API_PORT.
 import {
-  checkDotnet,
   checkEnvFile,
   checkNode,
   colourEnabled,
@@ -11,6 +10,8 @@ import {
   dotnetEnv,
   dotnetRunArgs,
   ensureDependencies,
+  ensureDotnet,
+  restoreDotnet,
   httpGet,
   isPortOpen,
   packageBin,
@@ -38,8 +39,7 @@ async function main() {
 
   const runner = createRunner("start")
   if (!ensureDependencies(runner.log)) process.exit(1)
-  const dotnet = checkDotnet()
-  if (dotnet.level === "error") failEarly(dotnet)
+  if (!(await ensureDotnet(runner.log))) process.exit(1)
   const env = checkEnvFile()
   if (env.level !== "ok") printCheck(env)
 
@@ -54,6 +54,8 @@ async function main() {
       fix: portHelp("start", "api", apiPort),
     })
   }
+
+  if (!restoreDotnet(runner.log)) process.exit(1)
 
   runner.log("Building the web app into src/FindThatBook.Api/wwwroot (vite build)...")
   const build = runner.start("web", process.execPath, [packageBin("vite"), "build"], {

@@ -1,9 +1,11 @@
-// Shared by dev.mjs, start.mjs, doctor.mjs and smoke.mjs. Plain Node ESM with built-ins only. Nothing goes through a
+// Shared by setup.mjs, dev.mjs, start.mjs, doctor.mjs and smoke.mjs. Plain Node ESM with built-ins only. Nothing goes through a
 // shell: every process is an executable plus an argument array, so paths with spaces and Windows behave like macOS.
+// The .NET installer is the exception. It runs winget, or Microsoft's dotnet-install script, and only when the SDK is missing.
 // This file must still load on an old Node, so that the version check can explain what to install.
 import { spawn, spawnSync } from "node:child_process"
-import { existsSync, readFileSync, realpathSync, statSync } from "node:fs"
+import { existsSync, readFileSync, realpathSync, statSync, writeFileSync } from "node:fs"
 import net from "node:net"
+import os from "node:os"
 import path from "node:path"
 import readline from "node:readline"
 import { fileURLToPath } from "node:url"
@@ -152,10 +154,15 @@ export function checkNode(version = process.versions.node) {
 }
 
 const DOTNET_FIX = [
-  "Install the .NET 10 SDK: https://dotnet.microsoft.com/download/dotnet/10.0",
-  "(macOS: the .pkg installer there, or brew install --cask dotnet-sdk. Windows: winget install Microsoft.DotNet.SDK.10)",
+  "npm run dev installs the .NET 10 SDK. Run it again if that install was interrupted.",
+  "Or install it yourself: https://dotnet.microsoft.com/download/dotnet/10.0",
+  "(macOS: the .pkg installer, or brew install --cask dotnet-sdk. Windows: winget install Microsoft.DotNet.SDK.10)",
   "Then open a new terminal so the dotnet command is on PATH.",
 ]
+
+// Set when the SDK we must use is a per-user install that is not first on PATH (Windows keeps Program Files ahead of
+// the user PATH). Child processes then see this directory first. Left unset when the dotnet already on PATH is fine.
+let preferredDotnetDir = null
 
 /** `dotnet --version` from the repo root applies global.json (10.0.100, rolling forward to any later 10.0 SDK). */
 export function checkDotnet() {
@@ -173,6 +180,158 @@ export function checkDotnet() {
     text: `No .NET 10 SDK found${installed.length ? ` (installed: ${installed.join(", ")})` : ""}; global.json needs 10.0.100 or a later 10.0 SDK`,
     fix: DOTNET_FIX,
   }
+}
+
+function checkDotnetUsing(dir) {
+  const previous = preferredDotnetDir
+  preferredDotnetDir = dir
+  try {
+    return checkDotnet()
+  } finally {
+    preferredDotnetDir = previous
+  }
+}
+
+/** The feature band global.json asks for: 10.0.100 -> 10.0.1xx, which rollForward latestFeature accepts. */
+function sdkChannel() {
+  try {
+    const version = JSON.parse(readFileSync(path.join(repoRoot, "global.json"), "utf8")).sdk?.version
+    const [major, minor, band] = String(version ?? "").split(".")
+    if (/^\d+$/.test(major) && /^\d+$/.test(minor) && /^\d/.test(band ?? "")) return `${major}.${minor}.${band[0]}xx`
+  } catch {
+    // unreadable global.json; the installer falls back to the whole 10.0 release
+  }
+  return "10.0"
+}
+
+function userDotnetDir() {
+  if (isWindows) {
+    const local = process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData", "Local")
+    return path.join(local, "Microsoft", "dotnet")
+  }
+  return path.join(os.homedir(), ".dotnet")
+}
+
+function commandExists(command) {
+  const probe = spawnSync(command, ["--version"], { encoding: "utf8", windowsHide: true, timeout: 20_000 })
+  return !probe.error && probe.status === 0
+}
+
+async function downloadFile(url, dest) {
+  const response = await fetch(url, { redirect: "follow" })
+  if (!response.ok) throw new Error(`${url} returned ${response.status}`)
+  writeFileSync(dest, Buffer.from(await response.arrayBuffer()))
+}
+
+function psQuote(value) {
+  return `'${String(value).replaceAll("'", "''")}'`
+}
+
+function persistUnixPath(dir) {
+  const profileName = (process.env.SHELL ?? "").includes("zsh") ? ".zshrc" : ".bashrc"
+  const file = path.join(os.homedir(), profileName)
+  const marker = "# Added by Find That Book so the .NET 10 SDK is on PATH"
+  let current = ""
+  try {
+    current = readFileSync(file, "utf8")
+  } catch {
+    current = ""
+  }
+  if (current.includes(marker)) return file
+  const separator = current.length === 0 || current.endsWith("\n") ? "" : "\n"
+  writeFileSync(file, `${current}${separator}${marker}\nexport DOTNET_ROOT="${dir}"\nexport PATH="$DOTNET_ROOT:$PATH"\n`)
+  return file
+}
+
+async function installDotnetUnix(log, dir) {
+  const script = path.join(os.tmpdir(), "dotnet-install.sh")
+  log("Downloading the official .NET installer. It installs for this user only, with no admin password.")
+  await downloadFile("https://dot.net/v1/dotnet-install.sh", script)
+  const child = spawnSync("bash", [script, "--channel", sdkChannel(), "--quality", "GA", "--install-dir", dir], { stdio: "inherit" })
+  if (child.error) throw child.error
+  if (child.status !== 0) return null
+  const profile = persistUnixPath(dir)
+  log(`Added it to PATH in ${profile}. Open a new terminal for a plain dotnet command; this run already uses it.`)
+  return "user"
+}
+
+async function installDotnetWindows(log, dir) {
+  if (commandExists("winget")) {
+    log("Installing the .NET 10 SDK with winget, beside the one already on this PC. Windows may ask for permission. This happens once.")
+    const winget = spawnSync(
+      "winget",
+      ["install", "--id", "Microsoft.DotNet.SDK.10", "--exact", "--accept-source-agreements", "--accept-package-agreements", "--disable-interactivity"],
+      { stdio: "inherit", windowsHide: true },
+    )
+    if (checkDotnet().level === "ok") return "machine"
+    log(winget.error ? `winget did not run (${winget.error.message}). Installing a per-user copy instead.` : "winget did not leave a .NET 10 SDK on PATH. Installing a per-user copy instead.")
+  } else {
+    log("winget is not installed. Installing a per-user copy of the .NET 10 SDK instead.")
+  }
+
+  const script = path.join(os.tmpdir(), "dotnet-install.ps1")
+  log("Downloading the official .NET installer. It installs for this user only, with no admin permission.")
+  await downloadFile("https://dot.net/v1/dotnet-install.ps1", script)
+  const channel = sdkChannel()
+  const proxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY || process.env.http_proxy
+  const proxyArg = proxy ? ` -ProxyAddress ${psQuote(proxy)}` : ""
+  const child = spawnSync(
+    "powershell.exe",
+    [
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-Command",
+      `Unblock-File -LiteralPath ${psQuote(script)}; & ${psQuote(script)} -Channel ${psQuote(channel)} -Quality GA -InstallDir ${psQuote(dir)}${proxyArg}`,
+    ],
+    { stdio: "inherit", windowsHide: true },
+  )
+  if (child.error) throw child.error
+  return child.status === 0 ? "user" : null
+}
+
+/**
+ * dev/start/setup: print the SDK check, and if .NET 10 is missing install it.
+ * Windows tries winget first so the existing `dotnet` command picks it up. Mac and Linux use Microsoft's per-user installer.
+ */
+export async function ensureDotnet(log) {
+  const onPath = checkDotnet()
+  if (onPath.level === "ok") {
+    printCheck(onPath)
+    return true
+  }
+  const dir = userDotnetDir()
+  const local = checkDotnetUsing(dir)
+  if (local.level === "ok") {
+    preferredDotnetDir = dir
+    printCheck({ level: "ok", text: `${local.text} (per user, ${dir})` })
+    return true
+  }
+  printCheck({ level: "warn", text: `${onPath.text}. Installing the .NET 10 SDK.` })
+  let how = null
+  try {
+    how = isWindows ? await installDotnetWindows(log, dir) : await installDotnetUnix(log, dir)
+  } catch (error) {
+    printCheck({ level: "error", text: `Could not install the .NET 10 SDK: ${error.message}`, fix: DOTNET_FIX })
+    return false
+  }
+  if (how === "machine") {
+    preferredDotnetDir = null
+    const after = checkDotnet()
+    printCheck(after)
+    return after.level === "ok"
+  }
+  preferredDotnetDir = dir
+  const after = checkDotnet()
+  if (after.level !== "ok") {
+    printCheck({ level: "error", text: "The .NET 10 SDK install did not leave a usable SDK.", fix: DOTNET_FIX })
+    return false
+  }
+  printCheck({ level: "ok", text: `${after.text} (per user, ${dir})` })
+  if (isWindows) {
+    log("This repo's commands will use that SDK. Windows still finds Program Files first, so a plain dotnet command in a new terminal keeps the older SDK until the winget install is approved.")
+  }
+  return true
 }
 
 export function findPackage(name) {
@@ -202,12 +361,12 @@ const mtime = (file) => {
 
 export function checkDependencies() {
   const vite = findPackage("vite")
-  if (!vite) return { level: "error", text: "Web dependencies are not installed", fix: ["Run once, at the repo root: npm install"] }
+  if (!vite) return { level: "error", text: "Web dependencies are not installed", fix: ["Run npm run dev (it installs them), or npm run setup first."] }
   // npm writes node_modules/.package-lock.json on every install; a lockfile newer than that means a pull changed it.
   const lock = mtime(path.join(repoRoot, "package-lock.json"))
   const installed = mtime(path.join(repoRoot, "node_modules", ".package-lock.json"))
   if (lock !== null && installed !== null && lock - installed > 60_000) {
-    return { level: "warn", text: "package-lock.json changed after the last install", fix: ["Run: npm install"] }
+    return { level: "warn", text: "package-lock.json changed after the last install", fix: ["Run npm run dev (it installs them), or npm run setup."] }
   }
   return { level: "ok", text: `Web dependencies installed (Vite ${JSON.parse(readFileSync(vite, "utf8")).version})` }
 }
@@ -232,20 +391,42 @@ function realpathOrNull(file) {
   }
 }
 
-/** dev/start: install the web dependencies once if node_modules is missing. False when they are still missing. */
+/** dev/start/setup: install the web dependencies when they are missing or the lockfile is newer. False when they are still missing. */
 export function ensureDependencies(log) {
   const status = checkDependencies()
-  if (status.level === "warn") printCheck(status)
-  if (status.level !== "error") return true
+  if (status.level === "ok") return true
   const npmCli = findNpmCli()
   if (!npmCli) {
     printCheck(status)
     return false
   }
-  log("Installing the web dependencies (first run only): npm install")
+  const why = status.level === "warn" ? "package-lock.json is newer than the last install" : "first run"
+  log(`Installing the web dependencies (${why}): npm install`)
   const install = spawnSync(process.execPath, [npmCli, "install", "--no-audit", "--no-fund"], { cwd: repoRoot, stdio: "inherit" })
   if (install.status === 0 && findPackage("vite")) return true
   printCheck({ level: "error", text: "npm install failed (see its output above)", fix: ["Fix the problem it reports, then run: npm install"] })
+  return false
+}
+
+/** dev/start/setup: download NuGet packages before the API starts, so the first launch is not a silent restore. */
+export function restoreDotnet(log) {
+  log("Restoring .NET packages. The first run downloads them; later runs only check.")
+  const restore = spawnSync("dotnet", ["restore", "FindThatBook.slnx"], {
+    cwd: repoRoot,
+    stdio: "inherit",
+    windowsHide: true,
+    env: dotnetEnv(),
+  })
+  if (restore.status === 0) return true
+  if (restore.error?.code === "ENOENT") {
+    printCheck({ level: "error", text: ".NET SDK not found (no dotnet command on PATH)", fix: DOTNET_FIX })
+    return false
+  }
+  printCheck({
+    level: "error",
+    text: restore.error ? `Could not run dotnet restore: ${restore.error.message}` : "dotnet restore failed (see its output above)",
+    fix: ["Fix the problem it reports, then run npm run dev again."],
+  })
   return false
 }
 
@@ -345,7 +526,14 @@ export function describeAi(health, adminUrl) {
 
 export function dotnetEnv() {
   // No first-run banner; no MSBuild worker nodes left running after the build (they would outlive Ctrl+C).
-  return { ...process.env, DOTNET_NOLOGO: "1", MSBUILDDISABLENODEREUSE: process.env.MSBUILDDISABLENODEREUSE ?? "1" }
+  const env = { ...process.env, DOTNET_NOLOGO: "1", MSBUILDDISABLENODEREUSE: process.env.MSBUILDDISABLENODEREUSE ?? "1" }
+  if (!preferredDotnetDir) return env
+  // Prefer the per-user SDK over an older machine-wide dotnet. MULTILEVEL_LOOKUP=0 stops the host falling back to it.
+  const key = Object.keys(env).find((name) => name.toLowerCase() === "path") ?? "PATH"
+  env[key] = `${preferredDotnetDir}${path.delimiter}${env[key] ?? ""}`
+  env.DOTNET_ROOT = preferredDotnetDir
+  env.DOTNET_MULTILEVEL_LOOKUP = "0"
+  return env
 }
 
 export function dotnetRunArgs({ port, configuration }) {
@@ -549,7 +737,7 @@ export async function waitForHealth(runner, proc, baseUrl, timeoutMs = 300_000) 
       return null
     }
     if (elapsed > nextNote) {
-      runner.log(`Still waiting for the API (${Math.round(elapsed / 1000)}s). The first run restores NuGet packages and builds.`)
+      runner.log(`Still waiting for the API (${Math.round(elapsed / 1000)}s). The first run builds it.`)
       nextNote += 20_000
     }
     await sleep(500)

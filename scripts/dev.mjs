@@ -2,7 +2,6 @@
 // Ports: --api-port / --web-port, or FTB_API_PORT / FTB_WEB_PORT. An API already answering on the API port is reused.
 // FTB_API_URL points the web app at an API running somewhere else (then no dotnet process is started).
 import {
-  checkDotnet,
   checkEnvFile,
   checkNode,
   colourEnabled,
@@ -11,6 +10,8 @@ import {
   dotnetEnv,
   dotnetRunArgs,
   ensureDependencies,
+  ensureDotnet,
+  restoreDotnet,
   isPortOpen,
   packageBin,
   paint,
@@ -62,9 +63,9 @@ async function main() {
     if (await isPortOpen(apiPort)) {
       failEarly({ level: "error", text: `Port ${apiPort} is in use by another program (not this API)`, fix: portHelp("dev", "api", apiPort) })
     }
-    const dotnet = checkDotnet()
-    if (dotnet.level === "error") failEarly(dotnet)
-    runner.log(`Starting the API on ${apiUrl} (dotnet run, Development). The first run restores packages and builds; allow a minute.`)
+    if (!(await ensureDotnet(runner.log))) process.exit(1)
+    if (!restoreDotnet(runner.log)) process.exit(1)
+    runner.log(`Starting the API on ${apiUrl} (dotnet run, Development). The first run builds; allow a minute.`)
     const api = runner.start("api", "dotnet", dotnetRunArgs({ port: apiPort }), {
       env: dotnetEnv(),
       colour: paint.cyan,
