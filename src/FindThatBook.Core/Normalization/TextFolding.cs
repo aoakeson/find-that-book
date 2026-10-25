@@ -39,6 +39,20 @@ public static partial class TextFolding
         foreach (var rune in Decompose(text).EnumerateRunes())
         {
             if (IsDeleted(rune)) continue;
+
+            // Normalize non-ASCII decimal digits to ASCII (Arabic-Indic ١٩٨٤, Eastern Arabic ۱۹۸۴, Devanagari, etc.)
+            // so year detection and numeric comparisons work consistently. NFKD already handles fullwidth digits.
+            if (Rune.GetUnicodeCategory(rune) == UnicodeCategory.DecimalDigitNumber && (rune.Value < '0' || rune.Value > '9'))
+            {
+                var digitValue = (int)Rune.GetNumericValue(rune);
+                if (digitValue is >= 0 and <= 9)
+                {
+                    kept.Append((char)('0' + digitValue));
+                    marksStay = false;
+                    continue;
+                }
+            }
+
             var cat = Rune.GetUnicodeCategory(rune);
             if (cat is UnicodeCategory.NonSpacingMark or UnicodeCategory.EnclosingMark)
             {
