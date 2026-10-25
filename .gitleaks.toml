@@ -1,0 +1,10 @@
+# gitleaks configuration: the default rules, plus an allowlist for test files that use fake key-shaped strings
+# on purpose (they test that keys are redacted and never echoed). Real keys live only in the git-ignored .env.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fake key-shaped test values"
+paths = [
+  '''tests/FindThatBook\.Api\.Tests/Http/AdminTests\.cs''',
+]
