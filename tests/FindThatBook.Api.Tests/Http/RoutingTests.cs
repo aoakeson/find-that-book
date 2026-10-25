@@ -34,6 +34,26 @@ public sealed class RoutingTests(FakeSearchApi fixture) : IClassFixture<FakeSear
         if (method != "HEAD") await response.ShouldBeProblem(HttpStatusCode.MethodNotAllowed, "method_not_allowed");
     }
 
+    [Theory]
+    [InlineData("/api/books/search")]
+    [InlineData("/api/health")]
+    [InlineData("/api/suggest")]
+    public async Task SY17_OptionsOnAKnownRoute_Is204_WithAllow(string path)
+    {
+        var response = await _client.SendAsync(new HttpRequestMessage(HttpMethod.Options, path), TestContext.Current.CancellationToken);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+        response.Content.Headers.Allow.ShouldBe(["GET"]);
+    }
+
+    [Fact]
+    public async Task SY17_OptionsOnUnknownRoute_Is404()
+    {
+        var response = await _client.SendAsync(new HttpRequestMessage(HttpMethod.Options, "/api/unknown"), TestContext.Current.CancellationToken);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+    }
+
     [Fact]
     public async Task SY18_TrailingSlash_StillSearches()
     {

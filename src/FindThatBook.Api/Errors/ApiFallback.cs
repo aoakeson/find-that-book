@@ -19,6 +19,12 @@ internal static class ApiFallback
         if (allowed.Count > 0)
         {
             ctx.Response.Headers.Allow = string.Join(", ", allowed);
+
+            // OPTIONS is RFC 7231 compliant: return 204 No Content with the Allow header (SY-17).
+            // This lets clients discover available methods without CORS (we have none per SY-39).
+            if (HttpMethods.IsOptions(ctx.Request.Method))
+                return Results.NoContent();
+
             return ApiProblems.Result(ApiProblems.Create(405, ApiProblems.MethodNotAllowed, "Method not allowed",
                 $"This endpoint accepts {string.Join(", ", allowed)}."));
         }
