@@ -70,21 +70,11 @@ test.describe("background motion", () => {
       `document.querySelector(".paper").getAnimations({ subtree: true }).filter((a) => ${JSON.stringify(state ?? null)} === null || a.playState === ${JSON.stringify(state ?? null)}).length`
     )
 
-  test("runs by default, and the pause control stops it and is remembered", async ({ page }) => {
+  test("runs by default, with no pause control", async ({ page }) => {
     await page.goto("/")
     await expect(paper(page)).toHaveAttribute("data-motion", "running")
     expect(await animations(page, "running")).toBeGreaterThan(0)
-
-    const toggle = page.getByRole("button", { name: "Pause background motion" })
-    await expect(toggle).toHaveAttribute("aria-pressed", "false")
-    await toggle.click()
-    await expect(toggle).toHaveAttribute("aria-pressed", "true")
-    await expect(paper(page)).toHaveAttribute("data-motion", "paused")
-    expect(await animations(page, "running")).toBe(0)
-
-    await page.reload()
-    await expect(paper(page)).toHaveAttribute("data-motion", "paused")
-    await expect(page.getByRole("button", { name: "Pause background motion" })).toHaveAttribute("aria-pressed", "true")
+    await expect(page.getByRole("button", { name: "Pause background motion" })).toHaveCount(0)
   })
 
   test("is off, with no animations at all, when the system asks for reduced motion", async ({ page }) => {
@@ -92,6 +82,5 @@ test.describe("background motion", () => {
     await page.goto("/")
     await expect(paper(page)).toHaveAttribute("data-motion", "off")
     expect(await animations(page)).toBe(0)
-    await expect(page.getByRole("button", { name: "Pause background motion" })).toHaveCount(0)
   })
 })

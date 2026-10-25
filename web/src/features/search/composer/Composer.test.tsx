@@ -312,6 +312,8 @@ describe("search button", () => {
 
     await user.type(composer(), "tolkien hobbit{Enter}")
     await user.tab()
+    expect(screen.getByRole("button", { name: "Clear" })).toHaveFocus()
+    await user.tab()
     expect(screen.getByRole("button", { name: "Stop" })).toHaveFocus()
     await user.keyboard("{Enter}")
 
@@ -327,6 +329,7 @@ describe("search button", () => {
     await renderApp("/")
 
     await user.type(composer(), "tolkien hobbit")
+    await user.tab()
     await user.tab()
     await user.keyboard("{Enter}")
     expect(await screen.findByRole("button", { name: "Stop" })).toHaveFocus()
@@ -429,5 +432,27 @@ describe("waiting after Retry-After", () => {
     await user.keyboard("{Enter}")
     await act(() => vi.advanceTimersByTimeAsync(50))
     expect(searchCalls(api)).toBe(2)
+  })
+})
+
+describe("clear", () => {
+  it("appears once there is text, empties the field, and does not search", async () => {
+    const api = fakeApi({ "GET /api/suggest": () => json(fixtures.suggestHar()) })
+    const user = userEvent.setup()
+    await renderApp("/")
+
+    expect(screen.queryByRole("button", { name: "Clear" })).not.toBeInTheDocument()
+    await user.type(composer(), "har")
+    expect(await screen.findByRole("listbox")).toBeInTheDocument()
+    // The open suggestion list hides the rest of the page; Escape keeps the typed text and brings Clear back.
+    await user.keyboard("{Escape}")
+
+    await user.click(screen.getByRole("button", { name: "Clear" }))
+
+    expect(composer()).toHaveValue("")
+    expect(composer()).toHaveFocus()
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Clear" })).not.toBeInTheDocument()
+    expect(searchCalls(api)).toBe(0)
   })
 })

@@ -5,7 +5,6 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { SearchSessionProvider, useSearchSession } from "@/features/search/session"
 import { MotionProvider } from "@/lib/motion"
 import { AppHeader } from "./AppHeader"
-import { MotionToggle } from "./MotionToggle"
 import { PaperBackground } from "./PaperBackground"
 import { ShellContext } from "./shell-context"
 import { useRouteFocus } from "./use-route-focus"
@@ -30,10 +29,6 @@ export function RootLayout() {
               <main id="main" tabIndex={-1} className="flex min-w-0 flex-1 flex-col">
                 <Outlet />
               </main>
-              {/* In the page flow below lg: only there is the gutter beside the content wide enough for a fixed corner. */}
-              <footer className="mx-auto flex w-full max-w-5xl justify-end px-4 pb-4 sm:px-6 lg:p-0">
-                <MotionToggle className="lg:fixed lg:right-5 lg:bottom-5 lg:z-20" />
-              </footer>
             </div>
             {/* Bottom: the composer sits at the top half of the page, so toasts never cover it on phones. */}
             <Toaster position="bottom-center" mobileOffset={{ bottom: "calc(1rem + env(safe-area-inset-bottom))" }} />

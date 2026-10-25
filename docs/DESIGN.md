@@ -94,7 +94,7 @@ input. Only the programmatic route-focus targets (`#main`, `#page-heading`) supp
 - **Gutters:** 16px on phones (`px-4`), 24px from `sm` (`sm:px-6`). Header and content use the same gutter.
 - **Columns:** content `max-w-3xl` (768px) centred; the header row is wider (`max-w-5xl`) so actions sit outside the
   reading column on large screens.
-- **Layout:** header (64px) → `main#main` (flex-1) → footer (the motion control on phones). The paper background is
+- **Layout:** header (64px) → `main#main` (flex-1). The paper background is
   `position: fixed` behind everything (`z-0`); page content is `relative z-10`. One document scroll; no nested
   fixed-height scroll panes. The search page switches from the centred home layout to a compact composer-on-top layout
   once a search starts.
@@ -106,7 +106,6 @@ input. Only the programmatic route-focus targets (`#main`, `#page-heading`) supp
 | Composer | `rounded-composer` 24px | `shadow-composer` (the only soft shadow in the page) |
 | Panels: best match, result groups, notices | `rounded-panel` 16px | Border (`line`); `shadow-panel` (1px) at most on the best-match panel |
 | Controls: buttons, inputs, chips, menus | `rounded-lg` 12px (default) | None |
-| Motion control | `rounded-full` | None |
 
 Borders before shadows. Overlays (Sheet, dropdown menu, alert dialog, popups) keep their component shadow because
 they float above content; nothing else in the page gets a shadow or a gradient. The paper background is the only
@@ -127,12 +126,7 @@ Rules:
   competing with the book. Real results are never delayed for an animation.
 - **Reduced motion** (`prefers-reduced-motion: reduce`): a global kill-switch in `index.css` collapses every animation
   and transition; the paper layers get `animation: none`, parallax is not attached, the book is a still icon and the
-  shimmer is off. The motion control is hidden because there is nothing left to pause.
-- **Pause control:** a 36px round button (44px on touch) labelled **"Pause background motion"**, a toggle with
-  `aria-pressed` (the name stays constant; the icon and tooltip switch between pause and resume). Remembered in
-  `localStorage` (`ftb.motionPaused`, failure-safe). Pausing freezes the paper where it is, detaches parallax, stills
-  the page-turn book and the Trace shimmer (`html[data-motion="paused"]`). Placement: in the page footer below `lg`,
-  fixed bottom-right from `lg` (1024px) up, where the side gutter is wide enough; `scroll-padding-bottom` keeps focused elements clear of it.
+  shimmer is off.
 - **Hidden tabs:** the paper stops (`animation-play-state: paused`) and the pointer listener is removed while
   `document.visibilityState` is `hidden`.
 - Cheap by construction: no animation library, compositor-only transforms, listeners and frames cleaned up on unmount.
@@ -143,8 +137,8 @@ Rules:
   page overflow at any width: `min-w-0` on flex children, `wrap-break-word`/`break-words` on every user- or API-supplied
   string (titles, authors, queries, ids), `truncate` only where the full text is available elsewhere.
 - **Breakpoints actually used:** `sm` (640px): header action labels appear, gutters grow to 24px, the Search button
-  shows its word; `md` (768px): the Turn on AI panel puts its two ways side by side; `lg` (1024px): the motion control
-  becomes fixed in the corner. Layout otherwise flows because the column caps at 768px. Short viewports
+  shows its word; `md` (768px): the Turn on AI panel puts its two ways side by side. Layout otherwise flows because
+  the column caps at 768px. Short viewports
   (`max-height: 32rem`: phone landscape, 200% zoom) get the quiet paper background.
 - **Header at 320px:** mark + name (150px) and three 44px icon actions fit with 6px to spare; the name truncates
   rather than wrapping or overflowing if a font fallback is wider.
@@ -162,8 +156,8 @@ at call sites. One primitive family, no second state or form framework.
 
 | Need | Component | Notes |
 |---|---|---|
-| Composer | **Base UI Autocomplete** (`ui/autocomplete.tsx`) in an Input Group, with Button | Autocomplete, not Combobox: Combobox selects a value from a list, Autocomplete keeps free text (any query is valid; suggestions only optionally complete it). Same ARIA combobox keyboard model: Up/Down, Enter accepts an active suggestion, Escape dismisses. Accessible name "Describe the book". |
-| Example queries | Button (outline chips) in a group labelled "Examples" | Fill the composer and focus it; the user starts the search. Never fake results. |
+| Composer | **Base UI Autocomplete** (`ui/autocomplete.tsx`) in an Input Group, with Button | Autocomplete, not Combobox: Combobox selects a value from a list, Autocomplete keeps free text (any query is valid; suggestions only optionally complete it). Same ARIA combobox keyboard model: Up/Down, Enter accepts an active suggestion, Escape dismisses. Accessible name "Describe the book". **Clear** (an X) appears once the field has text, empties it, and does not search. |
+| Example queries | Button (outline chips) in a group labelled "Examples", plus a collapsed "More things you can search for" link | The three brief examples stay visible. The link opens grouped chips for the other kinds of search; chips marked "Needs AI" need a configured provider. Clicking any chip fills the composer and focuses it; the user starts the search. Never fake results. |
 | Search activity | Trace + TraceCollapsible | Collapsed one-line summary with the page-turn book; only stages the backend reports. |
 | Results | Semantic lists (`ul`/`ol` + `li`, h3 titles) in `rounded-panel` surfaces, AspectRatio for covers, Badge sparingly | Cover box keeps its size whether the image loads or not. Topic requests show their matched Open Library subjects as quiet mist chips. |
 | History | Sheet (right), Item list, DropdownMenu for per-entry actions, AlertDialog to clear all | Opened by the header's History action. |
@@ -179,7 +173,7 @@ at call sites. One primitive family, no second state or form framework.
 
 | State | What the user sees |
 |---|---|
-| First visit / home | h1 "Which book are you thinking of?", the composer, three examples. No fake history or results. |
+| First visit / home | h1 "Which book are you thinking of?", the composer, three examples, and a collapsed "More things you can search for" list. No fake history or results. |
 | Suggestions failing | Nothing blocks: the list just doesn't appear; Search still works. |
 | Invalid query (400) | Inline field error under the composer (`aria-invalid` + `aria-describedby`), text kept, previous answer restored. |
 | Searching | Compact composer with **Stop**, the activity line with the turning book, "Searching…" and an elapsed counter (it becomes the "Search activity" summary when the answer arrives), result skeleton of stable height. |
@@ -196,7 +190,7 @@ at call sites. One primitive family, no second state or form framework.
 | History empty / unavailable / full | Empty state in the sheet; warning text when this browser can't keep history; search still works. |
 | Admin failure | Error next to the provider or field; never a fake success. |
 | Unknown route (404) | Header, paper and type as everywhere; h1 "Page not found", one sentence, **Back to search**. Title "Page not found – Find That Book". |
-| Unexpected render error | h1 "Something went wrong", "This page stopped working. Try again, or go back to search.", **Try again** and **Back to search**, and a short reference (`FTB-XXXXXXXX`) that is also `console.error`ed with the error. Never the error message or stack. If the layout itself failed, a minimal shell (mark, paper, motion control) is drawn instead. |
+| Unexpected render error | h1 "Something went wrong", "This page stopped working. Try again, or go back to search.", **Try again** and **Back to search**, and a short reference (`FTB-XXXXXXXX`) that is also `console.error`ed with the error. Never the error message or stack. If the layout itself failed, a minimal shell (mark and paper) is drawn instead. |
 
 ## 10. Copy
 
@@ -206,13 +200,13 @@ at call sites. One primitive family, no second state or form framework.
 - Show the server's words only where the contract says they are user-facing (explanations, field hints); describe
   failures from `kind`/`code`/`status`, never from raw server messages.
 - **Fixed vocabulary** (use exactly): Search · Stop (while running) · Search stopped · Search again · Try again ·
-  History · New search · Admin · Back to search · Search activity · Open Library · Pause background motion.
+  History · New search · Admin · Back to search · Search activity · Open Library · Clear.
 - Document titles: "Find That Book" on the empty home page, "“<query>” – Find That Book" for a search,
   "<Page> – Find That Book" elsewhere (`useDocumentTitle`).
 
 ## 11. Accessibility checklist
 
-- [ ] Landmarks: skip link "Skip to main content" first in tab order, `header`, `main#main`, `footer`; one h1 per page,
+- [ ] Landmarks: skip link "Skip to main content" first in tab order, `header`, `main#main`; one h1 per page,
       no skipped heading levels.
 - [ ] Route changes between pages move focus to `#page-heading` (fallback `#main`) without scrolling; search-param
       changes and search progress never move focus. If the new page already put focus in main (e.g. the composer
@@ -224,5 +218,5 @@ at call sites. One primitive family, no second state or form framework.
 - [ ] Text ≥ 4.5:1 and control boundaries/focus ≥ 3:1 on their real backgrounds (tables above).
 - [ ] State is never colour alone.
 - [ ] 44px targets on touch; no hover-only content; works at 320px and 200% zoom without horizontal scroll.
-- [ ] Reduced motion honoured; decorative motion pausable; nothing flashes.
+- [ ] Reduced motion honoured; nothing flashes.
 - [ ] API text rendered as text (no `dangerouslySetInnerHTML`); external URLs pass through `safeExternalUrl`.
