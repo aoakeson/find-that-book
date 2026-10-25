@@ -92,7 +92,19 @@ internal sealed class OpenLibraryCatalog(HttpClient http, HybridCache cache, IOp
         using var linked = CancellationTokenSource.CreateLinkedTokenSource(ct, budget.Token);
         try
         {
-            var page = await SendAsync(fetch.Url, call, linked.Token);
+            SearchPage page;
+            try
+            {
+                page = await SendAsync(fetch.Url, call, linked.Token);
+            }
+            catch (TimeoutRejectedException) when (!linked.IsCancellationRequested)
+            {
+                call.RetriesAllowed = false;
+                var lighter = await SendAsync(OpenLibraryUrls.Search(fetch.Query, slowEmptyRequery: true)!, call, linked.Token);
+                if (lighter.Works.Count == 0)
+                    throw new CatalogTimeoutException("Open Library timed out and the lighter re-query found no results.", call.Attempts);
+                return lighter with { SlowEmptyRetried = true };
+            }
             if (page.Works.Count > 0 || call.LastAnsweredAttempt <= _options.SlowEmptyThreshold) return page;
 
             // IN-064/DA-064: a slow 200 with 0 hits is usually Solr's time-allowed cut-off (`king` returned 0 after

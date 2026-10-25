@@ -282,16 +282,18 @@ public sealed class SearchServiceTests
     }
 
     [Fact]
-    public async Task Search_EmptyPoolAfterLaterOutage_IsAnOutageNotNone()
+    public async Task Search_EmptyPoolAfterLaterOutage_ReturnsDegradedNone()
     {
-        // Call 1 honestly finds nothing; every later call fails. Claiming "no such book" would be wrong.
+        // Call 1 completed and found nothing; a failed fallback cannot erase that completed answer.
         var hypothesis = new QueryHypothesis("Adventures of Huckleberry Finn", "Mark Twain", [], [], null, null);
         var catalog = new FakeCatalog()
             .On(q => q.Q == "mark huckleberry")
             .Throw(_ => true, new CatalogUnavailableException("503 after retries", 3));
 
-        await Should.ThrowAsync<CatalogUnavailableException>(
-            () => Service(catalog, new FakeInterpreter(hypothesis)).SearchAsync("mark huckleberry", null, Ct));
+        var outcome = await Service(catalog, new FakeInterpreter(hypothesis)).SearchAsync("mark huckleberry", null, Ct);
+        outcome.Status.ShouldBe(MatchStatus.None);
+        outcome.Items.ShouldBeEmpty();
+        outcome.Degraded.ShouldContain(DegradedReason.CatalogPartial);
     }
 
     [Fact]

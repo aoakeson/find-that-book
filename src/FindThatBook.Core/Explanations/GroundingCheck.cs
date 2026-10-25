@@ -133,15 +133,33 @@ public static partial class GroundingCheck
 
     private static void CheckVocabulary(List<Token> tokens, FactModel model, List<string> problems)
     {
-        foreach (var t in tokens.Where(t => t.Kind == TokenKind.Word))
+        for (var i = 0; i < tokens.Count; i++)
         {
+            var t = tokens[i];
+            if (t.Kind != TokenKind.Word) continue;
             var word = StripPossessive(t.Folded);
+            if (model.MatchedWords.Contains(word) && !MatchedTermClaim(tokens, i))
+            {
+                problems.Add($"unanchored_matched_term:{word}");
+                continue;
+            }
             if (word.Length == 0 || Allowed(word, model)) continue;
             var parts = word.Split(['\'', '’', '-', '‐', '‑'], StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length > 1 && parts.All(p => Allowed(p, model))) continue;
             var role = parts.FirstOrDefault(p => RoleLexicon.CategoryOfWord(p) is not null && !Allowed(p, model));
             problems.Add(role is not null ? $"role_not_in_facts:{role}" : $"unknown_word:{word}");
         }
+    }
+
+    private static bool MatchedTermClaim(List<Token> tokens, int index)
+    {
+        for (var i = index - 1; i >= Math.Max(0, index - 16); i--)
+        {
+            if (tokens[i].Kind == TokenKind.Period || tokens[i] is { Kind: TokenKind.Boundary, Folded: ";" or ":" }) break;
+            if (tokens[i] is { Kind: TokenKind.Word, Folded: "this" or "it" }) break;
+            if (tokens[i].Kind == TokenKind.Word && tokens[i].Folded is "match" or "matches" or "matched" or "matching") return true;
+        }
+        return false;
     }
 
     private static bool Allowed(string word, FactModel model)
@@ -171,6 +189,13 @@ public static partial class GroundingCheck
                     : before.Overlaps(["published", "publication", "year", "date"]) || after.Overlaps(["year", "years"])
                         ? model.Facts.FirstPublishYear?.ToString(System.Globalization.CultureInfo.InvariantCulture)
                         : null;
+            if (expected is null && number.Length == 4 && int.TryParse(number, out var yearNumber)
+                && yearNumber is >= 1000 and <= 2099 && model.Facts.FirstPublishYear != yearNumber)
+            {
+                if (model.MatchedWords.Contains(number) && MatchedTermClaim(tokens, i)) continue;
+                problems.Add($"number_not_in_facts:{t.Text}");
+                continue;
+            }
             if (expected is not null ? number != expected :
                 (before.Overlaps(["published", "publication", "year", "date"]) || after.Overlaps(["year", "years"])) || !model.Numbers.Contains(number))
                 problems.Add($"number_not_in_facts:{t.Text}");
@@ -186,7 +211,7 @@ public static partial class GroundingCheck
     [
         "match", "matches", "matched", "matching", "exact", "exactly", "near", "nearly", "close", "closely", "partial", "partially",
         "similar", "interpreted", "inferred", "original", "originally", "character", "characters", "title", "titles", "weak",
-        "loose", "loosely", "author-only", "contributor-only", "title-only", "topic", "subject", "subjects", "suggested",
+        "loose", "loosely", "author-only", "contributor-only", "title-only", "topic", "subject", "subjects", "suggested", "book", "books",
     ];
     private static readonly string[] TopicWords = ["topic", "subject", "subjects", "suggested"];
 

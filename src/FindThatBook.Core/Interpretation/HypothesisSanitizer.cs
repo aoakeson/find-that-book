@@ -267,7 +267,8 @@ public static partial class HypothesisSanitizer
         a = EtAlPattern().Replace(a, "");
         a = CoAuthorPattern().Split(a)[0];
         var commaParts = a.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        if (commaParts.Length == 2 && WordCount(commaParts[0]) <= 2 && FullWords(commaParts[1]) <= 1)
+        if (commaParts.Length == 2 && WordCount(commaParts[0]) <= 2
+            && (WordCount(commaParts[0]) == 1 || FullWords(commaParts[1]) <= 1))
             a = $"{commaParts[1]} {commaParts[0]}"; // "Surname, Given" / "Le Guin, Ursula K."
         else if (commaParts.Length >= 2)
             a = commaParts[0]; // "Neil Gaiman, Terry Pratchett"

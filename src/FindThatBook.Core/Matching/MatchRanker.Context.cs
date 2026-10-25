@@ -79,16 +79,18 @@ public static partial class MatchRanker
         /// <summary>A volume number the query asks for ("volume 1"), as digits.</summary>
         public string? TypedVolumeNumber { get; }
 
-        /// <summary>Year for the ±1 bonus: the extracted year, else a soft year token (IN-044) the title does not contain.</summary>
-        public int? YearFor(Candidate work)
+        /// <summary>Whether the extracted year or any soft year token matches this work.</summary>
+        public bool YearMatches(Candidate work)
         {
-            if (Query.Year is { } year) return year;
-            if (!Options.SoftTokens) return null;
+            if (work.Year is not { } published) return false;
+            if (Query.Year is { } year) return Math.Abs(published - year) <= 1;
+            if (!Options.SoftTokens) return false;
             foreach (var t in Search)
                 if (SoftTokens.Contains(t) && !work.Full.Contains(t) && t.Length == 4 && t.All(char.IsAsciiDigit)
-                    && int.TryParse(t, NumberStyles.None, CultureInfo.InvariantCulture, out var soft) && soft is >= 1000 and <= 2099)
-                    return soft;
-            return null;
+                    && int.TryParse(t, NumberStyles.None, CultureInfo.InvariantCulture, out var soft) && soft is >= 1000 and <= 2099
+                    && Math.Abs(published - soft) <= 1)
+                    return true;
+            return false;
         }
 
         private HashSet<string> FindDominantAuthorTokens(List<Candidate> works, long totalEditions)

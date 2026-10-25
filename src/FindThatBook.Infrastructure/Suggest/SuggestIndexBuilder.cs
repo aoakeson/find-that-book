@@ -109,7 +109,24 @@ public static partial class SuggestIndexBuilder
     /// listings with hundreds of ISBN "editions" that nobody looks up by title ("Mileage Log Book" outranked Macbeth).
     /// Older titles with these words are real books (The Diary of a Nobody, Diary of a Wimpy Kid 2007, The Notebook).
     /// </summary>
-    internal static bool IsLowContent(SuggestRow row) => row.FirstPublishYear >= 2010 && LowContentTitle().IsMatch(row.Title);
+    internal static bool IsLowContent(SuggestRow row)
+    {
+        if (row.FirstPublishYear is not { } year || year < 2010) return false;
+        if (LowContentTitle().IsMatch(row.Title)) return true;
+        var words = SuggestText.TitleForms(row.Title).FirstOrDefault();
+        var suspectAuthor = row.Author is { } author &&
+            (LowContentTitle().IsMatch(author) || RepeatedAuthorWords().IsMatch(author) ||
+             (words is { Length: 1 } && AuthorEchoesSingleWordTitle(author, words[0])));
+        if (!suspectAuthor) return false;
+        return words is { Length: 1 } || LowContentTitle().IsMatch(row.Author!);
+    }
+
+    private static bool AuthorEchoesSingleWordTitle(string author, string title) =>
+        !author.Contains(' ') && author.Length > title.Length &&
+        author.EndsWith(title, StringComparison.OrdinalIgnoreCase);
+
+    [GeneratedRegex(@"\b(.+?\b)\s+\1\b", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex RepeatedAuthorWords();
 
     [GeneratedRegex(@"\b(notebooks?|journals?|diary|diaries|planners?|agenda|log ?books?|colou?ring|sudoku|word ?search|crosswords?|mazes|activity ?books?|sketch ?books?|composition|cuaderno|libreta|carnet|cahier|notizbuch|malbuch|maltagebuch|password|lined|ruled|blank|tracker|calendar|organizer)\b",
         RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]

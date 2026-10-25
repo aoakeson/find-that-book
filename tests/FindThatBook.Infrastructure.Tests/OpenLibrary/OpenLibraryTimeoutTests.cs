@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using FindThatBook.Core.Ports;
+using FindThatBook.Infrastructure.OpenLibrary;
 using H = FindThatBook.Infrastructure.Tests.OpenLibrary.OpenLibraryHarness;
 
 namespace FindThatBook.Infrastructure.Tests.OpenLibrary;
@@ -31,7 +32,7 @@ public sealed class OpenLibraryTimeoutTests
     }
 
     [Fact]
-    public async Task Attempt_timeout_then_200_is_retried()
+    public async Task Attempt_timeout_sends_one_lighter_requery()
     {
         // The first reply hangs 5x past the 1 s attempt timeout; every later one is instant.
         await using var ol = H.Create(new() { ["AttemptTimeout"] = "00:00:01", ["SlowEmptyThreshold"] = "00:00:00.500" });
@@ -39,8 +40,10 @@ public sealed class OpenLibraryTimeoutTests
 
         var response = await ol.Catalog.SearchAsync(Dune, Ct);
 
-        response.Works.ShouldHaveSingleItem().WorkId.ShouldBe("OL1W"); // the hung attempt was abandoned, a retry answered
-        response.Stats.Attempts.ShouldBeInRange(2, 3);                 // 3 only if a loaded machine also slowed the retry
+        response.Works.ShouldHaveSingleItem().WorkId.ShouldBe("OL1W");
+        response.Stats.Attempts.ShouldBe(2);
+        response.Stats.SlowEmptyRetried.ShouldBeTrue();
+        ol.Requests.ShouldContain(request => request["limit"] == "10" && request["fields"] == OpenLibraryUrls.BaseFields);
     }
 
     [Fact]
@@ -55,7 +58,7 @@ public sealed class OpenLibraryTimeoutTests
 
         var ex = await Should.ThrowAsync<CatalogTimeoutException>(() => ol.Catalog.SearchAsync(Dune, Ct));
 
-        ex.Attempts.ShouldBe(3);
+        ex.Attempts.ShouldBe(2);
     }
 
     [Fact]

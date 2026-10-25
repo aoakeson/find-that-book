@@ -2,6 +2,7 @@ using FindThatBook.Infrastructure.Health;
 using Microsoft.Extensions.Http.Resilience;
 using Polly;
 using Polly.CircuitBreaker;
+using Polly.Timeout;
 
 namespace FindThatBook.Infrastructure.OpenLibrary;
 
@@ -67,6 +68,8 @@ internal static class OpenLibraryResilience
 
         var call = OpenLibraryCall.Of(context.GetRequestMessage());
         if (call is { RetriesAllowed: false }) return false;
+        // A timed-out heavy search has no usable hits; FetchAsync will try one lighter query.
+        if (outcome.Exception is TimeoutRejectedException) return false;
 
         // SY-03: sleeping through `Retry-After: 120` would end as a timeout after the whole budget. Wait only when
         // the wait is short and still fits the call's budget; otherwise stop now and report 503 with that Retry-After.

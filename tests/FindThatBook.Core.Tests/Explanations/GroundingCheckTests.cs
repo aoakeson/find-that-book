@@ -115,6 +115,7 @@ public class GroundingCheckTests
     {
         // Hallucinated facts.
         { "hobbit_a_plain", "Exact title match; J.R.R. Tolkien is the primary author; first published 1936 per Open Library.", "number_not_in_facts:1936" },
+        { "clarke_a", "Exact title match for 2001: A Space Odyssey; Arthur C. Clarke is the primary author; first published in 2001.", "number_not_in_facts:2001" },
         { "heller_c", "Near title match; Joseph Heller is the primary author; first published 1961.", "number_not_in_facts:1961" },
         // DA-061: no year unless the query typed it and it matched, even Open Library's own year.
         { "hobbit_a_no_year", "Exact title match; J.R.R. Tolkien is the primary author; first published 1937 per Open Library.", "number_not_in_facts:1937" },
@@ -136,6 +137,7 @@ public class GroundingCheckTests
         { "hobbit_b", "Exact title match; J.R.R. Tolkien is the primary author with Charles Dixon.", "matched_contributor_role_missing" },
         { "hobbit_b", "Exact title match; Charles Dixon is not the primary author; Tolkien is.", "negated_claim" },
         { "rowling_e", "Character match; Hermione Granger is the primary author.", "character_called_author" },
+        { "tkam_inferred_a", "Interpreted title match; Harper Lee is the primary author; Atticus Finch is a listed character; Finch is the author.", "author_claim_without_author" },
         { "rowling_e", "Character match on Hermione Granger; J. K. Rowling is the primary author; Hermione Granger is listed as illustrator.", "character_given_role" },
         { "hobbit_a_plain", "Exact title match; first published 1937 per Open Library.", "primary_author_missing" },
         // AI-29: recorded injected claims, AI-31 markup, other injections.
@@ -182,6 +184,7 @@ public class GroundingCheckTests
         { "hobbit_a_plain", "No exact title match; Tolkien is the primary author.", "negated_match" },
         { "hobbit_a_plain", "Not an exact title match; J.R.R. Tolkien is the primary author.", "negated_match" },
         { "hobbit_a_plain", "This is not a title match; J.R.R. Tolkien is the primary author.", "negated_match" },
+        { "hobbit_a_plain", "Exact title match; this is not the book; J.R.R. Tolkien is the primary author.", "negated_match" },
         { "hobbit_a_plain", "Exact title match not found; J.R.R. Tolkien is the primary author.", "negated_match" },
         { "hobbit_a_plain", "No exact title or author match; J.R.R. Tolkien is the primary author.", "negated_match" },
         { "hobbit_a_plain", "Isn't an exact title match; J.R.R. Tolkien is the primary author.", "unknown_word:isn't" },

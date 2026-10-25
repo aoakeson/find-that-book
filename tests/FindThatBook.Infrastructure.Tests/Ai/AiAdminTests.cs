@@ -155,6 +155,19 @@ public sealed class AiAdminTests
     }
 
     [Fact]
+    public async Task Auto_skips_a_disabled_provider_until_its_key_is_saved_again()
+    {
+        await using var host = new AiTestHost(FakeChatClient.Json(Good), new() { ["AI:Provider"] = "auto" });
+        var target = host.Settings.Target("gemini")!;
+        host.Get<ProviderHealth>().Disable(target, "unauthorized");
+        host.Settings.ActiveProvider.ShouldBe("anthropic");
+
+        host.Settings.SetKey("gemini", AiTestHost.GeminiKey);
+        host.Settings.ActiveProvider.ShouldBe("gemini");
+        host.Get<ProviderHealth>().DisabledReason(host.Settings.Target("gemini")!).ShouldBeNull();
+    }
+
+    [Fact]
     public async Task Admin_can_switch_to_an_explicit_provider_and_back_to_auto()
     {
         await using var host = new AiTestHost(FakeChatClient.Json(Good), new() { ["AI:Provider"] = "auto" });

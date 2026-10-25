@@ -13,9 +13,9 @@ public sealed class EmbeddedSuggestIndexTests
     static SuggestIndex Index => SuggestIndex.Embedded;
 
     [Fact]
-    public void Embedded_index_holds_the_top_50k_works()
+    public void Embedded_index_holds_the_filtered_top_50k_snapshot()
     {
-        Index.Count.ShouldBe(50_000);
+        Index.Count.ShouldBe(49_837);
         Index.Version.ShouldBe("1-2026-09-30");
     }
 
@@ -37,11 +37,20 @@ public sealed class EmbeddedSuggestIndexTests
     [InlineData("lord of the r", "OL27448W")]
     [InlineData("austen", "OL66554W")]                                // her novel (author word) before books titled "Jane Austen…"
     [InlineData("it", "OL81613W")]                                    // exact title "It" before It Can't Happen Here
+    [InlineData("j.r.r. tolkien", "OL27482W")]                       // typed initials match the stored author key
     [InlineData("s", "OL455305W")]                                    // one letter: by editions (The Scarlet Letter), not the "S" notebooks
     [InlineData("pride & prej", "OL66554W")]
     [InlineData("harry potter and the philosopher’s", "OL82563W")]    // curly apostrophe
     public void Known_prefixes_find_the_canonical_work_first(string prefix, string workId) =>
         Index.Lookup(prefix, SuggestLimits.DefaultLimit)[0].WorkId.ShouldBe(workId);
+
+    [Fact]
+    public void Cat_reaches_the_cat_in_the_hat_without_journal_stubs()
+    {
+        var matches = Index.Lookup("cat", SuggestLimits.DefaultLimit);
+        matches.ShouldContain(s => s.WorkId == "OL1898309W");
+        matches.ShouldNotContain(s => s.Author != null && s.Author.Contains("Journal", StringComparison.OrdinalIgnoreCase));
+    }
 
     [Fact]
     public void Whole_word_finds_harry_potter_before_potterism()
@@ -68,7 +77,7 @@ public sealed class EmbeddedSuggestIndexTests
     public void Rows_are_unique_ranked_and_clean()
     {
         var rows = ReadRows();
-        rows.Count.ShouldBe(50_000);
+        rows.Count.ShouldBe(49_837);
         rows.Select(r => r.WorkId).Distinct().Count().ShouldBe(rows.Count);
         rows.ShouldAllBe(r => Regex.IsMatch(r.WorkId, @"^OL\d+W$"));
         rows.Select(r => SuggestText.DedupeKey(r.Title, r.Author)).Distinct().Count().ShouldBe(rows.Count);

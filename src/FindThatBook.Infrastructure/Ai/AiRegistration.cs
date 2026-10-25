@@ -38,6 +38,7 @@ public static class AiRegistration
         services.AddOptions<JudgeOptions>().Bind(configuration.GetSection(JudgeOptions.Section)).ValidateOnStart();
         services.AddSingleton<IValidateOptions<JudgeOptions>, JudgeOptionsValidator>();
         services.TryAddSingleton(configuration);
+        services.TryAddSingleton<ProviderHealth>();
         services.AddSingleton<AiSettingsStore>();
         return services;
     }

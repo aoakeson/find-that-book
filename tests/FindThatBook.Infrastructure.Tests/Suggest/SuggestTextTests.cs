@@ -18,6 +18,8 @@ public sealed class SuggestTextTests
     [InlineData("a", "a")]                                                 // a lone article is the typing state, kept
     [InlineData("三体", "三体")]                                           // DE-07 CJK kept
     [InlineData("Анна Карен", "анна карен")]                               // DE-07 Cyrillic kept, lowercased
+    [InlineData("J.R.R. Tolkien", "jrr tolkien")]
+    [InlineData("j.k. rowling", "jk rowling")]
     [InlineData("?!? ###", "")]                                            // nothing searchable
     public void PrefixKey_folds_like_search(string prefix, string expected) =>
         SuggestText.PrefixKey(prefix).ShouldBe(expected);

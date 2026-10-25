@@ -202,14 +202,20 @@ export function SearchSessionProvider({ children }: { children: ReactNode }) {
             const apiError = error instanceof ApiError ? error : new ApiError("unexpected", String(error))
             if (apiError.kind === "aborted") return
             if (apiError.status === 400 && apiError.code !== null && FIELD_ERROR_CODES.has(apiError.code)) {
-              if (draftVersion.current === run.draftVersion)
+              if (draftVersion.current === run.draftVersion) {
                 setFieldError(
                   apiError.fieldErrors("Q")[0] ??
                     apiError.problem?.hint ??
                     apiError.problem?.detail ??
                     "Check the search text and try again."
                 )
-              setView(run.previous)
+                unsyncedEntry.current = null
+                setView({ kind: "home" })
+                if (router.state.location.pathname === "/" && router.state.location.search.entry)
+                  void router.navigate({ to: "/", search: { entry: undefined }, replace: true })
+              } else {
+                setView(run.previous)
+              }
               return
             }
             const retryAt = apiError.retryAfterSeconds ? Date.now() + apiError.retryAfterSeconds * 1000 : null

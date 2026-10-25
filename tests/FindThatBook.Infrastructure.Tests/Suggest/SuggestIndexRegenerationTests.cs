@@ -34,6 +34,24 @@ public sealed class SuggestIndexRegenerationTests(ITestOutputHelper output)
         Report(SuggestIndexBuilder.BuildFromCandidates(candidates!, OutputPath(), dumpDate!, BuiltOn()));
     }
 
+    /// <summary>
+    /// Applies a new cleanup rule to the committed top-50k snapshot when the source dump/candidates are unavailable.
+    /// This can only remove rows; a full dump regeneration is needed to backfill to 50,000.
+    /// </summary>
+    [Fact(Explicit = true)]
+    public void Regenerate_filter_from_current_index()
+    {
+        var path = OutputPath();
+        SuggestIndexFile source;
+        using (var input = File.OpenRead(path)) source = SuggestIndexFile.Read(input);
+        var filtered = SuggestIndexBuilder.Build(source.Works, source.DumpDate,
+            DateOnly.Parse(source.Built, System.Globalization.CultureInfo.InvariantCulture));
+        var temp = path + ".tmp";
+        using (var outputFile = File.Create(temp)) filtered.File.Write(outputFile);
+        File.Move(temp, path, overwrite: true);
+        output.WriteLine($"Filtered {source.Works.Count:N0} to {filtered.File.Works.Count:N0}; removed {filtered.LowContent:N0} low-content rows.");
+    }
+
     void Report(SuggestBuildReport r)
     {
         output.WriteLine($"{r.OutputPath}: {r.Count:N0} works, {r.Bytes:N0} bytes; from {r.Candidates:N0} candidates " +

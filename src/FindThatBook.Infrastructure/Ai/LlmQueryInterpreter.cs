@@ -61,7 +61,7 @@ public sealed record InterpretOutput(
         {
             Intent = string.Equals(Intent?.Trim(), "topic", StringComparison.OrdinalIgnoreCase) ? QueryIntent.Topic : QueryIntent.Book,
             Subjects = Subjects ?? [],
-            Suggestions = [.. (Suggestions ?? []).Select(s => new BookSuggestion(s.Title ?? "", s.Author))],
+            Suggestions = [.. (Suggestions ?? []).OfType<SuggestionOutput>().Select(s => new BookSuggestion(s.Title ?? "", s.Author))],
         };
 }
 

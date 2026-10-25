@@ -97,6 +97,7 @@ public static partial class MatchRanker
             var backed = topicMode ? members.Where(HasTopicEvidence).ToList() : [];
             var representative = Candidate.MostEdited(backed.Count > 0 ? backed : members);
             if (backed.Count > 0) CarryTopicEvidence(representative, backed);
+            else if (options.BestDuplicateScore) representative.Score = members.Max(m => m.Score);
             if (representative == leader) continue;
             if (options.SubtitleWorks && representative.Tier != leader.Tier)
             {
@@ -159,7 +160,7 @@ public static partial class MatchRanker
             var exactWork = ranked[j];
             if (exactWork.Tier is not (MatchTier.A or MatchTier.B) || !exactWork.Exact) continue;
             var target = j;
-            while (target > 0 && ranked[target - 1] is { Tier: MatchTier.E, Exact: false, TitleScore: > 0 } partial
+            while (target > 0 && ranked[target - 1] is { Tier: MatchTier.E, Exact: false } partial
                    && partial.CharacterCoverage < 0.5
                    && (!partial.SharesAuthorWith(exactWork) || partial.TitlePrecision < 1.0)
                    && exactWork.Editions * Weights.TinyFactor >= partial.Editions)

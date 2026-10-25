@@ -377,7 +377,7 @@ internal static partial class RequestPhrases
 
     private static FrozenSet<string> Set(params string[] phrases) => phrases.ToFrozenSet();
 
-    [GeneratedRegex(@"[.!?;:]+(?=\s|$)|\s[-–—]+\s|[\r\n]+")]
+    [GeneratedRegex(@"(?<!\b\p{L})\.(?=\s|$)|[!?;:]+(?=\s|$)|\s[-–—]+\s|[\r\n]+")]
     private static partial Regex SentenceBreak();
 
     [GeneratedRegex(@",(?=\s)")]
