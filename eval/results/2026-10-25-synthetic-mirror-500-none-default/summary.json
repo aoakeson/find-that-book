@@ -1,0 +1,333 @@
+{
+  "label": "synthetic-mirror-500-none-default",
+  "command": "dotnet run --project tools/FindThatBook.Eval -- run --set synthetic --catalog mirror --limit 500 --provider none --ranker default --concurrency 6 --quiet --label synthetic-mirror-500-none-default --config OpenLibrary:AttemptTimeout=00:01:00 --config OpenLibrary:TotalTimeout=00:02:00 --config OpenLibrary:SlowEmptyThreshold=00:00:55 --config OpenLibrary:BreakerSamplingDuration=00:02:00 --config OpenLibrary:BreakerFailureRatio=1 --config OpenLibrary:BreakerMinimumThroughput=100000 --config OpenLibrary:MaxRetries=1 --config Search:RequestDeadline=00:04:00",
+  "started": "2026-10-25T02:10:05.7972500-06:00",
+  "wall_seconds": 321.6,
+  "dataset": {
+    "name": "synthetic mirror queries",
+    "version": 1,
+    "path": "eval/datasets/synthetic-mirror.v1.jsonl",
+    "sha256": "4e28a8b5b31e3d2b",
+    "held_out": false,
+    "tuning": "never used for tuning (generated for this build); still machine noise over well-known works, so it measures the cleaner and the retrieval ladder, not headline quality",
+    "cases": 500
+  },
+  "code_fingerprint": "sha256:a70a9a21182a7288 (149 files)",
+  "eval_fingerprint": "sha256:6408f042696f29ac (31 files)",
+  "binary_fingerprint": "sha256:23d8df33d6e24992 (2 files)",
+  "catalog": "mirror",
+  "provider": "none",
+  "model": null,
+  "observed_models": [],
+  "judge": false,
+  "hypotheses": null,
+  "hypotheses_recorded_on": null,
+  "explain": "llm",
+  "ranker": "default",
+  "catalog_cache": "eval/results/_catalog-cache/raw/mirror",
+  "label_note": "synthetic, local mirror (bm25, OR fallback), not Open Library's ranking",
+  "held_out": false,
+  "bypass_caches": false,
+  "stopped": null,
+  "counts": {
+    "cases": 500,
+    "run": 500,
+    "skipped": 0,
+    "rejected": 0,
+    "errors": 0,
+    "replay_miss_rows": 0,
+    "in_sample": 0
+  },
+  "ops": {
+    "searched": 500,
+    "latency_p50_ms": 619,
+    "latency_p95_ms": 13846,
+    "ol_calls_per_query": 1.694,
+    "ol_attempts_per_query": 1.472,
+    "paid_llm_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_per_1k_usd": null,
+    "degraded_rows": 500,
+    "degraded_by_settings_rows": 500,
+    "provider_error_rows": 0,
+    "explanations_llm": 0,
+    "explanations_template": 2269,
+    "grounding_rejections": 0
+  },
+  "overall": {
+    "rows": 500,
+    "answerable": 500,
+    "top1": {
+      "hits": 416,
+      "total": 500,
+      "value": 0.832
+    },
+    "top5": {
+      "hits": 430,
+      "total": 500,
+      "value": 0.86
+    },
+    "status": {
+      "hits": 0,
+      "total": 0,
+      "value": null
+    },
+    "match_precision": {
+      "hits": 271,
+      "total": 273,
+      "value": 0.9926739926739927
+    },
+    "coverage": {
+      "hits": 273,
+      "total": 500,
+      "value": 0.546
+    },
+    "no_answer_rows": 0,
+    "false_matches": 0,
+    "errors": 0,
+    "severe_matches": 2,
+    "dup_record_matches": 0
+  },
+  "categories": {
+    "author_only": {
+      "rows": 89,
+      "answerable": 89,
+      "top1": {
+        "hits": 70,
+        "total": 89,
+        "value": 0.7865168539325843
+      },
+      "top5": {
+        "hits": 73,
+        "total": 89,
+        "value": 0.8202247191011236
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 0,
+        "total": 2,
+        "value": 0
+      },
+      "coverage": {
+        "hits": 2,
+        "total": 89,
+        "value": 0.02247191011235955
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 2,
+      "dup_record_matches": 0
+    },
+    "noisy": {
+      "rows": 69,
+      "answerable": 69,
+      "top1": {
+        "hits": 68,
+        "total": 69,
+        "value": 0.9855072463768116
+      },
+      "top5": {
+        "hits": 68,
+        "total": 69,
+        "value": 0.9855072463768116
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 58,
+        "total": 58,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 58,
+        "total": 69,
+        "value": 0.8405797101449275
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "partial": {
+      "rows": 73,
+      "answerable": 73,
+      "top1": {
+        "hits": 70,
+        "total": 73,
+        "value": 0.958904109589041
+      },
+      "top5": {
+        "hits": 71,
+        "total": 73,
+        "value": 0.9726027397260274
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 40,
+        "total": 40,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 40,
+        "total": 73,
+        "value": 0.547945205479452
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "reordered": {
+      "rows": 51,
+      "answerable": 51,
+      "top1": {
+        "hits": 47,
+        "total": 51,
+        "value": 0.9215686274509803
+      },
+      "top5": {
+        "hits": 50,
+        "total": 51,
+        "value": 0.9803921568627451
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 40,
+        "total": 40,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 40,
+        "total": 51,
+        "value": 0.7843137254901961
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "title_author": {
+      "rows": 85,
+      "answerable": 85,
+      "top1": {
+        "hits": 83,
+        "total": 85,
+        "value": 0.9764705882352941
+      },
+      "top5": {
+        "hits": 84,
+        "total": 85,
+        "value": 0.9882352941176471
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 67,
+        "total": 67,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 67,
+        "total": 85,
+        "value": 0.788235294117647
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "title_only": {
+      "rows": 66,
+      "answerable": 66,
+      "top1": {
+        "hits": 58,
+        "total": 66,
+        "value": 0.8787878787878788
+      },
+      "top5": {
+        "hits": 62,
+        "total": 66,
+        "value": 0.9393939393939394
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 50,
+        "total": 50,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 50,
+        "total": 66,
+        "value": 0.7575757575757576
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "typo": {
+      "rows": 67,
+      "answerable": 67,
+      "top1": {
+        "hits": 20,
+        "total": 67,
+        "value": 0.29850746268656714
+      },
+      "top5": {
+        "hits": 22,
+        "total": 67,
+        "value": 0.3283582089552239
+      },
+      "status": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "match_precision": {
+        "hits": 16,
+        "total": 16,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 16,
+        "total": 67,
+        "value": 0.23880597014925373
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    }
+  },
+  "excluding_replay_misses": null
+}

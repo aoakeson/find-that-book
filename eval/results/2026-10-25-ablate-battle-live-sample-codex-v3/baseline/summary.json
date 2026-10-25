@@ -1,0 +1,1219 @@
+{
+  "label": "ablate-battle-live-sample-codex-v3 baseline (every addition off)",
+  "command": "dotnet run --project tools/FindThatBook.Eval -- ablate --set eval/datasets/battle-live-sample.v1.jsonl --catalog live --catalog-cache eval/results/_catalog-cache/raw/live --hypotheses ../research/11-battle-test/cache/hyp_v3.jsonl --switches RequiredTitleWords,Mashup,HypothesisAuthorCheck,AuthoredExact,IntentRivals,SameTitleRival,TinyRecord --max-ol-requests 124 --concurrency 2 --label ablate-battle-live-sample-codex-v3",
+  "started": "2026-10-25T02:30:48.0893780-06:00",
+  "wall_seconds": 15.6,
+  "dataset": {
+    "name": "battle live sample",
+    "version": 1,
+    "path": "eval/datasets/battle-live-sample.v1.jsonl",
+    "sha256": "f2a1aacd619df805",
+    "held_out": false,
+    "tuning": "in_sample: battle rounds the v3 fixes and the ranker's R3-xxxx rules were designed on; used here to decide which ranker rules stay (never the held-out set)",
+    "cases": 200
+  },
+  "code_fingerprint": "sha256:b872851edf7c3974 (151 files)",
+  "eval_fingerprint": "sha256:1caf4d1d3f242957 (31 files)",
+  "binary_fingerprint": "sha256:23d8df33d6e24992 (2 files)",
+  "catalog": "live",
+  "provider": "none",
+  "model": null,
+  "observed_models": [
+    "interpret: replay/codex (research cache, prompt v3)"
+  ],
+  "judge": false,
+  "hypotheses": "../research/11-battle-test/cache/hyp_v3.jsonl",
+  "hypotheses_recorded_on": null,
+  "explain": "template",
+  "ranker": "baseline",
+  "catalog_cache": "eval/results/_catalog-cache/raw/live",
+  "label_note": "battle sample on LIVE Open Library (in-sample tuning data for the ranker-rule decision)",
+  "held_out": false,
+  "bypass_caches": false,
+  "stopped": null,
+  "counts": {
+    "cases": 200,
+    "run": 200,
+    "skipped": 0,
+    "rejected": 1,
+    "errors": 0,
+    "replay_miss_rows": 0,
+    "in_sample": 200
+  },
+  "ops": {
+    "searched": 199,
+    "latency_p50_ms": 4,
+    "latency_p95_ms": 17,
+    "ol_calls_per_query": 2.864321608040201,
+    "ol_attempts_per_query": 0.010050251256281407,
+    "paid_llm_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_per_1k_usd": null,
+    "degraded_rows": 184,
+    "degraded_by_settings_rows": 183,
+    "provider_error_rows": 0,
+    "explanations_llm": 0,
+    "explanations_template": 847,
+    "grounding_rejections": 0
+  },
+  "overall": {
+    "rows": 200,
+    "answerable": 192,
+    "top1": {
+      "hits": 158,
+      "total": 192,
+      "value": 0.8229166666666666
+    },
+    "top5": {
+      "hits": 168,
+      "total": 192,
+      "value": 0.875
+    },
+    "status": {
+      "hits": 139,
+      "total": 200,
+      "value": 0.695
+    },
+    "match_precision": {
+      "hits": 117,
+      "total": 130,
+      "value": 0.9
+    },
+    "coverage": {
+      "hits": 130,
+      "total": 192,
+      "value": 0.6770833333333334
+    },
+    "no_answer_rows": 8,
+    "false_matches": 0,
+    "errors": 0,
+    "severe_matches": 1,
+    "dup_record_matches": 8
+  },
+  "categories": {
+    "adversarial": {
+      "rows": 4,
+      "answerable": 1,
+      "top1": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "top5": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "status": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "no_answer_rows": 3,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "alt_title": {
+      "rows": 4,
+      "answerable": 4,
+      "top1": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "top5": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "status": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "match_precision": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "ambiguous_title": {
+      "rows": 4,
+      "answerable": 4,
+      "top1": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "top5": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 4,
+        "value": 0
+      },
+      "match_precision": {
+        "hits": 0,
+        "total": 4,
+        "value": 0
+      },
+      "coverage": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "audiobook_phrasing": {
+      "rows": 2,
+      "answerable": 2,
+      "top1": {
+        "hits": 0,
+        "total": 2,
+        "value": 0
+      },
+      "top5": {
+        "hits": 1,
+        "total": 2,
+        "value": 0.5
+      },
+      "status": {
+        "hits": 0,
+        "total": 2,
+        "value": 0
+      },
+      "match_precision": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "coverage": {
+        "hits": 0,
+        "total": 2,
+        "value": 0
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "author_alias": {
+      "rows": 14,
+      "answerable": 14,
+      "top1": {
+        "hits": 10,
+        "total": 14,
+        "value": 0.7142857142857143
+      },
+      "top5": {
+        "hits": 11,
+        "total": 14,
+        "value": 0.7857142857142857
+      },
+      "status": {
+        "hits": 12,
+        "total": 14,
+        "value": 0.8571428571428571
+      },
+      "match_precision": {
+        "hits": 9,
+        "total": 12,
+        "value": 0.75
+      },
+      "coverage": {
+        "hits": 12,
+        "total": 14,
+        "value": 0.8571428571428571
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 1,
+      "dup_record_matches": 2
+    },
+    "author_only": {
+      "rows": 4,
+      "answerable": 4,
+      "top1": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "top5": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "status": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "coverage": {
+        "hits": 0,
+        "total": 4,
+        "value": 0
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "author_plus_clue": {
+      "rows": 3,
+      "answerable": 3,
+      "top1": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "top5": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "status": {
+        "hits": 0,
+        "total": 3,
+        "value": 0
+      },
+      "match_precision": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "coverage": {
+        "hits": 0,
+        "total": 3,
+        "value": 0
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "author_wrong_title": {
+      "rows": 4,
+      "answerable": 4,
+      "top1": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "top5": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "status": {
+        "hits": 0,
+        "total": 4,
+        "value": 0
+      },
+      "match_precision": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "coverage": {
+        "hits": 0,
+        "total": 4,
+        "value": 0
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "character": {
+      "rows": 6,
+      "answerable": 6,
+      "top1": {
+        "hits": 6,
+        "total": 6,
+        "value": 1
+      },
+      "top5": {
+        "hits": 6,
+        "total": 6,
+        "value": 1
+      },
+      "status": {
+        "hits": 6,
+        "total": 6,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 6,
+        "total": 6,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 6,
+        "total": 6,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "chatty_filler": {
+      "rows": 4,
+      "answerable": 4,
+      "top1": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "top5": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "status": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "coauthor": {
+      "rows": 3,
+      "answerable": 3,
+      "top1": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "top5": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "status": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "decorated_titles": {
+      "rows": 14,
+      "answerable": 14,
+      "top1": {
+        "hits": 11,
+        "total": 14,
+        "value": 0.7857142857142857
+      },
+      "top5": {
+        "hits": 13,
+        "total": 14,
+        "value": 0.9285714285714286
+      },
+      "status": {
+        "hits": 9,
+        "total": 14,
+        "value": 0.6428571428571429
+      },
+      "match_precision": {
+        "hits": 9,
+        "total": 9,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 9,
+        "total": 14,
+        "value": 0.6428571428571429
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "format_words": {
+      "rows": 4,
+      "answerable": 4,
+      "top1": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "top5": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "status": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "match_precision": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "gibberish": {
+      "rows": 4,
+      "answerable": 0,
+      "top1": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "top5": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "status": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "match_precision": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "coverage": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "no_answer_rows": 4,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "jp_en_duplicates": {
+      "rows": 14,
+      "answerable": 14,
+      "top1": {
+        "hits": 12,
+        "total": 14,
+        "value": 0.8571428571428571
+      },
+      "top5": {
+        "hits": 13,
+        "total": 14,
+        "value": 0.9285714285714286
+      },
+      "status": {
+        "hits": 12,
+        "total": 14,
+        "value": 0.8571428571428571
+      },
+      "match_precision": {
+        "hits": 11,
+        "total": 12,
+        "value": 0.9166666666666666
+      },
+      "coverage": {
+        "hits": 12,
+        "total": 14,
+        "value": 0.8571428571428571
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 1
+    },
+    "kid_vague": {
+      "rows": 4,
+      "answerable": 4,
+      "top1": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "top5": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "status": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "match_precision": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "noisy_paste": {
+      "rows": 4,
+      "answerable": 4,
+      "top1": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "top5": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "status": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "nonfiction_edition": {
+      "rows": 3,
+      "answerable": 2,
+      "top1": {
+        "hits": 0,
+        "total": 2,
+        "value": 0
+      },
+      "top5": {
+        "hits": 1,
+        "total": 2,
+        "value": 0.5
+      },
+      "status": {
+        "hits": 2,
+        "total": 3,
+        "value": 0.6666666666666666
+      },
+      "match_precision": {
+        "hits": 0,
+        "total": 1,
+        "value": 0
+      },
+      "coverage": {
+        "hits": 1,
+        "total": 2,
+        "value": 0.5
+      },
+      "no_answer_rows": 1,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 1
+    },
+    "numbers": {
+      "rows": 4,
+      "answerable": 4,
+      "top1": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "top5": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "status": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "coverage": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 1
+    },
+    "partial_title": {
+      "rows": 3,
+      "answerable": 3,
+      "top1": {
+        "hits": 2,
+        "total": 3,
+        "value": 0.6666666666666666
+      },
+      "top5": {
+        "hits": 2,
+        "total": 3,
+        "value": 0.6666666666666666
+      },
+      "status": {
+        "hits": 2,
+        "total": 3,
+        "value": 0.6666666666666666
+      },
+      "match_precision": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 2,
+        "total": 3,
+        "value": 0.6666666666666666
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "pen_name": {
+      "rows": 14,
+      "answerable": 14,
+      "top1": {
+        "hits": 12,
+        "total": 14,
+        "value": 0.8571428571428571
+      },
+      "top5": {
+        "hits": 13,
+        "total": 14,
+        "value": 0.9285714285714286
+      },
+      "status": {
+        "hits": 12,
+        "total": 14,
+        "value": 0.8571428571428571
+      },
+      "match_precision": {
+        "hits": 12,
+        "total": 12,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 12,
+        "total": 14,
+        "value": 0.8571428571428571
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "pen_name_obscure": {
+      "rows": 14,
+      "answerable": 14,
+      "top1": {
+        "hits": 13,
+        "total": 14,
+        "value": 0.9285714285714286
+      },
+      "top5": {
+        "hits": 13,
+        "total": 14,
+        "value": 0.9285714285714286
+      },
+      "status": {
+        "hits": 14,
+        "total": 14,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 13,
+        "total": 14,
+        "value": 0.9285714285714286
+      },
+      "coverage": {
+        "hits": 14,
+        "total": 14,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 1
+    },
+    "picture_books": {
+      "rows": 2,
+      "answerable": 2,
+      "top1": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "top5": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "status": {
+        "hits": 1,
+        "total": 2,
+        "value": 0.5
+      },
+      "match_precision": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 1,
+        "total": 2,
+        "value": 0.5
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "plot": {
+      "rows": 14,
+      "answerable": 14,
+      "top1": {
+        "hits": 12,
+        "total": 14,
+        "value": 0.8571428571428571
+      },
+      "top5": {
+        "hits": 12,
+        "total": 14,
+        "value": 0.8571428571428571
+      },
+      "status": {
+        "hits": 1,
+        "total": 14,
+        "value": 0.07142857142857142
+      },
+      "match_precision": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 1,
+        "total": 14,
+        "value": 0.07142857142857142
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "poetry_anthology": {
+      "rows": 2,
+      "answerable": 2,
+      "top1": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "top5": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "status": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 1,
+        "total": 1,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 1,
+        "total": 2,
+        "value": 0.5
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "quote": {
+      "rows": 4,
+      "answerable": 4,
+      "top1": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "top5": {
+        "hits": 3,
+        "total": 4,
+        "value": 0.75
+      },
+      "status": {
+        "hits": 0,
+        "total": 4,
+        "value": 0
+      },
+      "match_precision": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "coverage": {
+        "hits": 0,
+        "total": 4,
+        "value": 0
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "recent_releases": {
+      "rows": 2,
+      "answerable": 2,
+      "top1": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "top5": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "status": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "romanized_title": {
+      "rows": 3,
+      "answerable": 3,
+      "top1": {
+        "hits": 2,
+        "total": 3,
+        "value": 0.6666666666666666
+      },
+      "top5": {
+        "hits": 2,
+        "total": 3,
+        "value": 0.6666666666666666
+      },
+      "status": {
+        "hits": 2,
+        "total": 3,
+        "value": 0.6666666666666666
+      },
+      "match_precision": {
+        "hits": 1,
+        "total": 2,
+        "value": 0.5
+      },
+      "coverage": {
+        "hits": 2,
+        "total": 3,
+        "value": 0.6666666666666666
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 1
+    },
+    "series": {
+      "rows": 14,
+      "answerable": 14,
+      "top1": {
+        "hits": 12,
+        "total": 14,
+        "value": 0.8571428571428571
+      },
+      "top5": {
+        "hits": 12,
+        "total": 14,
+        "value": 0.8571428571428571
+      },
+      "status": {
+        "hits": 11,
+        "total": 14,
+        "value": 0.7857142857142857
+      },
+      "match_precision": {
+        "hits": 11,
+        "total": 11,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 11,
+        "total": 14,
+        "value": 0.7857142857142857
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "short_title": {
+      "rows": 4,
+      "answerable": 4,
+      "top1": {
+        "hits": 2,
+        "total": 4,
+        "value": 0.5
+      },
+      "top5": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "status": {
+        "hits": 2,
+        "total": 4,
+        "value": 0.5
+      },
+      "match_precision": {
+        "hits": 2,
+        "total": 2,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 2,
+        "total": 4,
+        "value": 0.5
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "stopword_title": {
+      "rows": 4,
+      "answerable": 4,
+      "top1": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "top5": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "status": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 4,
+        "total": 4,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "translation": {
+      "rows": 14,
+      "answerable": 14,
+      "top1": {
+        "hits": 8,
+        "total": 14,
+        "value": 0.5714285714285714
+      },
+      "top5": {
+        "hits": 8,
+        "total": 14,
+        "value": 0.5714285714285714
+      },
+      "status": {
+        "hits": 7,
+        "total": 14,
+        "value": 0.5
+      },
+      "match_precision": {
+        "hits": 6,
+        "total": 7,
+        "value": 0.8571428571428571
+      },
+      "coverage": {
+        "hits": 7,
+        "total": 14,
+        "value": 0.5
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 1
+    },
+    "typos": {
+      "rows": 3,
+      "answerable": 3,
+      "top1": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "top5": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "status": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    }
+  },
+  "excluding_replay_misses": null
+}

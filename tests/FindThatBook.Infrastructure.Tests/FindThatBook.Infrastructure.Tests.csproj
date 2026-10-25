@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src/FindThatBook.Infrastructure/FindThatBook.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="Shouldly" />
+    <PackageReference Include="WireMock.Net" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="Shouldly" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Recorded Open Library responses, replayed by WireMock: output/fixtures/openlibrary/*.json -->
+    <None Include="..\fixtures\openlibrary\**\*.json" LinkBase="fixtures\openlibrary" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

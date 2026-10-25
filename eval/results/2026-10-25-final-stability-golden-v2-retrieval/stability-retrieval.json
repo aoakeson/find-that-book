@@ -1,0 +1,28 @@
+{
+  "kind": "retrieval",
+  "dataset": "Find That Book golden set v2",
+  "held_out": false,
+  "queries": 20,
+  "runs": 3,
+  "catalog": "live",
+  "code_fingerprint": "sha256:0acf0a6c4a1e5263 (146 files)",
+  "binary_fingerprint": "sha256:23d8df33d6e24992 (2 files)",
+  "started": "2026-10-25T01:54:38.6217360-06:00",
+  "cache_hits": 0,
+  "top1_identical": {
+    "hits": 20,
+    "total": 20,
+    "value": 1
+  },
+  "top5_set_identical": {
+    "hits": 20,
+    "total": 20,
+    "value": 1
+  },
+  "status_identical": {
+    "hits": 20,
+    "total": 20,
+    "value": 1
+  },
+  "pool_jaccard_mean": 1
+}

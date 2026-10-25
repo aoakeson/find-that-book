@@ -1,0 +1,101 @@
+{
+  "query": "xqzv blorptangle",
+  "status": "none",
+  "status_reason": "no_candidates",
+  "hint": "No Open Library work matched. Check the spelling or add an author.",
+  "degraded": false,
+  "degraded_reasons": [],
+  "interpretation": {
+    "title": null,
+    "author": null,
+    "characters": [],
+    "keywords": [
+      "xqzv",
+      "blorptangle"
+    ],
+    "english_title": null,
+    "original_title": null,
+    "year": null,
+    "removed_noise": [],
+    "source": "heuristic",
+    "intent": "book",
+    "topics": []
+  },
+  "candidates": [],
+  "meta": {
+    "request_id": "<scrubbed>",
+    "elapsed_ms": 2440,
+    "timings_ms": {
+      "clean": 0,
+      "interpret": 480,
+      "retrieve": 2425,
+      "rank": 0
+    },
+    "open_library": {
+      "calls": 2,
+      "cache_hits": 0,
+      "upstream_requests": 2,
+      "retries": 0,
+      "slow_empty_requeries": 0,
+      "budget": 5,
+      "steps": [
+        {
+          "step": "broad",
+          "outcome": "ok",
+          "cache_hit": false,
+          "attempts": 1,
+          "elapsed_ms": 1320,
+          "results": 0,
+          "num_found": 0
+        },
+        {
+          "step": "any_of",
+          "outcome": "ok",
+          "cache_hit": false,
+          "attempts": 1,
+          "elapsed_ms": 1105,
+          "results": 0,
+          "num_found": 0
+        }
+      ]
+    },
+    "llm": {
+      "provider": "gemini",
+      "model": "test-model",
+      "calls": 1,
+      "cache_hits": 0,
+      "input_tokens": 371,
+      "output_tokens": 18,
+      "est_cost_usd": 0.0001563,
+      "prompt_versions": {
+        "interpret": "interpret.v3"
+      },
+      "steps": [
+        {
+          "operation": "interpret",
+          "provider": "gemini",
+          "model": "test-model",
+          "prompt_id": "interpret.v3",
+          "status": "ok",
+          "cache_hit": false,
+          "elapsed_ms": 480,
+          "input_tokens": 371,
+          "output_tokens": 18
+        }
+      ]
+    },
+    "judge": {
+      "enabled": true,
+      "status": "skipped",
+      "pick": null,
+      "probability": null,
+      "threshold": 0.9,
+      "agreed": null,
+      "model": null,
+      "latency_ms": null,
+      "input_tokens": null,
+      "est_cost_usd": null,
+      "detail": "no_candidates"
+    }
+  }
+}

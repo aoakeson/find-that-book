@@ -1,0 +1,89 @@
+{
+  "summary": "Typing \"harry\"",
+  "description": "Whole-title prefix matches first, then title-word matches, then author surnames; edition count breaks ties. Live response.",
+  "value": {
+    "prefix": "harry",
+    "suggestions": [
+      {
+        "work_id": "OL82563W",
+        "title": "Harry Potter and the Philosopher's Stone",
+        "author": "J. K. Rowling",
+        "first_publish_year": 1997,
+        "cover_url": "https://covers.openlibrary.org/b/id/15155833-M.jpg",
+        "edition_count": 400,
+        "open_library_url": "https://openlibrary.org/works/OL82563W",
+        "match": "title"
+      },
+      {
+        "work_id": "OL82537W",
+        "title": "Harry Potter and the Chamber of Secrets",
+        "author": "J. K. Rowling",
+        "first_publish_year": 1998,
+        "cover_url": "https://covers.openlibrary.org/b/id/15158664-M.jpg",
+        "edition_count": 306,
+        "open_library_url": "https://openlibrary.org/works/OL82537W",
+        "match": "title"
+      },
+      {
+        "work_id": "OL82536W",
+        "title": "Harry Potter and the Prisoner of Azkaban",
+        "author": "J. K. Rowling",
+        "first_publish_year": 1999,
+        "cover_url": "https://covers.openlibrary.org/b/id/10580435-M.jpg",
+        "edition_count": 279,
+        "open_library_url": "https://openlibrary.org/works/OL82536W",
+        "match": "title"
+      },
+      {
+        "work_id": "OL82548W",
+        "title": "Harry Potter and the Order of the Phoenix",
+        "author": "J. K. Rowling",
+        "first_publish_year": 2003,
+        "cover_url": "https://covers.openlibrary.org/b/id/15158666-M.jpg",
+        "edition_count": 247,
+        "open_library_url": "https://openlibrary.org/works/OL82548W",
+        "match": "title"
+      },
+      {
+        "work_id": "OL82560W",
+        "title": "Harry Potter and the Goblet of Fire",
+        "author": "J. K. Rowling",
+        "first_publish_year": 2000,
+        "cover_url": "https://covers.openlibrary.org/b/id/12059372-M.jpg",
+        "edition_count": 244,
+        "open_library_url": "https://openlibrary.org/works/OL82560W",
+        "match": "title"
+      },
+      {
+        "work_id": "OL82565W",
+        "title": "Harry Potter and the Half-Blood Prince",
+        "author": "J. K. Rowling",
+        "first_publish_year": 2005,
+        "cover_url": "https://covers.openlibrary.org/b/id/10716273-M.jpg",
+        "edition_count": 177,
+        "open_library_url": "https://openlibrary.org/works/OL82565W",
+        "match": "title"
+      },
+      {
+        "work_id": "OL82586W",
+        "title": "Harry Potter and the Deathly Hallows",
+        "author": "J. K. Rowling",
+        "first_publish_year": 2007,
+        "cover_url": "https://covers.openlibrary.org/b/id/15158660-M.jpg",
+        "edition_count": 144,
+        "open_library_url": "https://openlibrary.org/works/OL82586W",
+        "match": "title"
+      },
+      {
+        "work_id": "OL109866W",
+        "title": "Harry Heathcote of Gangoil",
+        "author": "Anthony Trollope",
+        "first_publish_year": 1874,
+        "cover_url": "https://covers.openlibrary.org/b/id/118788-M.jpg",
+        "edition_count": 129,
+        "open_library_url": "https://openlibrary.org/works/OL109866W",
+        "match": "title"
+      }
+    ]
+  }
+}

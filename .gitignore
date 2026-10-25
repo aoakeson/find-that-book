@@ -1,0 +1,28 @@
+# Secrets: never commit
+.env
+.env.*
+!.env.example
+appsettings.*.local.json
+
+# Build
+bin/
+obj/
+artifacts/
+*.user
+.vs/
+.idea/
+.vscode/
+.DS_Store
+
+# Test / eval output
+TestResults/
+eval/results/**/raw/
+*.trx
+*.received.json
+
+# Frontend
+node_modules/
+web/node_modules/
+web/dist/
+web/.vitest/
+src/FindThatBook.Api/wwwroot/

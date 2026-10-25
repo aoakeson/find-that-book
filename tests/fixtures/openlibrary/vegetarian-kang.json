@@ -1,0 +1,5 @@
+{"url": "https://openlibrary.org/search.json?title=vegetarian&author=kang&fields=key%2Ctitle%2Csubtitle%2Cauthor_name%2Cauthor_key%2Cfirst_publish_year%2Cedition_count%2Ccover_i%2Ccontributor%2Creadinglog_count%2Cauthor_alternative_name%2Ceditions%2Ceditions.title&limit=20", "dt": 2.29,
+ "body": {"numFound": 1, "start": 0, "numFoundExact": true, "docs": [
+  {"author_key": ["OL11584906A", "OL4846316A"], "author_name": ["Kang Han", "Deborah Smith"], "edition_count": 1, "first_publish_year": 2023, "key": "/works/OL36047219W", "title": "Vegetarian", "editions": {"numFound": 1, "start": 0, "numFoundExact": true, "docs": [{"title": "Vegetarian"}]}}
+ ]}
+}

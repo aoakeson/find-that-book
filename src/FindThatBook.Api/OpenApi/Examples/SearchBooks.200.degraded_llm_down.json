@@ -1,0 +1,343 @@
+{
+  "summary": "Degraded: no LLM available",
+  "description": "No LLM provider configured: heuristic parse and template explanations, still a useful answer. degraded=true says why; the LLM never causes an error status. Recorded on build 918d7b88 with the LLM off (AI:Provider=none).",
+  "value": {
+    "query": "mark huckleberry",
+    "status": "ambiguous",
+    "status_reason": "near_title_author",
+    "hint": "Several books fit. Add the author or more of the title to narrow it.",
+    "degraded": true,
+    "degraded_reasons": [
+      "ai_not_configured",
+      "explanation_fallback"
+    ],
+    "interpretation": {
+      "title": null,
+      "author": null,
+      "characters": [],
+      "keywords": [
+        "mark",
+        "huckleberry"
+      ],
+      "english_title": null,
+      "original_title": null,
+      "year": null,
+      "removed_noise": [],
+      "source": "heuristic",
+      "intent": "book",
+      "topics": []
+    },
+    "candidates": [
+      {
+        "rank": 1,
+        "work_id": "OL53908W",
+        "title": "Adventures of Huckleberry Finn",
+        "subtitle": null,
+        "author": "Mark Twain",
+        "primary_authors": [
+          {
+            "key": "OL18319A",
+            "name": "Mark Twain",
+            "url": "https://openlibrary.org/authors/OL18319A"
+          }
+        ],
+        "primary_authors_total": 1,
+        "contributors": [
+          {
+            "key": null,
+            "name": "Rudy Nebres",
+            "role": "illustrator"
+          },
+          {
+            "key": null,
+            "name": "J. A. De Larrinaga",
+            "role": "translator"
+          },
+          {
+            "key": null,
+            "name": "Sherry Neidigh",
+            "role": "illustrator"
+          }
+        ],
+        "contributors_total": 25,
+        "first_publish_year": 1876,
+        "edition_count": 2623,
+        "open_library_url": "https://openlibrary.org/works/OL53908W?edition=key%3A/books/OL26482905M",
+        "cover_url": "https://covers.openlibrary.org/b/id/8157718-M.jpg",
+        "match_tier": "c",
+        "match_tier_label": "Near-match title + author",
+        "matched_subjects": [],
+        "explanation": "Near title match on the word “huckleberry”; also published as Huckleberry Finn; Mark Twain is the primary author; Huckleberry Finn is a listed character; 5 duplicate records merged.",
+        "explanation_source": "template",
+        "second_opinion": false,
+        "duplicates_folded": 5
+      },
+      {
+        "rank": 2,
+        "work_id": "OL53919W",
+        "title": "The Adventures of Tom Sawyer",
+        "subtitle": null,
+        "author": "Mark Twain",
+        "primary_authors": [
+          {
+            "key": "OL18319A",
+            "name": "Mark Twain",
+            "url": "https://openlibrary.org/authors/OL18319A"
+          }
+        ],
+        "primary_authors_total": 1,
+        "contributors": [
+          {
+            "key": null,
+            "name": "E. R. Cruz",
+            "role": "illustrator"
+          },
+          {
+            "key": null,
+            "name": "D. H. Howe",
+            "role": "editor"
+          },
+          {
+            "key": null,
+            "name": "Nivio Lopez",
+            "role": "illustrator"
+          }
+        ],
+        "contributors_total": 23,
+        "first_publish_year": 1817,
+        "edition_count": 879,
+        "open_library_url": "https://openlibrary.org/works/OL53919W?edition=key%3A/books/OL13537112M",
+        "cover_url": "https://covers.openlibrary.org/b/id/12043351-M.jpg",
+        "match_tier": "d",
+        "match_tier_label": "Author only",
+        "matched_subjects": [],
+        "explanation": "Author-only match; Mark Twain is the primary author; Huckleberry Finn is a listed character; 879 editions.",
+        "explanation_source": "template",
+        "second_opinion": false,
+        "duplicates_folded": 0
+      },
+      {
+        "rank": 3,
+        "work_id": "OL413674W",
+        "title": "Tom Sawyer Abroad",
+        "subtitle": null,
+        "author": "Mark Twain",
+        "primary_authors": [
+          {
+            "key": "OL18319A",
+            "name": "Mark Twain",
+            "url": "https://openlibrary.org/authors/OL18319A"
+          }
+        ],
+        "primary_authors_total": 1,
+        "contributors": [
+          {
+            "key": null,
+            "name": "Erik Sellin",
+            "role": "narrator"
+          },
+          {
+            "key": null,
+            "name": "Nat Hentoff",
+            "role": "introduction"
+          },
+          {
+            "key": null,
+            "name": "Dan Beard",
+            "role": "illustrator"
+          }
+        ],
+        "contributors_total": 7,
+        "first_publish_year": 1894,
+        "edition_count": 333,
+        "open_library_url": "https://openlibrary.org/works/OL413674W?edition=key%3A/books/OL31959414M",
+        "cover_url": "https://covers.openlibrary.org/b/id/9162125-M.jpg",
+        "match_tier": "d",
+        "match_tier_label": "Author only",
+        "matched_subjects": [],
+        "explanation": "Author-only match; Mark Twain is the primary author; 333 editions.",
+        "explanation_source": "template",
+        "second_opinion": false,
+        "duplicates_folded": 0
+      },
+      {
+        "rank": 4,
+        "work_id": "OL53994W",
+        "title": "The Prince and the Pauper",
+        "subtitle": null,
+        "author": "Mark Twain",
+        "primary_authors": [
+          {
+            "key": "OL18319A",
+            "name": "Mark Twain",
+            "url": "https://openlibrary.org/authors/OL18319A"
+          }
+        ],
+        "primary_authors_total": 1,
+        "contributors": [
+          {
+            "key": null,
+            "name": "Thea Kliros",
+            "role": "illustrator"
+          },
+          {
+            "key": null,
+            "name": "Suzanne Fisher Staples",
+            "role": "foreword"
+          },
+          {
+            "key": null,
+            "name": "Robert Tine",
+            "role": "introduction"
+          }
+        ],
+        "contributors_total": 7,
+        "first_publish_year": 1881,
+        "edition_count": 755,
+        "open_library_url": "https://openlibrary.org/works/OL53994W?edition=key%3A/books/OL24178317M",
+        "cover_url": "https://covers.openlibrary.org/b/id/8221267-M.jpg",
+        "match_tier": "d",
+        "match_tier_label": "Author only",
+        "matched_subjects": [],
+        "explanation": "Author-only match; Mark Twain is the primary author; 755 editions.",
+        "explanation_source": "template",
+        "second_opinion": false,
+        "duplicates_folded": 0
+      },
+      {
+        "rank": 5,
+        "work_id": "OL17901897W",
+        "title": "Adventures of Huckleberry Finn and Related Readings",
+        "subtitle": null,
+        "author": "Mark Twain",
+        "primary_authors": [
+          {
+            "key": "OL18319A",
+            "name": "Mark Twain",
+            "url": "https://openlibrary.org/authors/OL18319A"
+          }
+        ],
+        "primary_authors_total": 1,
+        "contributors": [
+          {
+            "key": "OL26459A",
+            "name": "Langston Hughes",
+            "role": "also credited"
+          },
+          {
+            "key": "OL2943471A",
+            "name": "Daniel Fisher",
+            "role": "also credited"
+          },
+          {
+            "key": "OL238257A",
+            "name": "Rita Dove",
+            "role": "also credited"
+          }
+        ],
+        "contributors_total": 7,
+        "first_publish_year": 1997,
+        "edition_count": 2,
+        "open_library_url": "https://openlibrary.org/works/OL17901897W?edition=key%3A/books/OL27766390M",
+        "cover_url": "https://covers.openlibrary.org/b/id/9176082-M.jpg",
+        "match_tier": "d",
+        "match_tier_label": "Author only",
+        "matched_subjects": [],
+        "explanation": "Author-only match; Mark Twain is the primary author; Huckleberry Finn is a listed character; 2 editions.",
+        "explanation_source": "template",
+        "second_opinion": false,
+        "duplicates_folded": 0
+      }
+    ],
+    "meta": {
+      "request_id": "00-0b6566bae0738bd78522b701e3772738-edb4e748b54a86df-00",
+      "elapsed_ms": 1301,
+      "timings_ms": {
+        "clean": 4,
+        "interpret": 2,
+        "rank": 43,
+        "retrieve": 1280,
+        "explain": 12,
+        "judge": 0
+      },
+      "open_library": {
+        "calls": 2,
+        "cache_hits": 0,
+        "upstream_requests": 2,
+        "retries": 0,
+        "slow_empty_requeries": 0,
+        "budget": 5,
+        "steps": [
+          {
+            "step": "broad",
+            "outcome": "ok",
+            "cache_hit": false,
+            "attempts": 1,
+            "elapsed_ms": 833,
+            "results": 20,
+            "num_found": 1025
+          },
+          {
+            "step": "person_fallback",
+            "outcome": "ok",
+            "cache_hit": false,
+            "attempts": 1,
+            "elapsed_ms": 399,
+            "results": 16,
+            "num_found": 16
+          }
+        ]
+      },
+      "llm": {
+        "provider": "none",
+        "model": null,
+        "calls": 0,
+        "cache_hits": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "est_cost_usd": 0,
+        "prompt_versions": {
+          "interpret": "interpret.v5",
+          "explain": "explain.v4"
+        },
+        "steps": [
+          {
+            "operation": "interpret",
+            "provider": "none",
+            "model": "",
+            "prompt_id": "interpret.v5",
+            "status": "not_configured",
+            "cache_hit": false,
+            "elapsed_ms": 0,
+            "input_tokens": null,
+            "output_tokens": null
+          },
+          {
+            "operation": "explain",
+            "provider": "none",
+            "model": "",
+            "prompt_id": "explain.v4",
+            "status": "not_configured",
+            "cache_hit": false,
+            "elapsed_ms": 0,
+            "input_tokens": null,
+            "output_tokens": null
+          }
+        ]
+      },
+      "judge": {
+        "enabled": false,
+        "status": "off",
+        "pick": null,
+        "probability": null,
+        "threshold": 0.9,
+        "agreed": null,
+        "model": null,
+        "latency_ms": null,
+        "input_tokens": null,
+        "est_cost_usd": null,
+        "detail": null
+      }
+    }
+  }
+}

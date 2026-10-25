@@ -1,0 +1,827 @@
+{
+  "dataset": "battle rounds r1-r3 v1 sha256:83fca5c42c766ebe",
+  "code_fingerprint": "sha256:62f0fdef8259815f (149 files)",
+  "binary_fingerprint": "sha256:23d8df33d6e24992 (2 files)",
+  "arms": [
+    {
+      "arm": "default",
+      "ranker": "default",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/default"
+    },
+    {
+      "arm": "-AuthoredExact",
+      "ranker": "default -AuthoredExact",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/authoredexact"
+    },
+    {
+      "arm": "-CharacterWord",
+      "ranker": "default -CharacterWord",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/characterword"
+    },
+    {
+      "arm": "-ExactOverPartial",
+      "ranker": "default -ExactOverPartial",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/exactoverpartial"
+    },
+    {
+      "arm": "-HypothesisAuthorCheck",
+      "ranker": "default -HypothesisAuthorCheck",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/hypothesisauthorcheck"
+    },
+    {
+      "arm": "-IntentRivals",
+      "ranker": "default -IntentRivals",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/intentrivals"
+    },
+    {
+      "arm": "-LoneSurname",
+      "ranker": "default -LoneSurname",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 144,
+          "total": 1356,
+          "value": 0.10619469026548672
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 21,
+          "value": 0.7619047619047619
+        },
+        "coverage": {
+          "hits": 20,
+          "total": 1284,
+          "value": 0.01557632398753894
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 2,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/lonesurname"
+    },
+    {
+      "arm": "-Mashup",
+      "ranker": "default -Mashup",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/mashup"
+    },
+    {
+      "arm": "-NamedContributor",
+      "ranker": "default -NamedContributor",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/namedcontributor"
+    },
+    {
+      "arm": "-NoneGuard",
+      "ranker": "default -NoneGuard",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/noneguard"
+    },
+    {
+      "arm": "-PerformerRoles",
+      "ranker": "default -PerformerRoles",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/performerroles"
+    },
+    {
+      "arm": "-RequiredTitleWords",
+      "ranker": "default -RequiredTitleWords",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/requiredtitlewords"
+    },
+    {
+      "arm": "-SameTitleRival",
+      "ranker": "default -SameTitleRival",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/sametitlerival"
+    },
+    {
+      "arm": "-SeriesName",
+      "ranker": "default -SeriesName",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/seriesname"
+    },
+    {
+      "arm": "-SoftTokens",
+      "ranker": "default -SoftTokens",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/softtokens"
+    },
+    {
+      "arm": "-SubtitleWorks",
+      "ranker": "default -SubtitleWorks",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/subtitleworks"
+    },
+    {
+      "arm": "-TinyRecord",
+      "ranker": "default -TinyRecord",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 144,
+          "total": 1356,
+          "value": 0.10619469026548672
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 21,
+          "value": 0.7619047619047619
+        },
+        "coverage": {
+          "hits": 20,
+          "total": 1284,
+          "value": 0.01557632398753894
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 4
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/tinyrecord"
+    },
+    {
+      "arm": "-TypedAuthorTiny",
+      "ranker": "default -TypedAuthorTiny",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 469,
+          "total": 1284,
+          "value": 0.3652647975077882
+        },
+        "top5": {
+          "hits": 554,
+          "total": 1284,
+          "value": 0.43146417445482865
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/typedauthortiny"
+    },
+    {
+      "arm": "-VolumeMarkers",
+      "ranker": "default -VolumeMarkers",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 468,
+          "total": 1284,
+          "value": 0.3644859813084112
+        },
+        "top5": {
+          "hits": 553,
+          "total": 1284,
+          "value": 0.43068535825545173
+        },
+        "status": {
+          "hits": 143,
+          "total": 1356,
+          "value": 0.10545722713864307
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 20,
+          "value": 0.8
+        },
+        "coverage": {
+          "hits": 19,
+          "total": 1284,
+          "value": 0.014797507788161994
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 1,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/raw/arms/volumemarkers"
+    },
+    {
+      "arm": "baseline (every addition off)",
+      "ranker": "baseline",
+      "quality": {
+        "rows": 1356,
+        "answerable": 1284,
+        "top1": {
+          "hits": 470,
+          "total": 1284,
+          "value": 0.3660436137071651
+        },
+        "top5": {
+          "hits": 555,
+          "total": 1284,
+          "value": 0.4322429906542056
+        },
+        "status": {
+          "hits": 144,
+          "total": 1356,
+          "value": 0.10619469026548672
+        },
+        "match_precision": {
+          "hits": 16,
+          "total": 21,
+          "value": 0.7619047619047619
+        },
+        "coverage": {
+          "hits": 20,
+          "total": 1284,
+          "value": 0.01557632398753894
+        },
+        "no_answer_rows": 72,
+        "false_matches": 1,
+        "errors": 0,
+        "severe_matches": 2,
+        "dup_record_matches": 3
+      },
+      "off_breaks": [],
+      "off_fixes": [],
+      "folder": "eval/results/2026-10-25-ablate-battle-r1-r3-llm-off/baseline"
+    }
+  ]
+}

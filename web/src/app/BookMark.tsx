@@ -1,0 +1,17 @@
+import { cn } from "@/lib/utils"
+
+/**
+ * The product mark: an open book on a rounded tile, with a ribbon bookmark cut into the right page. The tile takes
+ * `currentColor` (teal in the header); the pages use the surface token. Decorative: the product name sits beside it.
+ * public/favicon.svg is the same drawing with literal colours.
+ */
+export function BookMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false" className={cn("size-7 shrink-0", className)}>
+      <rect width="32" height="32" rx="9" fill="currentColor" />
+      <path d="M15.25 10.4C13 8.9 10.1 8.35 7 8.7v13.6c3.1-.3 6 .25 8.25 1.75Z" fill="var(--surface)" />
+      <path d="M16.75 10.4C19 8.9 21.9 8.35 25 8.7v13.6c-3.1-.3-6 .25-8.25 1.75Z" fill="var(--surface)" />
+      <path d="M20.2 7.5h3.1v7.25l-1.55-1.25-1.55 1.25Z" fill="currentColor" />
+    </svg>
+  )
+}

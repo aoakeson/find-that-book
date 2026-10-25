@@ -1,0 +1,1664 @@
+[
+  {
+    "query": "mark huckleberry",
+    "search": [
+      "mark",
+      "huckleberry"
+    ],
+    "optional": [],
+    "all": [
+      "mark",
+      "huckleberry"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "mark huckleberry",
+    "raw": "mark huckleberry"
+  },
+  {
+    "query": "twilight meyer",
+    "search": [
+      "twilight",
+      "meyer"
+    ],
+    "optional": [],
+    "all": [
+      "twilight",
+      "meyer"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "twilight meyer",
+    "raw": "twilight meyer"
+  },
+  {
+    "query": "tolkien hobbit illustrated deluxe 1937",
+    "search": [
+      "tolkien",
+      "hobbit"
+    ],
+    "optional": [
+      "1937",
+      "deluxe",
+      "illustrated"
+    ],
+    "all": [
+      "tolkien",
+      "hobbit",
+      "illustrated",
+      "deluxe",
+      "1937"
+    ],
+    "head": [],
+    "year": 1937,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [
+      "illustrated",
+      "deluxe"
+    ],
+    "text": "tolkien hobbit illustrated deluxe 1937",
+    "raw": "tolkien hobbit illustrated deluxe 1937"
+  },
+  {
+    "query": "dickens",
+    "search": [
+      "dickens"
+    ],
+    "optional": [],
+    "all": [
+      "dickens"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "dickens",
+    "raw": "dickens"
+  },
+  {
+    "query": "tale two cities",
+    "search": [
+      "tale",
+      "2",
+      "cities"
+    ],
+    "optional": [],
+    "all": [
+      "tale",
+      "two",
+      "cities"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "tale two cities",
+    "raw": "tale two cities"
+  },
+  {
+    "query": "austen bennet",
+    "search": [
+      "austen",
+      "bennet"
+    ],
+    "optional": [],
+    "all": [
+      "austen",
+      "bennet"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "austen bennet",
+    "raw": "austen bennet"
+  },
+  {
+    "query": "the hobbit",
+    "search": [
+      "hobbit"
+    ],
+    "optional": [
+      "the"
+    ],
+    "all": [
+      "the",
+      "hobbit"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "the hobbit",
+    "raw": "the hobbit"
+  },
+  {
+    "query": "frankenstein",
+    "search": [
+      "frankenstein"
+    ],
+    "optional": [],
+    "all": [
+      "frankenstein"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "frankenstein",
+    "raw": "frankenstein"
+  },
+  {
+    "query": "the great gatsby",
+    "search": [
+      "great",
+      "gatsby"
+    ],
+    "optional": [
+      "the"
+    ],
+    "all": [
+      "the",
+      "great",
+      "gatsby"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "the great gatsby",
+    "raw": "the great gatsby"
+  },
+  {
+    "query": "moby dick",
+    "search": [
+      "moby",
+      "dick"
+    ],
+    "optional": [],
+    "all": [
+      "moby",
+      "dick"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "moby dick",
+    "raw": "moby dick"
+  },
+  {
+    "query": "to kill a mockingbird",
+    "search": [
+      "kill",
+      "mockingbird"
+    ],
+    "optional": [
+      "a",
+      "to"
+    ],
+    "all": [
+      "to",
+      "kill",
+      "a",
+      "mockingbird"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "to kill a mockingbird",
+    "raw": "to kill a mockingbird"
+  },
+  {
+    "query": "orwell",
+    "search": [
+      "orwell"
+    ],
+    "optional": [],
+    "all": [
+      "orwell"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "orwell",
+    "raw": "orwell"
+  },
+  {
+    "query": "jane austen",
+    "search": [
+      "jane",
+      "austen"
+    ],
+    "optional": [],
+    "all": [
+      "jane",
+      "austen"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "jane austen",
+    "raw": "jane austen"
+  },
+  {
+    "query": "mark twain",
+    "search": [
+      "mark",
+      "twain"
+    ],
+    "optional": [],
+    "all": [
+      "mark",
+      "twain"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "mark twain",
+    "raw": "mark twain"
+  },
+  {
+    "query": "j.k. rowling",
+    "search": [
+      "j",
+      "k",
+      "rowling"
+    ],
+    "optional": [],
+    "all": [
+      "j",
+      "k",
+      "rowling"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "j.k. rowling",
+    "raw": "j.k. rowling"
+  },
+  {
+    "query": "stephen king",
+    "search": [
+      "stephen",
+      "king"
+    ],
+    "optional": [],
+    "all": [
+      "stephen",
+      "king"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "stephen king",
+    "raw": "stephen king"
+  },
+  {
+    "query": "dracula stoker",
+    "search": [
+      "dracula",
+      "stoker"
+    ],
+    "optional": [],
+    "all": [
+      "dracula",
+      "stoker"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "dracula stoker",
+    "raw": "dracula stoker"
+  },
+  {
+    "query": "1984 orwell",
+    "search": [
+      "1984",
+      "orwell"
+    ],
+    "optional": [],
+    "all": [
+      "1984",
+      "orwell"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [
+      "1984"
+    ],
+    "intents": [],
+    "removed_noise": [],
+    "text": "1984 orwell",
+    "raw": "1984 orwell"
+  },
+  {
+    "query": "emma austen",
+    "search": [
+      "emma",
+      "austen"
+    ],
+    "optional": [],
+    "all": [
+      "emma",
+      "austen"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "emma austen",
+    "raw": "emma austen"
+  },
+  {
+    "query": "of mice and men steinbeck",
+    "search": [
+      "mice",
+      "men",
+      "steinbeck"
+    ],
+    "optional": [
+      "and",
+      "of"
+    ],
+    "all": [
+      "of",
+      "mice",
+      "and",
+      "men",
+      "steinbeck"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "of mice and men steinbeck",
+    "raw": "of mice and men steinbeck"
+  },
+  {
+    "query": "huxley brave new world",
+    "search": [
+      "huxley",
+      "brave",
+      "new",
+      "world"
+    ],
+    "optional": [],
+    "all": [
+      "huxley",
+      "brave",
+      "new",
+      "world"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "huxley brave new world",
+    "raw": "huxley brave new world"
+  },
+  {
+    "query": "dickens tale two cities",
+    "search": [
+      "dickens",
+      "tale",
+      "2",
+      "cities"
+    ],
+    "optional": [],
+    "all": [
+      "dickens",
+      "tale",
+      "two",
+      "cities"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "dickens tale two cities",
+    "raw": "dickens tale two cities"
+  },
+  {
+    "query": "the great gatsby fitzgerald penguin classics 2003",
+    "search": [
+      "great",
+      "gatsby",
+      "fitzgerald"
+    ],
+    "optional": [
+      "2003",
+      "classics",
+      "penguin",
+      "the"
+    ],
+    "all": [
+      "the",
+      "great",
+      "gatsby",
+      "fitzgerald",
+      "penguin",
+      "classics",
+      "2003"
+    ],
+    "head": [],
+    "year": 2003,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [
+      "penguin",
+      "classics"
+    ],
+    "text": "the great gatsby fitzgerald penguin classics 2003",
+    "raw": "the great gatsby fitzgerald penguin classics 2003"
+  },
+  {
+    "query": "a christmas carol dickens illustrated",
+    "search": [
+      "christmas",
+      "carol",
+      "dickens"
+    ],
+    "optional": [
+      "a",
+      "illustrated"
+    ],
+    "all": [
+      "a",
+      "christmas",
+      "carol",
+      "dickens",
+      "illustrated"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [
+      "illustrated"
+    ],
+    "text": "a christmas carol dickens illustrated",
+    "raw": "a christmas carol dickens illustrated"
+  },
+  {
+    "query": "pride and prejudice hardcover annotated 1813",
+    "search": [
+      "pride",
+      "prejudice"
+    ],
+    "optional": [
+      "1813",
+      "and",
+      "annotated",
+      "hardcover"
+    ],
+    "all": [
+      "pride",
+      "and",
+      "prejudice",
+      "hardcover",
+      "annotated",
+      "1813"
+    ],
+    "head": [],
+    "year": 1813,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [
+      "hardcover",
+      "annotated"
+    ],
+    "text": "pride and prejudice hardcover annotated 1813",
+    "raw": "pride and prejudice hardcover annotated 1813"
+  },
+  {
+    "query": "moby dick melville paperback unabridged",
+    "search": [
+      "moby",
+      "dick",
+      "melville"
+    ],
+    "optional": [
+      "paperback",
+      "unabridged"
+    ],
+    "all": [
+      "moby",
+      "dick",
+      "melville",
+      "paperback",
+      "unabridged"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [
+      "paperback",
+      "unabridged"
+    ],
+    "text": "moby dick melville paperback unabridged",
+    "raw": "moby dick melville paperback unabridged"
+  },
+  {
+    "query": "tolkien hobbit illustrated deluxe edition hardcover",
+    "search": [
+      "tolkien",
+      "hobbit"
+    ],
+    "optional": [
+      "deluxe",
+      "edition",
+      "hardcover",
+      "illustrated"
+    ],
+    "all": [
+      "tolkien",
+      "hobbit",
+      "illustrated",
+      "deluxe",
+      "edition",
+      "hardcover"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [
+      "illustrated",
+      "deluxe",
+      "edition",
+      "hardcover"
+    ],
+    "text": "tolkien hobbit illustrated deluxe edition hardcover",
+    "raw": "tolkien hobbit illustrated deluxe edition hardcover"
+  },
+  {
+    "query": "tolkein hobbit",
+    "search": [
+      "tolkein",
+      "hobbit"
+    ],
+    "optional": [],
+    "all": [
+      "tolkein",
+      "hobbit"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "tolkein hobbit",
+    "raw": "tolkein hobbit"
+  },
+  {
+    "query": "great expecttions dikens",
+    "search": [
+      "great",
+      "expecttions",
+      "dikens"
+    ],
+    "optional": [],
+    "all": [
+      "great",
+      "expecttions",
+      "dikens"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "great expecttions dikens",
+    "raw": "great expecttions dikens"
+  },
+  {
+    "query": "harry poter philosophers stone",
+    "search": [
+      "harry",
+      "poter",
+      "philosophers",
+      "stone"
+    ],
+    "optional": [],
+    "all": [
+      "harry",
+      "poter",
+      "philosophers",
+      "stone"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "harry poter philosophers stone",
+    "raw": "harry poter philosophers stone"
+  },
+  {
+    "query": "farenheit 451 bradbury",
+    "search": [
+      "farenheit",
+      "451",
+      "bradbury"
+    ],
+    "optional": [],
+    "all": [
+      "farenheit",
+      "451",
+      "bradbury"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "farenheit 451 bradbury",
+    "raw": "farenheit 451 bradbury"
+  },
+  {
+    "query": "wuthering hieghts",
+    "search": [
+      "wuthering",
+      "hieghts"
+    ],
+    "optional": [],
+    "all": [
+      "wuthering",
+      "hieghts"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "wuthering hieghts",
+    "raw": "wuthering hieghts"
+  },
+  {
+    "query": "anne green gables",
+    "search": [
+      "anne",
+      "green",
+      "gables"
+    ],
+    "optional": [],
+    "all": [
+      "anne",
+      "green",
+      "gables"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "anne green gables",
+    "raw": "anne green gables"
+  },
+  {
+    "query": "old man sea hemingway",
+    "search": [
+      "old",
+      "man",
+      "sea",
+      "hemingway"
+    ],
+    "optional": [],
+    "all": [
+      "old",
+      "man",
+      "sea",
+      "hemingway"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "old man sea hemingway",
+    "raw": "old man sea hemingway"
+  },
+  {
+    "query": "kill mockingbird",
+    "search": [
+      "kill",
+      "mockingbird"
+    ],
+    "optional": [],
+    "all": [
+      "kill",
+      "mockingbird"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "kill mockingbird",
+    "raw": "kill mockingbird"
+  },
+  {
+    "query": "the hobbit or there and back again",
+    "search": [
+      "hobbit",
+      "there",
+      "back",
+      "again"
+    ],
+    "optional": [
+      "and",
+      "or",
+      "the"
+    ],
+    "all": [
+      "the",
+      "hobbit",
+      "or",
+      "there",
+      "and",
+      "back",
+      "again"
+    ],
+    "head": [
+      "hobbit"
+    ],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "the hobbit or there and back again",
+    "raw": "the hobbit or there and back again"
+  },
+  {
+    "query": "frankenstein or the modern prometheus",
+    "search": [
+      "frankenstein",
+      "modern",
+      "prometheus"
+    ],
+    "optional": [
+      "or",
+      "the"
+    ],
+    "all": [
+      "frankenstein",
+      "or",
+      "the",
+      "modern",
+      "prometheus"
+    ],
+    "head": [
+      "frankenstein"
+    ],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "frankenstein or the modern prometheus",
+    "raw": "frankenstein or the modern prometheus"
+  },
+  {
+    "query": "harry potter and the sorcerer's stone",
+    "search": [
+      "harry",
+      "potter",
+      "sorcerers",
+      "stone"
+    ],
+    "optional": [
+      "and",
+      "the"
+    ],
+    "all": [
+      "harry",
+      "potter",
+      "and",
+      "the",
+      "sorcerers",
+      "stone"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "harry potter and the sorcerer's stone",
+    "raw": "harry potter and the sorcerer's stone"
+  },
+  {
+    "query": "bronte jane eyre",
+    "search": [
+      "bronte",
+      "jane",
+      "eyre"
+    ],
+    "optional": [],
+    "all": [
+      "bronte",
+      "jane",
+      "eyre"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "bronte jane eyre",
+    "raw": "bronte jane eyre"
+  },
+  {
+    "query": "pride & prejudice",
+    "search": [
+      "pride",
+      "prejudice"
+    ],
+    "optional": [
+      "and"
+    ],
+    "all": [
+      "pride",
+      "and",
+      "prejudice"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "pride & prejudice",
+    "raw": "pride & prejudice"
+  },
+  {
+    "query": "les misérables hugo",
+    "search": [
+      "les",
+      "miserables",
+      "hugo"
+    ],
+    "optional": [],
+    "all": [
+      "les",
+      "miserables",
+      "hugo"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "les misérables hugo",
+    "raw": "les misérables hugo"
+  },
+  {
+    "query": "garcía márquez one hundred years of solitude",
+    "search": [
+      "garcia",
+      "marquez",
+      "100",
+      "years",
+      "solitude"
+    ],
+    "optional": [
+      "of"
+    ],
+    "all": [
+      "garcia",
+      "marquez",
+      "one",
+      "hundred",
+      "years",
+      "of",
+      "solitude"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "garcía márquez one hundred years of solitude",
+    "raw": "garcía márquez one hundred years of solitude"
+  },
+  {
+    "query": "scout atticus",
+    "search": [
+      "scout",
+      "atticus"
+    ],
+    "optional": [],
+    "all": [
+      "scout",
+      "atticus"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "scout atticus",
+    "raw": "scout atticus"
+  },
+  {
+    "query": "ahab whale",
+    "search": [
+      "ahab",
+      "whale"
+    ],
+    "optional": [],
+    "all": [
+      "ahab",
+      "whale"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "ahab whale",
+    "raw": "ahab whale"
+  },
+  {
+    "query": "bilbo dragon",
+    "search": [
+      "bilbo",
+      "dragon"
+    ],
+    "optional": [],
+    "all": [
+      "bilbo",
+      "dragon"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "bilbo dragon",
+    "raw": "bilbo dragon"
+  },
+  {
+    "query": "holden caulfield",
+    "search": [
+      "holden",
+      "caulfield"
+    ],
+    "optional": [],
+    "all": [
+      "holden",
+      "caulfield"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "holden caulfield",
+    "raw": "holden caulfield"
+  },
+  {
+    "query": "sherlock baskerville",
+    "search": [
+      "sherlock",
+      "baskerville"
+    ],
+    "optional": [],
+    "all": [
+      "sherlock",
+      "baskerville"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "sherlock baskerville",
+    "raw": "sherlock baskerville"
+  },
+  {
+    "query": "hobbit dixon",
+    "search": [
+      "hobbit",
+      "dixon"
+    ],
+    "optional": [],
+    "all": [
+      "hobbit",
+      "dixon"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "hobbit dixon",
+    "raw": "hobbit dixon"
+  },
+  {
+    "query": "hobbit graphic novel",
+    "search": [
+      "hobbit",
+      "graphic"
+    ],
+    "optional": [
+      "novel"
+    ],
+    "all": [
+      "hobbit",
+      "graphic",
+      "novel"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [
+      "Adaptation"
+    ],
+    "removed_noise": [
+      "novel"
+    ],
+    "text": "hobbit graphic novel",
+    "raw": "hobbit graphic novel"
+  },
+  {
+    "query": "the hobbit tolkien dixon",
+    "search": [
+      "hobbit",
+      "tolkien",
+      "dixon"
+    ],
+    "optional": [
+      "the"
+    ],
+    "all": [
+      "the",
+      "hobbit",
+      "tolkien",
+      "dixon"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "the hobbit tolkien dixon",
+    "raw": "the hobbit tolkien dixon"
+  },
+  {
+    "query": "pride and prejudice",
+    "search": [
+      "pride",
+      "prejudice"
+    ],
+    "optional": [
+      "and"
+    ],
+    "all": [
+      "pride",
+      "and",
+      "prejudice"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "pride and prejudice",
+    "raw": "pride and prejudice"
+  },
+  {
+    "query": "adventures of huckleberry finn",
+    "search": [
+      "adventures",
+      "huckleberry",
+      "finn"
+    ],
+    "optional": [
+      "of"
+    ],
+    "all": [
+      "adventures",
+      "of",
+      "huckleberry",
+      "finn"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "adventures of huckleberry finn",
+    "raw": "adventures of huckleberry finn"
+  },
+  {
+    "query": "a tale of two cities",
+    "search": [
+      "tale",
+      "2",
+      "cities"
+    ],
+    "optional": [
+      "a",
+      "of"
+    ],
+    "all": [
+      "a",
+      "tale",
+      "of",
+      "two",
+      "cities"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "a tale of two cities",
+    "raw": "a tale of two cities"
+  },
+  {
+    "query": "twilight",
+    "search": [
+      "twilight"
+    ],
+    "optional": [],
+    "all": [
+      "twilight"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "twilight",
+    "raw": "twilight"
+  },
+  {
+    "query": "meyer",
+    "search": [
+      "meyer"
+    ],
+    "optional": [],
+    "all": [
+      "meyer"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "meyer",
+    "raw": "meyer"
+  },
+  {
+    "query": "hermione",
+    "search": [
+      "hermione"
+    ],
+    "optional": [],
+    "all": [
+      "hermione"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "hermione",
+    "raw": "hermione"
+  },
+  {
+    "query": "emma",
+    "search": [
+      "emma"
+    ],
+    "optional": [],
+    "all": [
+      "emma"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "emma",
+    "raw": "emma"
+  },
+  {
+    "query": "xqzv plorft wibble",
+    "search": [
+      "xqzv",
+      "plorft",
+      "wibble"
+    ],
+    "optional": [],
+    "all": [
+      "xqzv",
+      "plorft",
+      "wibble"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "xqzv plorft wibble",
+    "raw": "xqzv plorft wibble"
+  },
+  {
+    "query": "the purple elephant who sang opera on mars",
+    "search": [
+      "purple",
+      "elephant",
+      "who",
+      "sang",
+      "opera",
+      "mars"
+    ],
+    "optional": [
+      "on",
+      "the"
+    ],
+    "all": [
+      "the",
+      "purple",
+      "elephant",
+      "who",
+      "sang",
+      "opera",
+      "on",
+      "mars"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "the purple elephant who sang opera on mars",
+    "raw": "the purple elephant who sang opera on mars"
+  },
+  {
+    "query": "?!? ... ###",
+    "search": [],
+    "optional": [],
+    "all": [],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "?!? ... ###",
+    "raw": "?!? ... ###"
+  },
+  {
+    "query": "katniss",
+    "search": [
+      "katniss"
+    ],
+    "optional": [],
+    "all": [
+      "katniss"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "katniss",
+    "raw": "katniss"
+  },
+  {
+    "query": "gatsby daisy",
+    "search": [
+      "gatsby",
+      "daisy"
+    ],
+    "optional": [],
+    "all": [
+      "gatsby",
+      "daisy"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "gatsby daisy",
+    "raw": "gatsby daisy"
+  },
+  {
+    "query": "elizabeth darcy",
+    "search": [
+      "elizabeth",
+      "darcy"
+    ],
+    "optional": [],
+    "all": [
+      "elizabeth",
+      "darcy"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "elizabeth darcy",
+    "raw": "elizabeth darcy"
+  },
+  {
+    "query": "heathcliff moors",
+    "search": [
+      "heathcliff",
+      "moors"
+    ],
+    "optional": [],
+    "all": [
+      "heathcliff",
+      "moors"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "heathcliff moors",
+    "raw": "heathcliff moors"
+  },
+  {
+    "query": "jean valjean",
+    "search": [
+      "jean",
+      "valjean"
+    ],
+    "optional": [],
+    "all": [
+      "jean",
+      "valjean"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "jean valjean",
+    "raw": "jean valjean"
+  },
+  {
+    "query": "dorian gray",
+    "search": [
+      "dorian",
+      "gray"
+    ],
+    "optional": [],
+    "all": [
+      "dorian",
+      "gray"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "dorian gray",
+    "raw": "dorian gray"
+  },
+  {
+    "query": "frodo ring",
+    "search": [
+      "frodo",
+      "ring"
+    ],
+    "optional": [],
+    "all": [
+      "frodo",
+      "ring"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "frodo ring",
+    "raw": "frodo ring"
+  },
+  {
+    "query": "rowling",
+    "search": [
+      "rowling"
+    ],
+    "optional": [],
+    "all": [
+      "rowling"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "rowling",
+    "raw": "rowling"
+  },
+  {
+    "query": "harry potter philosophers stone",
+    "search": [
+      "harry",
+      "potter",
+      "philosophers",
+      "stone"
+    ],
+    "optional": [],
+    "all": [
+      "harry",
+      "potter",
+      "philosophers",
+      "stone"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "harry potter philosophers stone",
+    "raw": "harry potter philosophers stone"
+  },
+  {
+    "query": "sparknotes catcher in the rye",
+    "search": [
+      "sparknotes",
+      "catcher",
+      "rye"
+    ],
+    "optional": [
+      "in",
+      "the"
+    ],
+    "all": [
+      "sparknotes",
+      "catcher",
+      "in",
+      "the",
+      "rye"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [
+      "StudyGuide"
+    ],
+    "removed_noise": [],
+    "text": "sparknotes catcher in the rye",
+    "raw": "sparknotes catcher in the rye"
+  },
+  {
+    "query": "lotr",
+    "search": [
+      "lotr"
+    ],
+    "optional": [],
+    "all": [
+      "lotr"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "lotr",
+    "raw": "lotr"
+  },
+  {
+    "query": "tom sawyer",
+    "search": [
+      "tom",
+      "sawyer"
+    ],
+    "optional": [],
+    "all": [
+      "tom",
+      "sawyer"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "tom sawyer",
+    "raw": "tom sawyer"
+  },
+  {
+    "query": "harry potter philosopher's stone",
+    "search": [
+      "harry",
+      "potter",
+      "philosophers",
+      "stone"
+    ],
+    "optional": [],
+    "all": [
+      "harry",
+      "potter",
+      "philosophers",
+      "stone"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "harry potter philosopher's stone",
+    "raw": "harry potter philosopher's stone"
+  },
+  {
+    "query": "The Adventures of Huckleberry Finn by Mark Twain (Illustrated) [Annotated]",
+    "search": [
+      "adventures",
+      "huckleberry",
+      "finn",
+      "mark",
+      "twain"
+    ],
+    "optional": [
+      "annotated",
+      "by",
+      "illustrated",
+      "of",
+      "the"
+    ],
+    "all": [
+      "the",
+      "adventures",
+      "of",
+      "huckleberry",
+      "finn",
+      "by",
+      "mark",
+      "twain",
+      "illustrated",
+      "annotated"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [
+      "illustrated",
+      "annotated"
+    ],
+    "text": "The Adventures of Huckleberry Finn by Mark Twain (Illustrated) [Annotated]",
+    "raw": "The Adventures of Huckleberry Finn by Mark Twain (Illustrated) [Annotated]"
+  },
+  {
+    "query": "dickens' great expectations",
+    "search": [
+      "dickens",
+      "great",
+      "expectations"
+    ],
+    "optional": [],
+    "all": [
+      "dickens",
+      "great",
+      "expectations"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "dickens' great expectations",
+    "raw": "dickens' great expectations"
+  },
+  {
+    "query": "les miserables hugo",
+    "search": [
+      "les",
+      "miserables",
+      "hugo"
+    ],
+    "optional": [],
+    "all": [
+      "les",
+      "miserables",
+      "hugo"
+    ],
+    "head": [],
+    "year": null,
+    "soft": [],
+    "intents": [],
+    "removed_noise": [],
+    "text": "les miserables hugo",
+    "raw": "les miserables hugo"
+  }
+]

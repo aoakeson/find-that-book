@@ -1,0 +1,12 @@
+{
+  "summary": "Open Library timed out",
+  "description": "Every attempt of the first call timed out.",
+  "value": {
+    "type": "/problems/catalog-timeout",
+    "title": "Open Library did not answer in time",
+    "status": 504,
+    "detail": "Every attempt timed out (3 attempt(s)). Try again shortly.",
+    "code": "catalog_timeout",
+    "trace_id": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
+  }
+}

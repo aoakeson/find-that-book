@@ -1,0 +1,253 @@
+{
+  "query": "dickens",
+  "status": "ambiguous",
+  "status_reason": "author_only",
+  "hint": "These are Charles Dickens's most-published works. Add a title to narrow it.",
+  "degraded": false,
+  "degraded_reasons": [],
+  "interpretation": {
+    "title": null,
+    "author": "Charles Dickens",
+    "characters": [],
+    "keywords": [],
+    "english_title": null,
+    "original_title": null,
+    "year": null,
+    "removed_noise": [],
+    "source": "llm",
+    "intent": "book",
+    "topics": []
+  },
+  "candidates": [
+    {
+      "rank": 1,
+      "work_id": "OL1440354W",
+      "title": "A Christmas Carol",
+      "subtitle": null,
+      "author": "Charles Dickens",
+      "primary_authors": [
+        {
+          "key": "OL24638A",
+          "name": "Charles Dickens",
+          "url": "https://openlibrary.org/authors/OL24638A"
+        }
+      ],
+      "primary_authors_total": 1,
+      "contributors": [],
+      "contributors_total": 0,
+      "first_publish_year": 1843,
+      "edition_count": 3196,
+      "open_library_url": "https://openlibrary.org/works/OL1440354W",
+      "cover_url": "https://covers.openlibrary.org/b/id/13299306-M.jpg",
+      "match_tier": "d",
+      "match_tier_label": "Author only",
+      "matched_subjects": [],
+      "explanation": "Author-only match: Charles Dickens is the primary author; 3,196 editions.",
+      "explanation_source": "llm",
+      "second_opinion": false,
+      "duplicates_folded": 0
+    },
+    {
+      "rank": 2,
+      "work_id": "OL118421W",
+      "title": "Oliver Twist",
+      "subtitle": null,
+      "author": "Charles Dickens",
+      "primary_authors": [
+        {
+          "key": "OL24638A",
+          "name": "Charles Dickens",
+          "url": "https://openlibrary.org/authors/OL24638A"
+        }
+      ],
+      "primary_authors_total": 1,
+      "contributors": [],
+      "contributors_total": 0,
+      "first_publish_year": 1838,
+      "edition_count": 2181,
+      "open_library_url": "https://openlibrary.org/works/OL118421W",
+      "cover_url": "https://covers.openlibrary.org/b/id/14361217-M.jpg",
+      "match_tier": "d",
+      "match_tier_label": "Author only",
+      "matched_subjects": [],
+      "explanation": "Author-only match: Charles Dickens is the primary author; 2,181 editions.",
+      "explanation_source": "llm",
+      "second_opinion": false,
+      "duplicates_folded": 0
+    },
+    {
+      "rank": 3,
+      "work_id": "OL118411W",
+      "title": "A Tale of Two Cities",
+      "subtitle": null,
+      "author": "Charles Dickens",
+      "primary_authors": [
+        {
+          "key": "OL24638A",
+          "name": "Charles Dickens",
+          "url": "https://openlibrary.org/authors/OL24638A"
+        }
+      ],
+      "primary_authors_total": 1,
+      "contributors": [],
+      "contributors_total": 0,
+      "first_publish_year": 1859,
+      "edition_count": 1971,
+      "open_library_url": "https://openlibrary.org/works/OL118411W",
+      "cover_url": "https://covers.openlibrary.org/b/id/13301713-M.jpg",
+      "match_tier": "d",
+      "match_tier_label": "Author only",
+      "matched_subjects": [],
+      "explanation": "Author-only match: Charles Dickens is the primary author; 1,971 editions.",
+      "explanation_source": "llm",
+      "second_opinion": false,
+      "duplicates_folded": 0
+    },
+    {
+      "rank": 4,
+      "work_id": "OL118435W",
+      "title": "Great Expectations",
+      "subtitle": null,
+      "author": "Charles Dickens",
+      "primary_authors": [
+        {
+          "key": "OL24638A",
+          "name": "Charles Dickens",
+          "url": "https://openlibrary.org/authors/OL24638A"
+        }
+      ],
+      "primary_authors_total": 1,
+      "contributors": [],
+      "contributors_total": 0,
+      "first_publish_year": 1860,
+      "edition_count": 1616,
+      "open_library_url": "https://openlibrary.org/works/OL118435W",
+      "cover_url": "https://covers.openlibrary.org/b/id/13285640-M.jpg",
+      "match_tier": "d",
+      "match_tier_label": "Author only",
+      "matched_subjects": [],
+      "explanation": "Author-only match: Charles Dickens is the primary author; 1,616 editions.",
+      "explanation_source": "llm",
+      "second_opinion": false,
+      "duplicates_folded": 0
+    },
+    {
+      "rank": 5,
+      "work_id": "OL118445W",
+      "title": "David Copperfield",
+      "subtitle": null,
+      "author": "Charles Dickens",
+      "primary_authors": [
+        {
+          "key": "OL24638A",
+          "name": "Charles Dickens",
+          "url": "https://openlibrary.org/authors/OL24638A"
+        }
+      ],
+      "primary_authors_total": 1,
+      "contributors": [],
+      "contributors_total": 0,
+      "first_publish_year": 1849,
+      "edition_count": 1310,
+      "open_library_url": "https://openlibrary.org/works/OL118445W",
+      "cover_url": "https://covers.openlibrary.org/b/id/12711497-M.jpg",
+      "match_tier": "d",
+      "match_tier_label": "Author only",
+      "matched_subjects": [],
+      "explanation": "Author-only match: Charles Dickens is the primary author; 1,310 editions.",
+      "explanation_source": "llm",
+      "second_opinion": false,
+      "duplicates_folded": 0
+    }
+  ],
+  "meta": {
+    "request_id": "<scrubbed>",
+    "elapsed_ms": 4510,
+    "timings_ms": {
+      "clean": 0,
+      "interpret": 540,
+      "retrieve": 4060,
+      "rank": 2,
+      "explain": 420,
+      "judge": 0
+    },
+    "open_library": {
+      "calls": 2,
+      "cache_hits": 0,
+      "upstream_requests": 2,
+      "retries": 0,
+      "slow_empty_requeries": 0,
+      "budget": 5,
+      "steps": [
+        {
+          "step": "broad",
+          "outcome": "ok",
+          "cache_hit": false,
+          "attempts": 1,
+          "elapsed_ms": 2410,
+          "results": 20,
+          "num_found": 1280
+        },
+        {
+          "step": "author_works",
+          "outcome": "ok",
+          "cache_hit": false,
+          "attempts": 1,
+          "elapsed_ms": 1650,
+          "results": 10,
+          "num_found": 1280
+        }
+      ]
+    },
+    "llm": {
+      "provider": "gemini",
+      "model": "test-model",
+      "calls": 2,
+      "cache_hits": 0,
+      "input_tokens": 1490,
+      "output_tokens": 262,
+      "est_cost_usd": 0.001102,
+      "prompt_versions": {
+        "interpret": "interpret.v3",
+        "explain": "explain.v3"
+      },
+      "steps": [
+        {
+          "operation": "interpret",
+          "provider": "gemini",
+          "model": "test-model",
+          "prompt_id": "interpret.v3",
+          "status": "ok",
+          "cache_hit": false,
+          "elapsed_ms": 540,
+          "input_tokens": 380,
+          "output_tokens": 22
+        },
+        {
+          "operation": "explain",
+          "provider": "gemini",
+          "model": "test-model",
+          "prompt_id": "explain.v3",
+          "status": "ok",
+          "cache_hit": false,
+          "elapsed_ms": 420,
+          "input_tokens": 1110,
+          "output_tokens": 240
+        }
+      ]
+    },
+    "judge": {
+      "enabled": true,
+      "status": "skipped",
+      "pick": null,
+      "probability": null,
+      "threshold": 0.9,
+      "agreed": null,
+      "model": null,
+      "latency_ms": null,
+      "input_tokens": null,
+      "est_cost_usd": null,
+      "detail": "not_applicable"
+    }
+  }
+}

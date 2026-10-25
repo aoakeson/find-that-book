@@ -1,0 +1,105 @@
+{
+  "summary": "No match: xqzv blorptangle",
+  "description": "Nothing usable: a 200 with an empty list and a hint (\"no book matched\" is an answer, not a 404). Recorded on build 918d7b88 with gpt-4.1-mini, judge off; with Gemini (the default) the meta.llm provider/model differ, and the LLM-written parts (interpretation, explanation wording) may too.",
+  "value": {
+    "query": "xqzv blorptangle",
+    "status": "none",
+    "status_reason": "no_candidates",
+    "hint": "Check the spelling or add an author.",
+    "degraded": false,
+    "degraded_reasons": [],
+    "interpretation": {
+      "title": null,
+      "author": null,
+      "characters": [],
+      "keywords": [
+        "xqzv",
+        "blorptangle"
+      ],
+      "english_title": null,
+      "original_title": null,
+      "year": null,
+      "removed_noise": [],
+      "source": "llm",
+      "intent": "book",
+      "topics": []
+    },
+    "candidates": [],
+    "meta": {
+      "request_id": "00-4ef63f125af6fd7574c9ed645cf76d3e-5d832b1f81c40461-00",
+      "elapsed_ms": 1324,
+      "timings_ms": {
+        "clean": 0,
+        "interpret": 1222,
+        "rank": 0,
+        "retrieve": 1323
+      },
+      "open_library": {
+        "calls": 2,
+        "cache_hits": 0,
+        "upstream_requests": 2,
+        "retries": 0,
+        "slow_empty_requeries": 0,
+        "budget": 5,
+        "steps": [
+          {
+            "step": "broad",
+            "outcome": "ok",
+            "cache_hit": false,
+            "attempts": 1,
+            "elapsed_ms": 204,
+            "results": 0,
+            "num_found": 0
+          },
+          {
+            "step": "any_of",
+            "outcome": "ok",
+            "cache_hit": false,
+            "attempts": 1,
+            "elapsed_ms": 100,
+            "results": 0,
+            "num_found": 0
+          }
+        ]
+      },
+      "llm": {
+        "provider": "openai",
+        "model": "gpt-4.1-mini",
+        "calls": 1,
+        "cache_hits": 0,
+        "input_tokens": 671,
+        "output_tokens": 46,
+        "est_cost_usd": 0.000342,
+        "prompt_versions": {
+          "interpret": "interpret.v5"
+        },
+        "steps": [
+          {
+            "operation": "interpret",
+            "provider": "openai",
+            "model": "gpt-4.1-mini",
+            "prompt_id": "interpret.v5",
+            "status": "ok",
+            "cache_hit": false,
+            "elapsed_ms": 1222,
+            "input_tokens": 671,
+            "output_tokens": 46
+          }
+        ]
+      },
+      "judge": {
+        "enabled": false,
+        "status": "off",
+        "pick": null,
+        "probability": null,
+        "threshold": 0.9,
+        "agreed": null,
+        "model": null,
+        "latency_ms": null,
+        "input_tokens": null,
+        "est_cost_usd": null,
+        "detail": null
+      }
+    }
+  }
+}

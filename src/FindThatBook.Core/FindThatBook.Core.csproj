@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Deliberately no PackageReference: matching, ranking and orchestration stay free of I/O and vendor packages. -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="FindThatBook.Core.Tests" />
+    <InternalsVisibleTo Include="FindThatBook.Eval" />
+  </ItemGroup>
+</Project>

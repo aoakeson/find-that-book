@@ -1,0 +1,17 @@
+{
+  "summary": "Only stop words",
+  "description": "\"the\" or \"a of the\": nothing left to search (DE-05).",
+  "value": {
+    "type": "/problems/no-searchable-terms",
+    "title": "The query has no searchable words.",
+    "status": 400,
+    "errors": {
+      "Q": [
+        "Add a title or author."
+      ]
+    },
+    "code": "no_searchable_terms",
+    "hint": "Add a title or author.",
+    "trace_id": "00-002abaa5f14359a89211d7437e439cf0-9372df5f1a7db3a5-00"
+  }
+}

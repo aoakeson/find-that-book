@@ -1,0 +1,2196 @@
+{
+  "name": "Find That Book golden set",
+  "version": 1,
+  "created": "2026-10-24",
+  "verified_against": "live https://openlibrary.org (search.json, search/authors.json) on 2026-10-24",
+  "how_verified": [
+    "Canonical work = for (title, author): GET /search.json?title=..&author=..&sort=editions; among works whose normalized main title equals the expected title, the one with the most editions.",
+    "Author-only rows: GET /search/authors.json?q=<name>; every author record with that exact name is listed (Open Library has duplicate author records).",
+    "Every query was also run raw (GET /search.json?q=<query>&limit=10); observed_live records the raw top-1 and numFound as evidence of difficulty, not as the expectation.",
+    "Extra acceptable ids are listed only where Open Library has a second record for the same book, and the note says why."
+  ],
+  "scoring": {
+    "top1": "candidates[0].work_id in expected.top1 (author rows: candidates[0] has an author in expected.author_keys, or author surname = expected.author_surname)",
+    "top5": "any of candidates[0..4] in expected.top5 (author rows: any of the first 5 by the author)",
+    "status": "response.status in expected.status",
+    "rows without top1/author": "no-answer rows: only status is scored; any 'match' is a false positive"
+  },
+  "categories": [
+    "ambiguous",
+    "author_only",
+    "brief",
+    "character",
+    "contributor",
+    "diacritics",
+    "duplicates",
+    "noisy",
+    "none",
+    "partial",
+    "subtitle",
+    "title_author",
+    "title_only",
+    "typo"
+  ],
+  "cases": [
+    {
+      "id": "brief-01",
+      "query": "mark huckleberry",
+      "category": "brief",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL53908W"
+        ],
+        "top5": [
+          "OL53908W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL53908W",
+        "title": "Adventures of Huckleberry Finn",
+        "authors": [
+          "Mark Twain"
+        ],
+        "edition_count": 2623,
+        "first_publish_year": 1876,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL37513138W",
+            "edition_count": 161
+          },
+          {
+            "work_id": "OL36127847W",
+            "edition_count": 14
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 1049,
+        "raw_top1": "OL53908W"
+      },
+      "note": "'mark' is a first name; a naive title/author split gives Huckleberry Rahr"
+    },
+    {
+      "id": "brief-02",
+      "query": "twilight meyer",
+      "category": "brief",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL5720023W"
+        ],
+        "top5": [
+          "OL5720023W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL5720023W",
+        "title": "Twilight",
+        "authors": [
+          "Stephenie Meyer"
+        ],
+        "edition_count": 132,
+        "first_publish_year": 2005,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL27437664W",
+            "edition_count": 2
+          },
+          {
+            "work_id": "OL28604658W",
+            "edition_count": 1
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 140,
+        "raw_top1": "OL5720023W"
+      }
+    },
+    {
+      "id": "brief-03",
+      "query": "tolkien hobbit illustrated deluxe 1937",
+      "category": "brief",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL27482W"
+        ],
+        "top5": [
+          "OL27482W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL27482W",
+        "title": "The Hobbit",
+        "authors": [
+          "J.R.R. Tolkien"
+        ],
+        "edition_count": 482,
+        "first_publish_year": 1937,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL219602W",
+            "edition_count": 10
+          },
+          {
+            "work_id": "OL45346371W",
+            "edition_count": 2
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 1,
+        "raw_top1": "OL27482W"
+      },
+      "note": "raw q= is fragile: one more noise word ('edition') gives 0 hits; graphic novel OL219602W must rank below"
+    },
+    {
+      "id": "brief-04",
+      "query": "dickens",
+      "category": "brief",
+      "expected": {
+        "status": [
+          "ambiguous"
+        ],
+        "author": "Charles Dickens",
+        "author_keys": [
+          "OL24638A",
+          "OL13244952A",
+          "OL1143300A",
+          "OL16224391A"
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 17314,
+        "raw_top1": "OL8193465W"
+      },
+      "note": "author-only fallback (tier D): top works by Charles Dickens, not Monica Dickens"
+    },
+    {
+      "id": "brief-05",
+      "query": "tale two cities",
+      "category": "brief",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL8193465W"
+        ],
+        "top5": [
+          "OL8193465W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL8193465W",
+        "title": "A Tale of Two Cities",
+        "authors": [
+          "Charles Dickens"
+        ],
+        "edition_count": 2059,
+        "first_publish_year": 1800,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL14926865W",
+            "edition_count": 8
+          },
+          {
+            "work_id": "OL43318590W",
+            "edition_count": 8
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 1467,
+        "raw_top1": "OL8193465W"
+      },
+      "note": "'[adaptation]' works crowd the top 5; first_publish_year is wrong (1800)"
+    },
+    {
+      "id": "brief-06",
+      "query": "austen bennet",
+      "category": "brief",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL66554W"
+        ],
+        "top5": [
+          "OL66554W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL66554W",
+        "title": "Pride and Prejudice",
+        "authors": [
+          "Jane Austen"
+        ],
+        "edition_count": 4042,
+        "first_publish_year": 1813,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL15165350W",
+            "edition_count": 132
+          },
+          {
+            "work_id": "OL27025377W",
+            "edition_count": 12
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 191,
+        "raw_top1": "OL66554W"
+      },
+      "note": "character hint; matched via person field; duplicate P&P work (132 eds) is #2"
+    },
+    {
+      "id": "title-01",
+      "query": "the hobbit",
+      "category": "title_only",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL27482W"
+        ],
+        "top5": [
+          "OL27482W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL27482W",
+        "title": "The Hobbit",
+        "authors": [
+          "J.R.R. Tolkien"
+        ],
+        "edition_count": 482,
+        "first_publish_year": 1937,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL219602W",
+            "edition_count": 10
+          },
+          {
+            "work_id": "OL45346371W",
+            "edition_count": 2
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 461,
+        "raw_top1": "OL27482W"
+      }
+    },
+    {
+      "id": "title-02",
+      "query": "frankenstein",
+      "category": "title_only",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL450063W"
+        ],
+        "top5": [
+          "OL450063W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL450063W",
+        "title": "Frankenstein; or, The Modern Prometheus",
+        "authors": [
+          "Mary Shelley"
+        ],
+        "edition_count": 2187,
+        "first_publish_year": 1818,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL26860869W",
+            "edition_count": 85
+          },
+          {
+            "work_id": "OL36141872W",
+            "edition_count": 43
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 3383,
+        "raw_top1": "OL450063W"
+      },
+      "note": "canonical title is 'Frankenstein; or, The Modern Prometheus': main-title cut at ';' makes it an exact match"
+    },
+    {
+      "id": "title-03",
+      "query": "the great gatsby",
+      "category": "title_only",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL468431W"
+        ],
+        "top5": [
+          "OL468431W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL468431W",
+        "title": "The Great Gatsby",
+        "authors": [
+          "F. Scott Fitzgerald"
+        ],
+        "edition_count": 1181,
+        "first_publish_year": 1920,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL33864210W",
+            "edition_count": 11
+          },
+          {
+            "work_id": "OL35975056W",
+            "edition_count": 8
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 482,
+        "raw_top1": "OL468431W"
+      }
+    },
+    {
+      "id": "title-04",
+      "query": "moby dick",
+      "category": "title_only",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL102749W"
+        ],
+        "top5": [
+          "OL102749W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL102749W",
+        "title": "Moby Dick",
+        "authors": [
+          "Herman Melville"
+        ],
+        "edition_count": 1129,
+        "first_publish_year": 1851,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL25985378W",
+            "edition_count": 25
+          },
+          {
+            "work_id": "OL30932533W",
+            "edition_count": 20
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 1470,
+        "raw_top1": "OL102749W"
+      }
+    },
+    {
+      "id": "title-05",
+      "query": "to kill a mockingbird",
+      "category": "title_only",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL3140822W"
+        ],
+        "top5": [
+          "OL3140822W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL3140822W",
+        "title": "To Kill a Mockingbird",
+        "authors": [
+          "Harper Lee"
+        ],
+        "edition_count": 213,
+        "first_publish_year": 1960,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL20168372W",
+            "edition_count": 2
+          },
+          {
+            "work_id": "OL24320592W",
+            "edition_count": 1
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 302,
+        "raw_top1": "OL3140822W"
+      }
+    },
+    {
+      "id": "author-01",
+      "query": "orwell",
+      "category": "author_only",
+      "expected": {
+        "status": [
+          "ambiguous"
+        ],
+        "author": "George Orwell",
+        "author_keys": [
+          "OL118077A",
+          "OL16029200A",
+          "OL15318546A",
+          "OL16230010A"
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 10357,
+        "raw_top1": "OL1168083W"
+      }
+    },
+    {
+      "id": "author-02",
+      "query": "jane austen",
+      "category": "author_only",
+      "expected": {
+        "status": [
+          "ambiguous"
+        ],
+        "author": "Jane Austen",
+        "author_keys": [
+          "OL21594A",
+          "OL16323475A"
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 5896,
+        "raw_top1": "OL66554W"
+      }
+    },
+    {
+      "id": "author-03",
+      "query": "mark twain",
+      "category": "author_only",
+      "expected": {
+        "status": [
+          "ambiguous"
+        ],
+        "author": "Mark Twain",
+        "author_keys": [
+          "OL18319A",
+          "OL9937375A",
+          "OL16227227A",
+          "OL16225221A"
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 15209,
+        "raw_top1": "OL53908W"
+      },
+      "note": "Twain has duplicate author records (OL18319A, OL9937375A); either counts"
+    },
+    {
+      "id": "author-04",
+      "query": "j.k. rowling",
+      "category": "author_only",
+      "expected": {
+        "status": [
+          "ambiguous"
+        ],
+        "author": "J. K. Rowling",
+        "author_keys": [
+          "OL23919A",
+          "OL16278610A"
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 855,
+        "raw_top1": "OL508838W"
+      },
+      "note": "initials with punctuation; raw q= top 5 are all books ABOUT Rowling titled 'J.K. Rowling': the author-only path must use /search/authors.json"
+    },
+    {
+      "id": "author-05",
+      "query": "stephen king",
+      "category": "author_only",
+      "expected": {
+        "status": [
+          "ambiguous"
+        ],
+        "author": "Stephen King",
+        "author_keys": [
+          "OL19981A",
+          "OL7829294A",
+          "OL7829287A"
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 4012,
+        "raw_top1": "OL81613W"
+      }
+    },
+    {
+      "id": "ta-01",
+      "query": "dracula stoker",
+      "category": "title_author",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL85892W"
+        ],
+        "top5": [
+          "OL85892W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL85892W",
+        "title": "Dracula",
+        "authors": [
+          "Bram Stoker"
+        ],
+        "edition_count": 1919,
+        "first_publish_year": 1897,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL14956444W",
+            "edition_count": 70
+          },
+          {
+            "work_id": "OL35956226W",
+            "edition_count": 23
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 632,
+        "raw_top1": "OL85892W"
+      }
+    },
+    {
+      "id": "ta-02",
+      "query": "1984 orwell",
+      "category": "title_author",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL1168083W"
+        ],
+        "top5": [
+          "OL1168083W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL1168083W",
+        "title": "Nineteen Eighty-Four",
+        "authors": [
+          "George Orwell"
+        ],
+        "edition_count": 727,
+        "first_publish_year": 1949,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL31903441W",
+            "edition_count": 1
+          },
+          {
+            "work_id": "OL41143048W",
+            "edition_count": 1
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 339,
+        "raw_top1": "OL1168083W"
+      },
+      "note": "numeric title vs spelled-out canonical title; '1984' must not be read as a year filter; canonical work's author_key is a duplicate George Orwell record (OL15318546A, 2 works), not OL118077A: match authors by normalized name, not key"
+    },
+    {
+      "id": "ta-03",
+      "query": "emma austen",
+      "category": "title_author",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL66513W"
+        ],
+        "top5": [
+          "OL66513W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL66513W",
+        "title": "Emma",
+        "authors": [
+          "Jane Austen"
+        ],
+        "edition_count": 2262,
+        "first_publish_year": 1815,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL15080007W",
+            "edition_count": 13
+          },
+          {
+            "work_id": "OL27025986W",
+            "edition_count": 11
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 589,
+        "raw_top1": "OL66513W"
+      }
+    },
+    {
+      "id": "ta-04",
+      "query": "of mice and men steinbeck",
+      "category": "title_author",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL23204W"
+        ],
+        "top5": [
+          "OL23204W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL23204W",
+        "title": "Of Mice and Men",
+        "authors": [
+          "John Steinbeck"
+        ],
+        "edition_count": 293,
+        "first_publish_year": 1937,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL17829994W",
+            "edition_count": 16
+          },
+          {
+            "work_id": "OL18425264W",
+            "edition_count": 2
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 144,
+        "raw_top1": "OL23204W"
+      }
+    },
+    {
+      "id": "ta-05",
+      "query": "huxley brave new world",
+      "category": "title_author",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL64365W"
+        ],
+        "top5": [
+          "OL64365W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL64365W",
+        "title": "Brave New World",
+        "authors": [
+          "Aldous Huxley"
+        ],
+        "edition_count": 723,
+        "first_publish_year": 1932,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL14942667W",
+            "edition_count": 5
+          },
+          {
+            "work_id": "OL27690578W",
+            "edition_count": 4
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 148,
+        "raw_top1": "OL64365W"
+      },
+      "note": "author first"
+    },
+    {
+      "id": "ta-06",
+      "query": "dickens tale two cities",
+      "category": "title_author",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL8193465W"
+        ],
+        "top5": [
+          "OL8193465W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL8193465W",
+        "title": "A Tale of Two Cities",
+        "authors": [
+          "Charles Dickens"
+        ],
+        "edition_count": 2059,
+        "first_publish_year": 1800,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL14926865W",
+            "edition_count": 8
+          },
+          {
+            "work_id": "OL43318590W",
+            "edition_count": 8
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 547,
+        "raw_top1": "OL8193465W"
+      }
+    },
+    {
+      "id": "noisy-01",
+      "query": "the great gatsby fitzgerald penguin classics 2003",
+      "category": "noisy",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL468431W"
+        ],
+        "top5": [
+          "OL468431W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL468431W",
+        "title": "The Great Gatsby",
+        "authors": [
+          "F. Scott Fitzgerald"
+        ],
+        "edition_count": 1181,
+        "first_publish_year": 1920,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL33864210W",
+            "edition_count": 11
+          },
+          {
+            "work_id": "OL35975056W",
+            "edition_count": 8
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 0,
+        "raw_top1": null
+      },
+      "note": "publisher + edition year; year must not filter; raw q= returns 0 hits (AND semantics); cleaned 'the great gatsby fitzgerald' finds it at #1"
+    },
+    {
+      "id": "noisy-02",
+      "query": "a christmas carol dickens illustrated",
+      "category": "noisy",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL32466W"
+        ],
+        "top5": [
+          "OL32466W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL32466W",
+        "title": "A Christmas Carol",
+        "authors": [
+          "Charles Dickens"
+        ],
+        "edition_count": 3196,
+        "first_publish_year": 1843,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL34488999W",
+            "edition_count": 13
+          },
+          {
+            "work_id": "OL24176611W",
+            "edition_count": 4
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 91,
+        "raw_top1": "OL32466W"
+      }
+    },
+    {
+      "id": "noisy-03",
+      "query": "pride and prejudice hardcover annotated 1813",
+      "category": "noisy",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL66554W"
+        ],
+        "top5": [
+          "OL66554W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL66554W",
+        "title": "Pride and Prejudice",
+        "authors": [
+          "Jane Austen"
+        ],
+        "edition_count": 4042,
+        "first_publish_year": 1813,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL15165350W",
+            "edition_count": 132
+          },
+          {
+            "work_id": "OL27025377W",
+            "edition_count": 12
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 1,
+        "raw_top1": "OL66554W"
+      }
+    },
+    {
+      "id": "noisy-04",
+      "query": "moby dick melville paperback unabridged",
+      "category": "noisy",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL102749W"
+        ],
+        "top5": [
+          "OL102749W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL102749W",
+        "title": "Moby Dick",
+        "authors": [
+          "Herman Melville"
+        ],
+        "edition_count": 1129,
+        "first_publish_year": 1851,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL25985378W",
+            "edition_count": 25
+          },
+          {
+            "work_id": "OL30932533W",
+            "edition_count": 20
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 1,
+        "raw_top1": "OL102749W"
+      }
+    },
+    {
+      "id": "noisy-05",
+      "query": "tolkien hobbit illustrated deluxe edition hardcover",
+      "category": "noisy",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL27482W"
+        ],
+        "top5": [
+          "OL27482W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL27482W",
+        "title": "The Hobbit",
+        "authors": [
+          "J.R.R. Tolkien"
+        ],
+        "edition_count": 482,
+        "first_publish_year": 1937,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL219602W",
+            "edition_count": 10
+          },
+          {
+            "work_id": "OL45346371W",
+            "edition_count": 2
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 0,
+        "raw_top1": null
+      },
+      "note": "raw q= returns 0 hits (AND semantics): proves the cleaner/relaxation ladder"
+    },
+    {
+      "id": "typo-01",
+      "query": "tolkein hobbit",
+      "category": "typo",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL27482W"
+        ],
+        "top5": [
+          "OL27482W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL27482W",
+        "title": "The Hobbit",
+        "authors": [
+          "J.R.R. Tolkien"
+        ],
+        "edition_count": 482,
+        "first_publish_year": 1937,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL219602W",
+            "edition_count": 10
+          },
+          {
+            "work_id": "OL45346371W",
+            "edition_count": 2
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 1,
+        "raw_top1": "OL3271745W"
+      },
+      "note": "raw q= returns an unrelated book; needs relaxation or LLM correction"
+    },
+    {
+      "id": "typo-02",
+      "query": "great expecttions dikens",
+      "category": "typo",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL8721462W"
+        ],
+        "top5": [
+          "OL8721462W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL8721462W",
+        "title": "Great Expectations",
+        "authors": [
+          "Charles Dickens"
+        ],
+        "edition_count": 1489,
+        "first_publish_year": 1861,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL40487595W",
+            "edition_count": 130
+          },
+          {
+            "work_id": "OL41603570W",
+            "edition_count": 26
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 0,
+        "raw_top1": null
+      },
+      "note": "raw q= returns 0 hits"
+    },
+    {
+      "id": "typo-03",
+      "query": "harry poter philosophers stone",
+      "category": "typo",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL82563W"
+        ],
+        "top5": [
+          "OL82563W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL82563W",
+        "title": "Harry Potter and the Philosopher's Stone",
+        "authors": [
+          "J. K. Rowling"
+        ],
+        "edition_count": 400,
+        "first_publish_year": 1997,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL16817116W",
+            "edition_count": 3
+          },
+          {
+            "work_id": "OL17937118W",
+            "edition_count": 2
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 2,
+        "raw_top1": "OL82563W"
+      }
+    },
+    {
+      "id": "typo-04",
+      "query": "farenheit 451 bradbury",
+      "category": "typo",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL103123W"
+        ],
+        "top5": [
+          "OL103123W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL103123W",
+        "title": "Fahrenheit 451",
+        "authors": [
+          "Ray Bradbury"
+        ],
+        "edition_count": 266,
+        "first_publish_year": 1953,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL28185143W",
+            "edition_count": 4
+          },
+          {
+            "work_id": "OL25635788W",
+            "edition_count": 2
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 3,
+        "raw_top1": "OL103123W"
+      }
+    },
+    {
+      "id": "typo-05",
+      "query": "wuthering hieghts",
+      "category": "typo",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL21177W"
+        ],
+        "top5": [
+          "OL21177W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL21177W",
+        "title": "Wuthering Heights",
+        "authors": [
+          "Emily Brontë"
+        ],
+        "edition_count": 2889,
+        "first_publish_year": 1846,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL43008309W",
+            "edition_count": 21
+          },
+          {
+            "work_id": "OL37836971W",
+            "edition_count": 11
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 0,
+        "raw_top1": null
+      },
+      "note": "raw q= returns 0 hits"
+    },
+    {
+      "id": "partial-01",
+      "query": "anne green gables",
+      "category": "partial",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL77746W"
+        ],
+        "top5": [
+          "OL77746W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL77746W",
+        "title": "Anne of Green Gables",
+        "authors": [
+          "Lucy Maud Montgomery"
+        ],
+        "edition_count": 1299,
+        "first_publish_year": 1908,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL40955314W",
+            "edition_count": 101
+          },
+          {
+            "work_id": "OL40306122W",
+            "edition_count": 45
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 568,
+        "raw_top1": "OL77746W"
+      }
+    },
+    {
+      "id": "partial-02",
+      "query": "old man sea hemingway",
+      "category": "partial",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL63073W"
+        ],
+        "top5": [
+          "OL63073W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL63073W",
+        "title": "The Old Man and the Sea",
+        "authors": [
+          "Ernest Hemingway"
+        ],
+        "edition_count": 307,
+        "first_publish_year": 1952,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL31695918W",
+            "edition_count": 16
+          },
+          {
+            "work_id": "OL40467417W",
+            "edition_count": 14
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 132,
+        "raw_top1": "OL63073W"
+      }
+    },
+    {
+      "id": "partial-04",
+      "query": "kill mockingbird",
+      "category": "partial",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL3140822W"
+        ],
+        "top5": [
+          "OL3140822W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL3140822W",
+        "title": "To Kill a Mockingbird",
+        "authors": [
+          "Harper Lee"
+        ],
+        "edition_count": 213,
+        "first_publish_year": 1960,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL20168372W",
+            "edition_count": 2
+          },
+          {
+            "work_id": "OL24320592W",
+            "edition_count": 1
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 319,
+        "raw_top1": "OL3140822W"
+      }
+    },
+    {
+      "id": "subtitle-01",
+      "query": "the hobbit or there and back again",
+      "category": "subtitle",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL27482W"
+        ],
+        "top5": [
+          "OL27482W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL27482W",
+        "title": "The Hobbit",
+        "authors": [
+          "J.R.R. Tolkien"
+        ],
+        "edition_count": 482,
+        "first_publish_year": 1937,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL219602W",
+            "edition_count": 10
+          },
+          {
+            "work_id": "OL45346371W",
+            "edition_count": 2
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 13,
+        "raw_top1": "OL27482W"
+      },
+      "note": "orphan 1-edition works carry the subtitle in the title; canonical is plain 'The Hobbit'"
+    },
+    {
+      "id": "subtitle-02",
+      "query": "frankenstein or the modern prometheus",
+      "category": "subtitle",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL450063W"
+        ],
+        "top5": [
+          "OL450063W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL450063W",
+        "title": "Frankenstein; or, The Modern Prometheus",
+        "authors": [
+          "Mary Shelley"
+        ],
+        "edition_count": 2187,
+        "first_publish_year": 1818,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL26860869W",
+            "edition_count": 85
+          },
+          {
+            "work_id": "OL36141872W",
+            "edition_count": 43
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 190,
+        "raw_top1": "OL450063W"
+      }
+    },
+    {
+      "id": "subtitle-03",
+      "query": "harry potter and the sorcerer's stone",
+      "category": "subtitle",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL82563W"
+        ],
+        "top5": [
+          "OL82563W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL82563W",
+        "title": "Harry Potter and the Philosopher's Stone",
+        "authors": [
+          "J. K. Rowling"
+        ],
+        "edition_count": 400,
+        "first_publish_year": 1997,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL16817116W",
+            "edition_count": 3
+          },
+          {
+            "work_id": "OL17937118W",
+            "edition_count": 2
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 78,
+        "raw_top1": "OL82563W"
+      },
+      "note": "US title of the same work; apostrophe; raw #2-#6 are other people's 'Sorcerer's Stone' works (poster book, film score, study guides)"
+    },
+    {
+      "id": "diacritics-01",
+      "query": "bronte jane eyre",
+      "category": "diacritics",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL1095427W"
+        ],
+        "top5": [
+          "OL1095427W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL1095427W",
+        "title": "Jane Eyre",
+        "authors": [
+          "Charlotte Brontë"
+        ],
+        "edition_count": 1170,
+        "first_publish_year": 1847,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL37840844W",
+            "edition_count": 558
+          },
+          {
+            "work_id": "OL36754933W",
+            "edition_count": 85
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 827,
+        "raw_top1": "OL1095427W"
+      },
+      "note": "a second Brontë 'Jane Eyre' work has 558 editions; canonical has 1,170"
+    },
+    {
+      "id": "diacritics-02",
+      "query": "pride & prejudice",
+      "category": "diacritics",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL66554W"
+        ],
+        "top5": [
+          "OL66554W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL66554W",
+        "title": "Pride and Prejudice",
+        "authors": [
+          "Jane Austen"
+        ],
+        "edition_count": 4042,
+        "first_publish_year": 1813,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL15165350W",
+            "edition_count": 132
+          },
+          {
+            "work_id": "OL27025377W",
+            "edition_count": 12
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 2626,
+        "raw_top1": "OL66554W"
+      },
+      "note": "& -> and"
+    },
+    {
+      "id": "diacritics-03",
+      "query": "les misérables hugo",
+      "category": "diacritics",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL1063588W"
+        ],
+        "top5": [
+          "OL1063588W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL1063588W",
+        "title": "Les Misérables",
+        "authors": [
+          "Victor Hugo"
+        ],
+        "edition_count": 526,
+        "first_publish_year": 1862,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL40542345W",
+            "edition_count": 83
+          },
+          {
+            "work_id": "OL44270693W",
+            "edition_count": 12
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 588,
+        "raw_top1": "OL1063588W"
+      }
+    },
+    {
+      "id": "diacritics-04",
+      "query": "garcía márquez one hundred years of solitude",
+      "category": "diacritics",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL274505W"
+        ],
+        "top5": [
+          "OL274505W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL274505W",
+        "title": "Cien años de soledad",
+        "authors": [
+          "Gabriel García Márquez"
+        ],
+        "edition_count": 208,
+        "first_publish_year": 1967,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL28027117W",
+            "edition_count": 1
+          },
+          {
+            "work_id": "OL38390718W",
+            "edition_count": 1
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 65,
+        "raw_top1": "OL274505W"
+      },
+      "note": "canonical work title is Spanish; English title search must still find it"
+    },
+    {
+      "id": "character-01",
+      "query": "scout atticus",
+      "category": "character",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL3140822W"
+        ],
+        "top5": [
+          "OL3140822W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL3140822W",
+        "title": "To Kill a Mockingbird",
+        "authors": [
+          "Harper Lee"
+        ],
+        "edition_count": 213,
+        "first_publish_year": 1960,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL20168372W",
+            "edition_count": 2
+          },
+          {
+            "work_id": "OL24320592W",
+            "edition_count": 1
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 13,
+        "raw_top1": "OL15093559W"
+      },
+      "note": "book-about-a-book trap: 'Scout, Atticus & Boo' ranks #1 on raw q="
+    },
+    {
+      "id": "character-02",
+      "query": "ahab whale",
+      "category": "character",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL102749W"
+        ],
+        "top5": [
+          "OL102749W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL102749W",
+        "title": "Moby Dick",
+        "authors": [
+          "Herman Melville"
+        ],
+        "edition_count": 1129,
+        "first_publish_year": 1851,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL25985378W",
+            "edition_count": 25
+          },
+          {
+            "work_id": "OL30932533W",
+            "edition_count": 20
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 103,
+        "raw_top1": "OL102749W"
+      }
+    },
+    {
+      "id": "character-03",
+      "query": "bilbo dragon",
+      "category": "character",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL27482W"
+        ],
+        "top5": [
+          "OL27482W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL27482W",
+        "title": "The Hobbit",
+        "authors": [
+          "J.R.R. Tolkien"
+        ],
+        "edition_count": 482,
+        "first_publish_year": 1937,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL219602W",
+            "edition_count": 10
+          },
+          {
+            "work_id": "OL45346371W",
+            "edition_count": 2
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 4,
+        "raw_top1": "OL27482W"
+      }
+    },
+    {
+      "id": "character-04",
+      "query": "holden caulfield",
+      "category": "character",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL3335245W"
+        ],
+        "top5": [
+          "OL3335245W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL3335245W",
+        "title": "The Catcher in the Rye",
+        "authors": [
+          "J. D. Salinger",
+          "Shao jia yun"
+        ],
+        "edition_count": 204,
+        "first_publish_year": 1945,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL44972658W",
+            "edition_count": 1
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 63,
+        "raw_top1": "OL18330137W"
+      },
+      "note": "raw q= top 5 are all books about the character (Harold Bloom); the canonical work's author_name is ['J. D. Salinger', 'Shao jia yun'] (a translator listed as author)"
+    },
+    {
+      "id": "character-05",
+      "query": "sherlock baskerville",
+      "category": "character",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL262454W"
+        ],
+        "top5": [
+          "OL262454W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL262454W",
+        "title": "The Hound of the Baskervilles",
+        "authors": [
+          "Arthur Conan Doyle"
+        ],
+        "edition_count": 1309,
+        "first_publish_year": 1900,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL37844349W",
+            "edition_count": 399
+          },
+          {
+            "work_id": "OL37814958W",
+            "edition_count": 184
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 299,
+        "raw_top1": "OL262454W"
+      }
+    },
+    {
+      "id": "contrib-01",
+      "query": "hobbit dixon",
+      "category": "contributor",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL219602W",
+          "OL19622663W"
+        ],
+        "top5": [
+          "OL219602W",
+          "OL19622663W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL219602W",
+        "title": "The Hobbit",
+        "authors": [
+          "Charles Dixon",
+          "Sean Deming",
+          "J.R.R. Tolkien"
+        ],
+        "edition_count": 10,
+        "first_publish_year": 1990,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL19622663W",
+            "edition_count": 1
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 9,
+        "raw_top1": "OL27482W"
+      },
+      "note": "graphic novel: author_name = [Dixon, Deming, Tolkien]; Tolkien is primary (canonical work), Dixon is adapter; tier B"
+    },
+    {
+      "id": "contrib-02",
+      "query": "hobbit graphic novel",
+      "category": "contributor",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL219602W",
+          "OL19622663W",
+          "OL44552594W"
+        ],
+        "top5": [
+          "OL219602W",
+          "OL19622663W",
+          "OL44552594W",
+          "OL27482W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL219602W",
+        "title": "The Hobbit",
+        "authors": [
+          "Charles Dixon",
+          "Sean Deming",
+          "J.R.R. Tolkien"
+        ],
+        "edition_count": 10,
+        "first_publish_year": 1990,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL19622663W",
+            "edition_count": 1
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 7,
+        "raw_top1": "OL27482W"
+      },
+      "note": "format words are signal here, not noise; accepting OL27482W at top-5 only"
+    },
+    {
+      "id": "contrib-03",
+      "query": "the hobbit tolkien dixon",
+      "category": "contributor",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL219602W",
+          "OL19622663W"
+        ],
+        "top5": [
+          "OL219602W",
+          "OL19622663W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL219602W",
+        "title": "The Hobbit",
+        "authors": [
+          "Charles Dixon",
+          "Sean Deming",
+          "J.R.R. Tolkien"
+        ],
+        "edition_count": 10,
+        "first_publish_year": 1990,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL19622663W",
+            "edition_count": 1
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 2,
+        "raw_top1": "OL27482W"
+      },
+      "note": "both names present: the work with both is the better match"
+    },
+    {
+      "id": "dup-01",
+      "query": "pride and prejudice",
+      "category": "duplicates",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL66554W"
+        ],
+        "top5": [
+          "OL66554W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL66554W",
+        "title": "Pride and Prejudice",
+        "authors": [
+          "Jane Austen"
+        ],
+        "edition_count": 4042,
+        "first_publish_year": 1813,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL15165350W",
+            "edition_count": 132
+          },
+          {
+            "work_id": "OL27025377W",
+            "edition_count": 12
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 2361,
+        "raw_top1": "OL66554W"
+      },
+      "note": "56 Austen works titled exactly this; canonical has ~4,000 editions"
+    },
+    {
+      "id": "dup-02",
+      "query": "adventures of huckleberry finn",
+      "category": "duplicates",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL53908W"
+        ],
+        "top5": [
+          "OL53908W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL53908W",
+        "title": "Adventures of Huckleberry Finn",
+        "authors": [
+          "Mark Twain"
+        ],
+        "edition_count": 2623,
+        "first_publish_year": 1876,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL37513138W",
+            "edition_count": 161
+          },
+          {
+            "work_id": "OL36127847W",
+            "edition_count": 14
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 865,
+        "raw_top1": "OL53908W"
+      },
+      "note": "'The Adventures of…' duplicate work has ~160 editions"
+    },
+    {
+      "id": "dup-03",
+      "query": "a tale of two cities",
+      "category": "duplicates",
+      "expected": {
+        "status": [
+          "match"
+        ],
+        "top1": [
+          "OL8193465W"
+        ],
+        "top5": [
+          "OL8193465W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL8193465W",
+        "title": "A Tale of Two Cities",
+        "authors": [
+          "Charles Dickens"
+        ],
+        "edition_count": 2059,
+        "first_publish_year": 1800,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL14926865W",
+            "edition_count": 8
+          },
+          {
+            "work_id": "OL43318590W",
+            "edition_count": 8
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 1125,
+        "raw_top1": "OL8193465W"
+      },
+      "note": "'[adaptation]' duplicates"
+    },
+    {
+      "id": "ambig-01",
+      "query": "twilight",
+      "category": "ambiguous",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL5720023W"
+        ],
+        "top5": [
+          "OL5720023W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL5720023W",
+        "title": "Twilight",
+        "authors": [
+          "Stephenie Meyer"
+        ],
+        "edition_count": 132,
+        "first_publish_year": 2005,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL27437664W",
+            "edition_count": 2
+          },
+          {
+            "work_id": "OL28604658W",
+            "edition_count": 1
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 7755,
+        "raw_top1": "OL5720023W"
+      },
+      "note": "Erin Hunter + Koontz also have 'Twilight'; Meyer's has most editions"
+    },
+    {
+      "id": "ambig-02",
+      "query": "meyer",
+      "category": "ambiguous",
+      "expected": {
+        "status": [
+          "ambiguous"
+        ],
+        "author": "Stephenie Meyer",
+        "author_surname": "meyer"
+      },
+      "observed_live": {
+        "raw_num_found": 49979,
+        "raw_top1": "OL5720023W"
+      },
+      "note": "ambiguous surname: Joyce Meyer appears first in author search; any Meyer in top 5 is acceptable, must not claim 'match'"
+    },
+    {
+      "id": "ambig-03",
+      "query": "hermione",
+      "category": "ambiguous",
+      "expected": {
+        "status": [
+          "ambiguous",
+          "none"
+        ],
+        "author": "J. K. Rowling",
+        "author_keys": [
+          "OL23919A"
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 803,
+        "raw_top1": "OL52818W"
+      },
+      "note": "raw q= top hit is 'HERmione' (H.D.); Decisions was confidently wrong (p .94) here: the known failure"
+    },
+    {
+      "id": "ambig-04",
+      "query": "emma",
+      "category": "ambiguous",
+      "expected": {
+        "status": [
+          "match",
+          "ambiguous"
+        ],
+        "top1": [
+          "OL66513W"
+        ],
+        "top5": [
+          "OL66513W"
+        ]
+      },
+      "canonical": {
+        "work_id": "OL66513W",
+        "title": "Emma",
+        "authors": [
+          "Jane Austen"
+        ],
+        "edition_count": 2262,
+        "first_publish_year": 1815,
+        "runner_up_same_title": [
+          {
+            "work_id": "OL15080007W",
+            "edition_count": 13
+          },
+          {
+            "work_id": "OL27025986W",
+            "edition_count": 11
+          }
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 43764,
+        "raw_top1": "OL66513W"
+      },
+      "note": "single common word; raw #2-#5 are unrelated books (Emma as a character/subject)"
+    },
+    {
+      "id": "none-01",
+      "query": "xqzv plorft wibble",
+      "category": "none",
+      "expected": {
+        "status": [
+          "none"
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 0,
+        "raw_top1": null
+      }
+    },
+    {
+      "id": "none-03",
+      "query": "the purple elephant who sang opera on mars",
+      "category": "none",
+      "expected": {
+        "status": [
+          "none",
+          "ambiguous"
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 0,
+        "raw_top1": null
+      },
+      "note": "plausible-looking but no such book: must never be 'match'"
+    },
+    {
+      "id": "none-04",
+      "query": "?!? ... ###",
+      "category": "none",
+      "expected": {
+        "status": [
+          "none"
+        ]
+      },
+      "observed_live": {
+        "raw_num_found": 0,
+        "raw_top1": null
+      },
+      "note": "punctuation only: empty after cleaning; 200 none (not 400) because the raw string is non-empty"
+    }
+  ]
+}

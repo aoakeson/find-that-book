@@ -1,0 +1,505 @@
+{
+  "label": "final3-heldout-live-openai-interpret",
+  "command": "dotnet run --project tools/FindThatBook.Eval -- run --set heldout --heldout --catalog live --provider openai --explain template --max-llm-calls 600 --quiet --label final3-heldout-live-openai-interpret",
+  "started": "2026-10-25T03:37:14.4010250-06:00",
+  "wall_seconds": 551.5,
+  "dataset": {
+    "name": "Find That Book HELD-OUT set",
+    "version": 1,
+    "path": "eval/heldout.json",
+    "sha256": "b2570dcf3f70231a",
+    "held_out": true,
+    "tuning": "HELD-OUT (sealed): never tuned on; final evaluation only",
+    "cases": 409
+  },
+  "code_fingerprint": "sha256:918d7b88cc5867cf (151 files)",
+  "eval_fingerprint": "sha256:bfa0664db82124b7 (31 files)",
+  "binary_fingerprint": "sha256:bb794a4ff02178f3 (2 files)",
+  "catalog": "live",
+  "provider": "openai",
+  "model": null,
+  "observed_models": [
+    "interpret: openai/gpt-4.1-mini"
+  ],
+  "judge": false,
+  "hypotheses": null,
+  "hypotheses_recorded_on": null,
+  "explain": "template",
+  "ranker": "default",
+  "catalog_cache": null,
+  "label_note": "HELD-OUT RESULTS: sealed set, final evaluation only. Do not tune anything on these rows.",
+  "held_out": true,
+  "bypass_caches": false,
+  "stopped": null,
+  "counts": {
+    "cases": 409,
+    "run": 409,
+    "skipped": 0,
+    "rejected": 0,
+    "errors": 1,
+    "replay_miss_rows": 0,
+    "in_sample": 0
+  },
+  "ops": {
+    "searched": 408,
+    "latency_p50_ms": 1251,
+    "latency_p95_ms": 5112,
+    "ol_calls_per_query": 2.1299019607843137,
+    "ol_attempts_per_query": 2.0441176470588234,
+    "paid_llm_calls": 408,
+    "input_tokens": 272665,
+    "output_tokens": 24897,
+    "cost_per_1k_usd": 0.3649539215686274509803922000,
+    "degraded_rows": 389,
+    "degraded_by_settings_rows": 387,
+    "provider_error_rows": 1,
+    "explanations_llm": 0,
+    "explanations_template": 1889,
+    "grounding_rejections": 0
+  },
+  "overall": {
+    "rows": 409,
+    "answerable": 406,
+    "top1": {
+      "hits": 334,
+      "total": 406,
+      "value": 0.8226600985221675
+    },
+    "top5": {
+      "hits": 359,
+      "total": 406,
+      "value": 0.8842364532019704
+    },
+    "status": {
+      "hits": 379,
+      "total": 409,
+      "value": 0.9266503667481663
+    },
+    "match_precision": {
+      "hits": 288,
+      "total": 300,
+      "value": 0.96
+    },
+    "coverage": {
+      "hits": 300,
+      "total": 406,
+      "value": 0.7389162561576355
+    },
+    "no_answer_rows": 3,
+    "false_matches": 0,
+    "errors": 1,
+    "severe_matches": 12,
+    "dup_record_matches": 0
+  },
+  "categories": {
+    "hand": {
+      "rows": 52,
+      "answerable": 49,
+      "top1": {
+        "hits": 45,
+        "total": 49,
+        "value": 0.9183673469387755
+      },
+      "top5": {
+        "hits": 48,
+        "total": 49,
+        "value": 0.9795918367346939
+      },
+      "status": {
+        "hits": 50,
+        "total": 52,
+        "value": 0.9615384615384616
+      },
+      "match_precision": {
+        "hits": 38,
+        "total": 40,
+        "value": 0.95
+      },
+      "coverage": {
+        "hits": 40,
+        "total": 49,
+        "value": 0.8163265306122449
+      },
+      "no_answer_rows": 3,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 2,
+      "dup_record_matches": 0
+    },
+    "llm_author_character": {
+      "rows": 8,
+      "answerable": 8,
+      "top1": {
+        "hits": 7,
+        "total": 8,
+        "value": 0.875
+      },
+      "top5": {
+        "hits": 8,
+        "total": 8,
+        "value": 1
+      },
+      "status": {
+        "hits": 8,
+        "total": 8,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 3,
+        "total": 3,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 3,
+        "total": 8,
+        "value": 0.375
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "llm_half_remembered": {
+      "rows": 54,
+      "answerable": 54,
+      "top1": {
+        "hits": 37,
+        "total": 54,
+        "value": 0.6851851851851852
+      },
+      "top5": {
+        "hits": 42,
+        "total": 54,
+        "value": 0.7777777777777778
+      },
+      "status": {
+        "hits": 47,
+        "total": 54,
+        "value": 0.8703703703703703
+      },
+      "match_precision": {
+        "hits": 28,
+        "total": 31,
+        "value": 0.9032258064516129
+      },
+      "coverage": {
+        "hits": 31,
+        "total": 54,
+        "value": 0.5740740740740741
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 3,
+      "dup_record_matches": 0
+    },
+    "llm_misspeller": {
+      "rows": 61,
+      "answerable": 61,
+      "top1": {
+        "hits": 47,
+        "total": 61,
+        "value": 0.7704918032786885
+      },
+      "top5": {
+        "hits": 48,
+        "total": 61,
+        "value": 0.7868852459016393
+      },
+      "status": {
+        "hits": 55,
+        "total": 61,
+        "value": 0.9016393442622951
+      },
+      "match_precision": {
+        "hits": 43,
+        "total": 44,
+        "value": 0.9772727272727273
+      },
+      "coverage": {
+        "hits": 44,
+        "total": 61,
+        "value": 0.7213114754098361
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 1,
+      "severe_matches": 1,
+      "dup_record_matches": 0
+    },
+    "llm_non_native": {
+      "rows": 52,
+      "answerable": 52,
+      "top1": {
+        "hits": 47,
+        "total": 52,
+        "value": 0.9038461538461539
+      },
+      "top5": {
+        "hits": 50,
+        "total": 52,
+        "value": 0.9615384615384616
+      },
+      "status": {
+        "hits": 51,
+        "total": 52,
+        "value": 0.9807692307692307
+      },
+      "match_precision": {
+        "hits": 45,
+        "total": 46,
+        "value": 0.9782608695652174
+      },
+      "coverage": {
+        "hits": 46,
+        "total": 52,
+        "value": 0.8846153846153846
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 1,
+      "dup_record_matches": 0
+    },
+    "llm_plot": {
+      "rows": 23,
+      "answerable": 23,
+      "top1": {
+        "hits": 8,
+        "total": 23,
+        "value": 0.34782608695652173
+      },
+      "top5": {
+        "hits": 10,
+        "total": 23,
+        "value": 0.43478260869565216
+      },
+      "status": {
+        "hits": 14,
+        "total": 23,
+        "value": 0.6086956521739131
+      },
+      "match_precision": {
+        "hits": 1,
+        "total": 2,
+        "value": 0.5
+      },
+      "coverage": {
+        "hits": 2,
+        "total": 23,
+        "value": 0.08695652173913043
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 1,
+      "dup_record_matches": 0
+    },
+    "llm_rushed_mobile": {
+      "rows": 80,
+      "answerable": 80,
+      "top1": {
+        "hits": 74,
+        "total": 80,
+        "value": 0.925
+      },
+      "top5": {
+        "hits": 77,
+        "total": 80,
+        "value": 0.9625
+      },
+      "status": {
+        "hits": 78,
+        "total": 80,
+        "value": 0.975
+      },
+      "match_precision": {
+        "hits": 70,
+        "total": 72,
+        "value": 0.9722222222222222
+      },
+      "coverage": {
+        "hits": 72,
+        "total": 80,
+        "value": 0.9
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 2,
+      "dup_record_matches": 0
+    },
+    "prog_drop": {
+      "rows": 8,
+      "answerable": 8,
+      "top1": {
+        "hits": 4,
+        "total": 8,
+        "value": 0.5
+      },
+      "top5": {
+        "hits": 8,
+        "total": 8,
+        "value": 1
+      },
+      "status": {
+        "hits": 7,
+        "total": 8,
+        "value": 0.875
+      },
+      "match_precision": {
+        "hits": 0,
+        "total": 1,
+        "value": 0
+      },
+      "coverage": {
+        "hits": 1,
+        "total": 8,
+        "value": 0.125
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 1,
+      "dup_record_matches": 0
+    },
+    "prog_format": {
+      "rows": 16,
+      "answerable": 16,
+      "top1": {
+        "hits": 16,
+        "total": 16,
+        "value": 1
+      },
+      "top5": {
+        "hits": 16,
+        "total": 16,
+        "value": 1
+      },
+      "status": {
+        "hits": 16,
+        "total": 16,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 15,
+        "total": 15,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 15,
+        "total": 16,
+        "value": 0.9375
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "prog_swap": {
+      "rows": 18,
+      "answerable": 18,
+      "top1": {
+        "hits": 17,
+        "total": 18,
+        "value": 0.9444444444444444
+      },
+      "top5": {
+        "hits": 18,
+        "total": 18,
+        "value": 1
+      },
+      "status": {
+        "hits": 18,
+        "total": 18,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 15,
+        "total": 15,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 15,
+        "total": 18,
+        "value": 0.8333333333333334
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "prog_typo": {
+      "rows": 22,
+      "answerable": 22,
+      "top1": {
+        "hits": 17,
+        "total": 22,
+        "value": 0.7727272727272727
+      },
+      "top5": {
+        "hits": 19,
+        "total": 22,
+        "value": 0.8636363636363636
+      },
+      "status": {
+        "hits": 20,
+        "total": 22,
+        "value": 0.9090909090909091
+      },
+      "match_precision": {
+        "hits": 15,
+        "total": 16,
+        "value": 0.9375
+      },
+      "coverage": {
+        "hits": 16,
+        "total": 22,
+        "value": 0.7272727272727273
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 1,
+      "dup_record_matches": 0
+    },
+    "prog_year": {
+      "rows": 15,
+      "answerable": 15,
+      "top1": {
+        "hits": 15,
+        "total": 15,
+        "value": 1
+      },
+      "top5": {
+        "hits": 15,
+        "total": 15,
+        "value": 1
+      },
+      "status": {
+        "hits": 15,
+        "total": 15,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 15,
+        "total": 15,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 15,
+        "total": 15,
+        "value": 1
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    }
+  },
+  "excluding_replay_misses": null
+}

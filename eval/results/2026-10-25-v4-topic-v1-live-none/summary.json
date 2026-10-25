@@ -1,0 +1,163 @@
+{
+  "label": "v4-topic-v1-live-none",
+  "command": "dotnet run --project tools/FindThatBook.Eval -- run --set topic --catalog live --provider none --quiet --label v4-topic-v1-live-none",
+  "started": "2026-10-25T02:35:47.4503200-06:00",
+  "wall_seconds": 26.8,
+  "dataset": {
+    "name": "topic requests and controls",
+    "version": 1,
+    "path": "eval/datasets/topic.v1.jsonl",
+    "sha256": "c609ca149dccc629",
+    "held_out": false,
+    "tuning": "dev set for the topic-search feature (written before the feature exists); the feature will be built against it, so treat its numbers as in-sample",
+    "cases": 33
+  },
+  "code_fingerprint": "sha256:0a0e4bd55f506bdf (151 files)",
+  "eval_fingerprint": "sha256:1caf4d1d3f242957 (31 files)",
+  "binary_fingerprint": "sha256:c584f6687a180097 (2 files)",
+  "catalog": "live",
+  "provider": "none",
+  "model": null,
+  "observed_models": [],
+  "judge": false,
+  "hypotheses": null,
+  "hypotheses_recorded_on": null,
+  "explain": "llm",
+  "ranker": "default",
+  "catalog_cache": null,
+  "label_note": "topic feature dev set: topic rows need the pipeline to expose matched subjects",
+  "held_out": false,
+  "bypass_caches": false,
+  "stopped": null,
+  "counts": {
+    "cases": 33,
+    "run": 33,
+    "skipped": 0,
+    "rejected": 0,
+    "errors": 0,
+    "replay_miss_rows": 0,
+    "in_sample": 0
+  },
+  "ops": {
+    "searched": 33,
+    "latency_p50_ms": 955,
+    "latency_p95_ms": 4752,
+    "ol_calls_per_query": 1.9393939393939394,
+    "ol_attempts_per_query": 1.9393939393939394,
+    "paid_llm_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_per_1k_usd": null,
+    "degraded_rows": 33,
+    "degraded_by_settings_rows": 33,
+    "provider_error_rows": 0,
+    "explanations_llm": 0,
+    "explanations_template": 145,
+    "grounding_rejections": 0
+  },
+  "overall": {
+    "rows": 33,
+    "answerable": 33,
+    "top1": {
+      "hits": 26,
+      "total": 33,
+      "value": 0.7878787878787878
+    },
+    "top5": {
+      "hits": 25,
+      "total": 33,
+      "value": 0.7575757575757576
+    },
+    "status": {
+      "hits": 26,
+      "total": 33,
+      "value": 0.7878787878787878
+    },
+    "match_precision": {
+      "hits": 11,
+      "total": 11,
+      "value": 1
+    },
+    "coverage": {
+      "hits": 11,
+      "total": 33,
+      "value": 0.3333333333333333
+    },
+    "no_answer_rows": 0,
+    "false_matches": 0,
+    "errors": 0,
+    "severe_matches": 0,
+    "dup_record_matches": 0
+  },
+  "categories": {
+    "topic": {
+      "rows": 21,
+      "answerable": 21,
+      "top1": {
+        "hits": 14,
+        "total": 21,
+        "value": 0.6666666666666666
+      },
+      "top5": {
+        "hits": 13,
+        "total": 21,
+        "value": 0.6190476190476191
+      },
+      "status": {
+        "hits": 14,
+        "total": 21,
+        "value": 0.6666666666666666
+      },
+      "match_precision": {
+        "hits": 0,
+        "total": 0,
+        "value": null
+      },
+      "coverage": {
+        "hits": 0,
+        "total": 21,
+        "value": 0
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    },
+    "topic_control": {
+      "rows": 12,
+      "answerable": 12,
+      "top1": {
+        "hits": 12,
+        "total": 12,
+        "value": 1
+      },
+      "top5": {
+        "hits": 12,
+        "total": 12,
+        "value": 1
+      },
+      "status": {
+        "hits": 12,
+        "total": 12,
+        "value": 1
+      },
+      "match_precision": {
+        "hits": 11,
+        "total": 11,
+        "value": 1
+      },
+      "coverage": {
+        "hits": 11,
+        "total": 12,
+        "value": 0.9166666666666666
+      },
+      "no_answer_rows": 0,
+      "false_matches": 0,
+      "errors": 0,
+      "severe_matches": 0,
+      "dup_record_matches": 0
+    }
+  },
+  "excluding_replay_misses": null
+}

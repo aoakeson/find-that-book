@@ -1,0 +1,19 @@
+{
+  "summary": "Invalid parameters",
+  "description": "Field errors are keyed by C# member name (Q, Limit); every problem is reported at once.",
+  "value": {
+    "type": "/problems/validation-failed",
+    "title": "One or more validation errors occurred.",
+    "status": 400,
+    "errors": {
+      "Limit": [
+        "The field Limit must be a whole number between 1 and 10."
+      ],
+      "Q": [
+        "The query must be at most 300 characters."
+      ]
+    },
+    "code": "validation_failed",
+    "trace_id": "00-21c442fe70d91900aa19fd2923dbba75-7bcb72d6929aa2b9-00"
+  }
+}

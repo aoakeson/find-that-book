@@ -1,0 +1,337 @@
+{
+  "summary": "Author only: dickens",
+  "description": "Author-only fallback: the author's most-published works, tier d, status ambiguous with a hint. Recorded on build 918d7b88 with gpt-4.1-mini, judge off; with Gemini (the default) the meta.llm provider/model differ, and the LLM-written parts (interpretation, explanation wording) may too.",
+  "value": {
+    "query": "dickens",
+    "status": "ambiguous",
+    "status_reason": "author_only",
+    "hint": "These are Charles Dickens's most-published works. Add a title to narrow it.",
+    "degraded": false,
+    "degraded_reasons": [],
+    "interpretation": {
+      "title": null,
+      "author": "Charles Dickens",
+      "characters": [],
+      "keywords": [],
+      "english_title": null,
+      "original_title": null,
+      "year": null,
+      "removed_noise": [],
+      "source": "llm",
+      "intent": "book",
+      "topics": []
+    },
+    "candidates": [
+      {
+        "rank": 1,
+        "work_id": "OL32466W",
+        "title": "A Christmas Carol",
+        "subtitle": null,
+        "author": "Charles Dickens",
+        "primary_authors": [
+          {
+            "key": "OL24638A",
+            "name": "Charles Dickens",
+            "url": "https://openlibrary.org/authors/OL24638A"
+          }
+        ],
+        "primary_authors_total": 1,
+        "contributors": [
+          {
+            "key": null,
+            "name": "Anton Rodgers",
+            "role": "narrator"
+          },
+          {
+            "key": null,
+            "name": "Martin Jarvis",
+            "role": "narrator"
+          },
+          {
+            "key": null,
+            "name": "John McRae",
+            "role": "editor"
+          }
+        ],
+        "contributors_total": 42,
+        "first_publish_year": 1843,
+        "edition_count": 3196,
+        "open_library_url": "https://openlibrary.org/works/OL32466W?edition=key%3A/books/OL45503979M",
+        "cover_url": "https://covers.openlibrary.org/b/id/12875748-M.jpg",
+        "match_tier": "d",
+        "match_tier_label": "Author only",
+        "matched_subjects": [],
+        "explanation": "Author-only match; Charles Dickens is the primary author; 3196 editions.",
+        "explanation_source": "llm",
+        "second_opinion": false,
+        "duplicates_folded": 0
+      },
+      {
+        "rank": 2,
+        "work_id": "OL8193465W",
+        "title": "A Tale of Two Cities",
+        "subtitle": null,
+        "author": "Charles Dickens",
+        "primary_authors": [
+          {
+            "key": "OL24638A",
+            "name": "Charles Dickens",
+            "url": "https://openlibrary.org/authors/OL24638A"
+          }
+        ],
+        "primary_authors_total": 1,
+        "contributors": [
+          {
+            "key": null,
+            "name": "Barry Wilkinson",
+            "role": "illustrator"
+          },
+          {
+            "key": null,
+            "name": "Buck Schirner",
+            "role": "reader"
+          },
+          {
+            "key": null,
+            "name": "Carol Hagerty",
+            "role": "editor"
+          }
+        ],
+        "contributors_total": 27,
+        "first_publish_year": 1800,
+        "edition_count": 2059,
+        "open_library_url": "https://openlibrary.org/works/OL8193465W?edition=key%3A/books/OL6531112M",
+        "cover_url": "https://covers.openlibrary.org/b/id/13301713-M.jpg",
+        "match_tier": "d",
+        "match_tier_label": "Author only",
+        "matched_subjects": [],
+        "explanation": "Author-only match; Charles Dickens is the primary author; 2059 editions.",
+        "explanation_source": "llm",
+        "second_opinion": false,
+        "duplicates_folded": 0
+      },
+      {
+        "rank": 3,
+        "work_id": "OL8193478W",
+        "title": "Oliver Twist",
+        "subtitle": null,
+        "author": "Charles Dickens",
+        "primary_authors": [
+          {
+            "key": "OL24638A",
+            "name": "Charles Dickens",
+            "url": "https://openlibrary.org/authors/OL24638A"
+          }
+        ],
+        "primary_authors_total": 1,
+        "contributors": [
+          {
+            "key": null,
+            "name": "John Wells",
+            "role": "narrator"
+          },
+          {
+            "key": null,
+            "name": "Jean Zallinger",
+            "role": "illustrator"
+          },
+          {
+            "key": null,
+            "name": "Simon Callow",
+            "role": "narrator"
+          }
+        ],
+        "contributors_total": 24,
+        "first_publish_year": 1822,
+        "edition_count": 2211,
+        "open_library_url": "https://openlibrary.org/works/OL8193478W?edition=key%3A/books/OL44585690M",
+        "cover_url": "https://covers.openlibrary.org/b/id/13300802-M.jpg",
+        "match_tier": "d",
+        "match_tier_label": "Author only",
+        "matched_subjects": [],
+        "explanation": "Author-only match; Charles Dickens is the primary author; 2211 editions.",
+        "explanation_source": "llm",
+        "second_opinion": false,
+        "duplicates_folded": 0
+      },
+      {
+        "rank": 4,
+        "work_id": "OL8721462W",
+        "title": "Great Expectations",
+        "subtitle": null,
+        "author": "Charles Dickens",
+        "primary_authors": [
+          {
+            "key": "OL24638A",
+            "name": "Charles Dickens",
+            "url": "https://openlibrary.org/authors/OL24638A"
+          }
+        ],
+        "primary_authors_total": 1,
+        "contributors": [
+          {
+            "key": null,
+            "name": "Charlotte Mitchell",
+            "role": "editor"
+          },
+          {
+            "key": null,
+            "name": "Charles Shaw",
+            "role": "other contributor"
+          },
+          {
+            "key": null,
+            "name": "David Trotter",
+            "role": "editor"
+          }
+        ],
+        "contributors_total": 28,
+        "first_publish_year": 1861,
+        "edition_count": 1489,
+        "open_library_url": "https://openlibrary.org/works/OL8721462W?edition=key%3A/books/OL41713849M",
+        "cover_url": "https://covers.openlibrary.org/b/id/13322313-M.jpg",
+        "match_tier": "d",
+        "match_tier_label": "Author only",
+        "matched_subjects": [],
+        "explanation": "Author-only match; Charles Dickens is the primary author; 1489 editions.",
+        "explanation_source": "llm",
+        "second_opinion": false,
+        "duplicates_folded": 0
+      },
+      {
+        "rank": 5,
+        "work_id": "OL8193387W",
+        "title": "Hard Times",
+        "subtitle": null,
+        "author": "Charles Dickens",
+        "primary_authors": [
+          {
+            "key": "OL24638A",
+            "name": "Charles Dickens",
+            "url": "https://openlibrary.org/authors/OL24638A"
+          }
+        ],
+        "primary_authors_total": 1,
+        "contributors": [
+          {
+            "key": null,
+            "name": "Gwen Jose",
+            "role": "editor"
+          },
+          {
+            "key": null,
+            "name": "Charles Shapiro",
+            "role": "afterword"
+          },
+          {
+            "key": null,
+            "name": "Karen Odden",
+            "role": "introduction"
+          }
+        ],
+        "contributors_total": 22,
+        "first_publish_year": 1854,
+        "edition_count": 1028,
+        "open_library_url": "https://openlibrary.org/works/OL8193387W?edition=key%3A/books/OL37044810M",
+        "cover_url": "https://covers.openlibrary.org/b/id/8236916-M.jpg",
+        "match_tier": "d",
+        "match_tier_label": "Author only",
+        "matched_subjects": [],
+        "explanation": "Author-only match; Charles Dickens is the primary author; 1028 editions.",
+        "explanation_source": "llm",
+        "second_opinion": false,
+        "duplicates_folded": 0
+      }
+    ],
+    "meta": {
+      "request_id": "00-f806da857c03dd1bb757f9b2ba2fc3d4-e1548f69c34027b3-00",
+      "elapsed_ms": 2463,
+      "timings_ms": {
+        "clean": 0,
+        "interpret": 711,
+        "rank": 39,
+        "retrieve": 1063,
+        "judge": 0,
+        "explain": 1400
+      },
+      "open_library": {
+        "calls": 2,
+        "cache_hits": 0,
+        "upstream_requests": 2,
+        "retries": 0,
+        "slow_empty_requeries": 0,
+        "budget": 5,
+        "steps": [
+          {
+            "step": "broad",
+            "outcome": "ok",
+            "cache_hit": false,
+            "attempts": 1,
+            "elapsed_ms": 805,
+            "results": 20,
+            "num_found": 16132
+          },
+          {
+            "step": "author_works",
+            "outcome": "ok",
+            "cache_hit": false,
+            "attempts": 1,
+            "elapsed_ms": 216,
+            "results": 10,
+            "num_found": 7572
+          }
+        ]
+      },
+      "llm": {
+        "provider": "openai",
+        "model": "gpt-4.1-mini",
+        "calls": 2,
+        "cache_hits": 0,
+        "input_tokens": 1455,
+        "output_tokens": 176,
+        "est_cost_usd": 0.0008636,
+        "prompt_versions": {
+          "interpret": "interpret.v5",
+          "explain": "explain.v4"
+        },
+        "steps": [
+          {
+            "operation": "interpret",
+            "provider": "openai",
+            "model": "gpt-4.1-mini",
+            "prompt_id": "interpret.v5",
+            "status": "ok",
+            "cache_hit": false,
+            "elapsed_ms": 711,
+            "input_tokens": 666,
+            "output_tokens": 37
+          },
+          {
+            "operation": "explain",
+            "provider": "openai",
+            "model": "gpt-4.1-mini",
+            "prompt_id": "explain.v4",
+            "status": "ok",
+            "cache_hit": false,
+            "elapsed_ms": 1394,
+            "input_tokens": 789,
+            "output_tokens": 139
+          }
+        ]
+      },
+      "judge": {
+        "enabled": false,
+        "status": "off",
+        "pick": null,
+        "probability": null,
+        "threshold": 0.9,
+        "agreed": null,
+        "model": null,
+        "latency_ms": null,
+        "input_tokens": null,
+        "est_cost_usd": null,
+        "detail": null
+      }
+    }
+  }
+}

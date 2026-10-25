@@ -1,0 +1,3458 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "Find That Book API",
+    "description": "Find the book a messy text most likely refers to (\"tolkien hobbit illustrated deluxe 1937\", \"mark huckleberry\").\n**AI interprets, code decides, every step is measured**: an LLM turns the text into a search hypothesis and\nwrites one grounded sentence per result; deterministic code searches Open Library, ranks the works on the\nbrief's hierarchy (a–e) and decides the status.\n\n* `GET /api/books/search` always answers 200 for `match`, `ambiguous` and `none`. `degraded: true` means a\n  lower-quality answer (LLM unavailable, partial retrieval); the LLM never causes an error status.\n* Errors are RFC 9457 problem details with a stable `code` and the request's `trace_id`\n  (also the `X-Request-Id` header and `meta.request_id`). Validation errors are keyed by field (`Q`, `Limit`).\n* JSON is snake_case; enums are snake_case strings.",
+    "contact": {
+      "name": "Andrew Oakeson",
+      "email": "andrew@andrewoakeson.com"
+    },
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5080/"
+    }
+  ],
+  "paths": {
+    "/api/books/search": {
+      "get": {
+        "tags": [
+          "Books"
+        ],
+        "summary": "Find the book a messy text most likely refers to",
+        "description": "Interprets a messy query (title and/or author and/or keywords) with an LLM, searches Open Library,\nand returns up to `limit` ranked works, each with a one-sentence grounded explanation.\nAI interprets, code decides: ranking and status are deterministic code.\n\n**status**: `match` (one confident answer: top candidate is tier a or b and clearly ahead),\n`ambiguous` (several plausible works, in order; see `hint`), `none` (nothing usable; 200 with an\nempty list and a hint). **degraded** = the answer is lower quality than normal (LLM unavailable,\na later Open Library call failed, or the deadline cut retrieval short); see `degraded_reasons`.\nThe LLM never causes an error status.\n\n**Topic requests** (\"find me a book about bears\"): `interpretation.intent` is `topic`, the candidates are\nbooks about `interpretation.topics` (status `ambiguous`, reason `topic_search`, never `match`), and each\nlists the Open Library subjects that matched in `matched_subjects`.\n\n**match_tier** (the brief's hierarchy): `a` exact title + primary author · `b` exact title +\ncontributor-only author · `c` near-match title + author · `d` author only (an author's most-published\nworks) · `e` no clear winner. Tiers label the evidence; the score orders the list.\n\nRate limits (defaults): 20 searches per minute per client, 60 per minute in total, 6 at once (16 more wait in line); 429 carries Retry-After.",
+        "operationId": "SearchBooks",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "The messy text: title and/or author and/or keywords. 1–300 characters (UTF-16 units) after trimming and removing control/zero-width characters; at least one letter or digit, any script; not only stop words. Give it once.",
+            "required": true,
+            "schema": {
+              "maxLength": 300,
+              "minLength": 1,
+              "type": "string"
+            },
+            "example": "tolkien hobbit illustrated deluxe 1937"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "How many candidates to return (default 5).",
+            "schema": {
+              "maximum": 10,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                },
+                "examples": {
+                  "ambiguous_author_only": {
+                    "summary": "Author only: dickens",
+                    "description": "Author-only fallback: the author's most-published works, tier d, status ambiguous with a hint. Recorded on build 918d7b88 with gpt-4.1-mini, judge off; with Gemini (the default) the meta.llm provider/model differ, and the LLM-written parts (interpretation, explanation wording) may too.",
+                    "value": {
+                      "query": "dickens",
+                      "status": "ambiguous",
+                      "status_reason": "author_only",
+                      "hint": "These are Charles Dickens's most-published works. Add a title to narrow it.",
+                      "degraded": false,
+                      "degraded_reasons": [],
+                      "interpretation": {
+                        "title": null,
+                        "author": "Charles Dickens",
+                        "characters": [],
+                        "keywords": [],
+                        "english_title": null,
+                        "original_title": null,
+                        "year": null,
+                        "removed_noise": [],
+                        "source": "llm",
+                        "intent": "book",
+                        "topics": []
+                      },
+                      "candidates": [
+                        {
+                          "rank": 1,
+                          "work_id": "OL32466W",
+                          "title": "A Christmas Carol",
+                          "subtitle": null,
+                          "author": "Charles Dickens",
+                          "primary_authors": [
+                            {
+                              "key": "OL24638A",
+                              "name": "Charles Dickens",
+                              "url": "https://openlibrary.org/authors/OL24638A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Anton Rodgers",
+                              "role": "narrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Martin Jarvis",
+                              "role": "narrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "John McRae",
+                              "role": "editor"
+                            }
+                          ],
+                          "contributors_total": 42,
+                          "first_publish_year": 1843,
+                          "edition_count": 3196,
+                          "open_library_url": "https://openlibrary.org/works/OL32466W?edition=key%3A/books/OL45503979M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/12875748-M.jpg",
+                          "match_tier": "d",
+                          "match_tier_label": "Author only",
+                          "matched_subjects": [],
+                          "explanation": "Author-only match; Charles Dickens is the primary author; 3196 editions.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 2,
+                          "work_id": "OL8193465W",
+                          "title": "A Tale of Two Cities",
+                          "subtitle": null,
+                          "author": "Charles Dickens",
+                          "primary_authors": [
+                            {
+                              "key": "OL24638A",
+                              "name": "Charles Dickens",
+                              "url": "https://openlibrary.org/authors/OL24638A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Barry Wilkinson",
+                              "role": "illustrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Buck Schirner",
+                              "role": "reader"
+                            },
+                            {
+                              "key": null,
+                              "name": "Carol Hagerty",
+                              "role": "editor"
+                            }
+                          ],
+                          "contributors_total": 27,
+                          "first_publish_year": 1800,
+                          "edition_count": 2059,
+                          "open_library_url": "https://openlibrary.org/works/OL8193465W?edition=key%3A/books/OL6531112M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/13301713-M.jpg",
+                          "match_tier": "d",
+                          "match_tier_label": "Author only",
+                          "matched_subjects": [],
+                          "explanation": "Author-only match; Charles Dickens is the primary author; 2059 editions.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 3,
+                          "work_id": "OL8193478W",
+                          "title": "Oliver Twist",
+                          "subtitle": null,
+                          "author": "Charles Dickens",
+                          "primary_authors": [
+                            {
+                              "key": "OL24638A",
+                              "name": "Charles Dickens",
+                              "url": "https://openlibrary.org/authors/OL24638A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "John Wells",
+                              "role": "narrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Jean Zallinger",
+                              "role": "illustrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Simon Callow",
+                              "role": "narrator"
+                            }
+                          ],
+                          "contributors_total": 24,
+                          "first_publish_year": 1822,
+                          "edition_count": 2211,
+                          "open_library_url": "https://openlibrary.org/works/OL8193478W?edition=key%3A/books/OL44585690M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/13300802-M.jpg",
+                          "match_tier": "d",
+                          "match_tier_label": "Author only",
+                          "matched_subjects": [],
+                          "explanation": "Author-only match; Charles Dickens is the primary author; 2211 editions.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 4,
+                          "work_id": "OL8721462W",
+                          "title": "Great Expectations",
+                          "subtitle": null,
+                          "author": "Charles Dickens",
+                          "primary_authors": [
+                            {
+                              "key": "OL24638A",
+                              "name": "Charles Dickens",
+                              "url": "https://openlibrary.org/authors/OL24638A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Charlotte Mitchell",
+                              "role": "editor"
+                            },
+                            {
+                              "key": null,
+                              "name": "Charles Shaw",
+                              "role": "other contributor"
+                            },
+                            {
+                              "key": null,
+                              "name": "David Trotter",
+                              "role": "editor"
+                            }
+                          ],
+                          "contributors_total": 28,
+                          "first_publish_year": 1861,
+                          "edition_count": 1489,
+                          "open_library_url": "https://openlibrary.org/works/OL8721462W?edition=key%3A/books/OL41713849M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/13322313-M.jpg",
+                          "match_tier": "d",
+                          "match_tier_label": "Author only",
+                          "matched_subjects": [],
+                          "explanation": "Author-only match; Charles Dickens is the primary author; 1489 editions.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 5,
+                          "work_id": "OL8193387W",
+                          "title": "Hard Times",
+                          "subtitle": null,
+                          "author": "Charles Dickens",
+                          "primary_authors": [
+                            {
+                              "key": "OL24638A",
+                              "name": "Charles Dickens",
+                              "url": "https://openlibrary.org/authors/OL24638A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Gwen Jose",
+                              "role": "editor"
+                            },
+                            {
+                              "key": null,
+                              "name": "Charles Shapiro",
+                              "role": "afterword"
+                            },
+                            {
+                              "key": null,
+                              "name": "Karen Odden",
+                              "role": "introduction"
+                            }
+                          ],
+                          "contributors_total": 22,
+                          "first_publish_year": 1854,
+                          "edition_count": 1028,
+                          "open_library_url": "https://openlibrary.org/works/OL8193387W?edition=key%3A/books/OL37044810M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/8236916-M.jpg",
+                          "match_tier": "d",
+                          "match_tier_label": "Author only",
+                          "matched_subjects": [],
+                          "explanation": "Author-only match; Charles Dickens is the primary author; 1028 editions.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        }
+                      ],
+                      "meta": {
+                        "request_id": "00-f806da857c03dd1bb757f9b2ba2fc3d4-e1548f69c34027b3-00",
+                        "elapsed_ms": 2463,
+                        "timings_ms": {
+                          "clean": 0,
+                          "interpret": 711,
+                          "rank": 39,
+                          "retrieve": 1063,
+                          "judge": 0,
+                          "explain": 1400
+                        },
+                        "open_library": {
+                          "calls": 2,
+                          "cache_hits": 0,
+                          "upstream_requests": 2,
+                          "retries": 0,
+                          "slow_empty_requeries": 0,
+                          "budget": 5,
+                          "steps": [
+                            {
+                              "step": "broad",
+                              "outcome": "ok",
+                              "cache_hit": false,
+                              "attempts": 1,
+                              "elapsed_ms": 805,
+                              "results": 20,
+                              "num_found": 16132
+                            },
+                            {
+                              "step": "author_works",
+                              "outcome": "ok",
+                              "cache_hit": false,
+                              "attempts": 1,
+                              "elapsed_ms": 216,
+                              "results": 10,
+                              "num_found": 7572
+                            }
+                          ]
+                        },
+                        "llm": {
+                          "provider": "openai",
+                          "model": "gpt-4.1-mini",
+                          "calls": 2,
+                          "cache_hits": 0,
+                          "input_tokens": 1455,
+                          "output_tokens": 176,
+                          "est_cost_usd": 0.0008636,
+                          "prompt_versions": {
+                            "interpret": "interpret.v5",
+                            "explain": "explain.v4"
+                          },
+                          "steps": [
+                            {
+                              "operation": "interpret",
+                              "provider": "openai",
+                              "model": "gpt-4.1-mini",
+                              "prompt_id": "interpret.v5",
+                              "status": "ok",
+                              "cache_hit": false,
+                              "elapsed_ms": 711,
+                              "input_tokens": 666,
+                              "output_tokens": 37
+                            },
+                            {
+                              "operation": "explain",
+                              "provider": "openai",
+                              "model": "gpt-4.1-mini",
+                              "prompt_id": "explain.v4",
+                              "status": "ok",
+                              "cache_hit": false,
+                              "elapsed_ms": 1394,
+                              "input_tokens": 789,
+                              "output_tokens": 139
+                            }
+                          ]
+                        },
+                        "judge": {
+                          "enabled": false,
+                          "status": "off",
+                          "pick": null,
+                          "probability": null,
+                          "threshold": 0.9,
+                          "agreed": null,
+                          "model": null,
+                          "latency_ms": null,
+                          "input_tokens": null,
+                          "est_cost_usd": null,
+                          "detail": null
+                        }
+                      }
+                    }
+                  },
+                  "clear_match": {
+                    "summary": "Clear match: tolkien hobbit illustrated deluxe 1937",
+                    "description": "A dense, noisy query. Edition words are removed as noise and the year is a soft bonus; tier a, status match. Recorded on build 918d7b88 with gpt-4.1-mini, judge off; with Gemini (the default) the meta.llm provider/model differ, and the LLM-written parts (interpretation, explanation wording) may too.",
+                    "value": {
+                      "query": "tolkien hobbit illustrated deluxe 1937",
+                      "status": "match",
+                      "status_reason": "exact_title_primary_author",
+                      "hint": null,
+                      "degraded": false,
+                      "degraded_reasons": [],
+                      "interpretation": {
+                        "title": "The Hobbit, or There and Back Again",
+                        "author": "J.R.R. Tolkien",
+                        "characters": [],
+                        "keywords": [
+                          "illustrated",
+                          "deluxe",
+                          "fantasy",
+                          "adventure"
+                        ],
+                        "english_title": null,
+                        "original_title": null,
+                        "year": 1937,
+                        "removed_noise": [
+                          "illustrated",
+                          "deluxe"
+                        ],
+                        "source": "llm",
+                        "intent": "book",
+                        "topics": []
+                      },
+                      "candidates": [
+                        {
+                          "rank": 1,
+                          "work_id": "OL27482W",
+                          "title": "The Hobbit",
+                          "subtitle": null,
+                          "author": "J.R.R. Tolkien",
+                          "primary_authors": [
+                            {
+                              "key": "OL26320A",
+                              "name": "J.R.R. Tolkien",
+                              "url": "https://openlibrary.org/authors/OL26320A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Michael Hague",
+                              "role": "illustrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Alan Lee",
+                              "role": "illustrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Martin Shaw",
+                              "role": "narrator"
+                            }
+                          ],
+                          "contributors_total": 10,
+                          "first_publish_year": 1937,
+                          "edition_count": 482,
+                          "open_library_url": "https://openlibrary.org/works/OL27482W?edition=key%3A/books/OL51709286M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/14627509-M.jpg",
+                          "match_tier": "a",
+                          "match_tier_label": "Exact title + primary author",
+                          "matched_subjects": [],
+                          "explanation": "Exact title match; J.R.R. Tolkien is the primary author; Open Library's first publication year 1937 matches the year in the search; 482 editions.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 2,
+                          "work_id": "OL27513W",
+                          "title": "The Fellowship of the Ring",
+                          "subtitle": null,
+                          "author": "J.R.R. Tolkien",
+                          "primary_authors": [
+                            {
+                              "key": "OL26320A",
+                              "name": "J.R.R. Tolkien",
+                              "url": "https://openlibrary.org/authors/OL26320A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Alan Lee",
+                              "role": "illustrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Moises Rodriguez Barcia",
+                              "role": "translator"
+                            }
+                          ],
+                          "contributors_total": 2,
+                          "first_publish_year": 1954,
+                          "edition_count": 319,
+                          "open_library_url": "https://openlibrary.org/works/OL27513W?edition=key%3A/books/OL23077320M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/14627060-M.jpg",
+                          "match_tier": "d",
+                          "match_tier_label": "Author only",
+                          "matched_subjects": [],
+                          "explanation": "Author-only match; J.R.R. Tolkien is the primary author; 319 editions.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 3,
+                          "work_id": "OL27479W",
+                          "title": "The Two Towers",
+                          "subtitle": null,
+                          "author": "J.R.R. Tolkien",
+                          "primary_authors": [
+                            {
+                              "key": "OL26320A",
+                              "name": "J.R.R. Tolkien",
+                              "url": "https://openlibrary.org/authors/OL26320A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Moises Rodriguez Barcia",
+                              "role": "translator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Alan Lee",
+                              "role": "illustrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Rob Inglis",
+                              "role": "narrator"
+                            }
+                          ],
+                          "contributors_total": 3,
+                          "first_publish_year": 1954,
+                          "edition_count": 290,
+                          "open_library_url": "https://openlibrary.org/works/OL27479W?edition=key%3A/books/OL51711624M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/14627564-M.jpg",
+                          "match_tier": "d",
+                          "match_tier_label": "Author only",
+                          "matched_subjects": [],
+                          "explanation": "Author-only match; J.R.R. Tolkien is the primary author; 290 editions.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 4,
+                          "work_id": "OL27448W",
+                          "title": "The Lord of the Rings",
+                          "subtitle": null,
+                          "author": "J.R.R. Tolkien",
+                          "primary_authors": [
+                            {
+                              "key": "OL26320A",
+                              "name": "J.R.R. Tolkien",
+                              "url": "https://openlibrary.org/authors/OL26320A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Ian Holm",
+                              "role": "narrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Rob Inglis",
+                              "role": "narrator, reader"
+                            },
+                            {
+                              "key": null,
+                              "name": "Brian Sibley",
+                              "role": "narrator"
+                            }
+                          ],
+                          "contributors_total": 3,
+                          "first_publish_year": 1954,
+                          "edition_count": 253,
+                          "open_library_url": "https://openlibrary.org/works/OL27448W?edition=key%3A/books/OL26885115M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/14625765-M.jpg",
+                          "match_tier": "d",
+                          "match_tier_label": "Author only",
+                          "matched_subjects": [],
+                          "explanation": "Author-only match; J.R.R. Tolkien is the primary author; 253 editions.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 5,
+                          "work_id": "OL219602W",
+                          "title": "The Hobbit",
+                          "subtitle": null,
+                          "author": "J.R.R. Tolkien",
+                          "primary_authors": [
+                            {
+                              "key": "OL26320A",
+                              "name": "J.R.R. Tolkien",
+                              "url": "https://openlibrary.org/authors/OL26320A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": "OL2453782A",
+                              "name": "Charles Dixon",
+                              "role": "adapter"
+                            },
+                            {
+                              "key": "OL758306A",
+                              "name": "Sean Deming",
+                              "role": "adapter"
+                            },
+                            {
+                              "key": null,
+                              "name": "Donato Giancola",
+                              "role": "illustrator"
+                            }
+                          ],
+                          "contributors_total": 4,
+                          "first_publish_year": 1990,
+                          "edition_count": 10,
+                          "open_library_url": "https://openlibrary.org/works/OL219602W?edition=key%3A/books/OL22039557M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/8406766-M.jpg",
+                          "match_tier": "a",
+                          "match_tier_label": "Exact title + primary author",
+                          "matched_subjects": [],
+                          "explanation": "Exact title match; J.R.R. Tolkien is the primary author; Charles Dixon is listed as adapter; Sean Deming is listed as adapter; 10 editions.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        }
+                      ],
+                      "meta": {
+                        "request_id": "00-78d06ed290d40a7e121c2eaf29c66dd3-c28f03005c9de29e-00",
+                        "elapsed_ms": 3477,
+                        "timings_ms": {
+                          "clean": 4,
+                          "interpret": 1498,
+                          "rank": 29,
+                          "retrieve": 1540,
+                          "judge": 0,
+                          "explain": 1927
+                        },
+                        "open_library": {
+                          "calls": 1,
+                          "cache_hits": 0,
+                          "upstream_requests": 1,
+                          "retries": 0,
+                          "slow_empty_requeries": 0,
+                          "budget": 5,
+                          "steps": [
+                            {
+                              "step": "broad",
+                              "outcome": "ok",
+                              "cache_hit": false,
+                              "attempts": 1,
+                              "elapsed_ms": 861,
+                              "results": 20,
+                              "num_found": 232
+                            }
+                          ]
+                        },
+                        "llm": {
+                          "provider": "openai",
+                          "model": "gpt-4.1-mini",
+                          "calls": 2,
+                          "cache_hits": 0,
+                          "input_tokens": 1515,
+                          "output_tokens": 259,
+                          "est_cost_usd": 0.0010204,
+                          "prompt_versions": {
+                            "interpret": "interpret.v5",
+                            "explain": "explain.v4"
+                          },
+                          "steps": [
+                            {
+                              "operation": "interpret",
+                              "provider": "openai",
+                              "model": "gpt-4.1-mini",
+                              "prompt_id": "interpret.v5",
+                              "status": "ok",
+                              "cache_hit": false,
+                              "elapsed_ms": 1490,
+                              "input_tokens": 673,
+                              "output_tokens": 83
+                            },
+                            {
+                              "operation": "explain",
+                              "provider": "openai",
+                              "model": "gpt-4.1-mini",
+                              "prompt_id": "explain.v4",
+                              "status": "ok",
+                              "cache_hit": false,
+                              "elapsed_ms": 1891,
+                              "input_tokens": 842,
+                              "output_tokens": 176
+                            }
+                          ]
+                        },
+                        "judge": {
+                          "enabled": false,
+                          "status": "off",
+                          "pick": null,
+                          "probability": null,
+                          "threshold": 0.9,
+                          "agreed": null,
+                          "model": null,
+                          "latency_ms": null,
+                          "input_tokens": null,
+                          "est_cost_usd": null,
+                          "detail": null
+                        }
+                      }
+                    }
+                  },
+                  "contributor_match": {
+                    "summary": "Contributor match: hobbit dixon",
+                    "description": "Exact title + contributor-only author: Dixon is credited as an adapter, Tolkien stays the primary author (tier b). Recorded on build 918d7b88 with gpt-4.1-mini, judge off; with Gemini (the default) the meta.llm provider/model differ, and the LLM-written parts (interpretation, explanation wording) may too.",
+                    "value": {
+                      "query": "hobbit dixon",
+                      "status": "match",
+                      "status_reason": "exact_title_contributor_author",
+                      "hint": null,
+                      "degraded": false,
+                      "degraded_reasons": [],
+                      "interpretation": {
+                        "title": "The Hobbit",
+                        "author": "J.R.R. Tolkien",
+                        "characters": [],
+                        "keywords": [
+                          "hobbit"
+                        ],
+                        "english_title": null,
+                        "original_title": null,
+                        "year": null,
+                        "removed_noise": [],
+                        "source": "llm",
+                        "intent": "book",
+                        "topics": []
+                      },
+                      "candidates": [
+                        {
+                          "rank": 1,
+                          "work_id": "OL219602W",
+                          "title": "The Hobbit",
+                          "subtitle": null,
+                          "author": "J.R.R. Tolkien",
+                          "primary_authors": [
+                            {
+                              "key": "OL26320A",
+                              "name": "J.R.R. Tolkien",
+                              "url": "https://openlibrary.org/authors/OL26320A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": "OL2453782A",
+                              "name": "Charles Dixon",
+                              "role": "adapter"
+                            },
+                            {
+                              "key": "OL758306A",
+                              "name": "Sean Deming",
+                              "role": "adapter"
+                            },
+                            {
+                              "key": null,
+                              "name": "Donato Giancola",
+                              "role": "illustrator"
+                            }
+                          ],
+                          "contributors_total": 4,
+                          "first_publish_year": 1990,
+                          "edition_count": 10,
+                          "open_library_url": "https://openlibrary.org/works/OL219602W?edition=key%3A/books/OL22039557M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/8406766-M.jpg",
+                          "match_tier": "b",
+                          "match_tier_label": "Exact title + contributor-only author",
+                          "matched_subjects": [],
+                          "explanation": "Exact title match; J.R.R. Tolkien is the primary author; Charles Dixon is listed as adapter; Charles Dixon is the matched contributor; 10 editions.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 1
+                        },
+                        {
+                          "rank": 2,
+                          "work_id": "OL27482W",
+                          "title": "The Hobbit",
+                          "subtitle": null,
+                          "author": "J.R.R. Tolkien",
+                          "primary_authors": [
+                            {
+                              "key": "OL26320A",
+                              "name": "J.R.R. Tolkien",
+                              "url": "https://openlibrary.org/authors/OL26320A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Michael Hague",
+                              "role": "illustrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Alan Lee",
+                              "role": "illustrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Martin Shaw",
+                              "role": "narrator"
+                            }
+                          ],
+                          "contributors_total": 10,
+                          "first_publish_year": 1937,
+                          "edition_count": 482,
+                          "open_library_url": "https://openlibrary.org/works/OL27482W?edition=key%3A/books/OL51709286M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/14627509-M.jpg",
+                          "match_tier": "e",
+                          "match_tier_label": "No clear winner",
+                          "matched_subjects": [],
+                          "explanation": "Exact title, but not by the searched author; J.R.R. Tolkien is the primary author; 482 editions.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 3,
+                          "work_id": "OL20651930W",
+                          "title": "Bilbo",
+                          "subtitle": null,
+                          "author": "Charles Dixon",
+                          "primary_authors": [
+                            {
+                              "key": "OL2453782A",
+                              "name": "Charles Dixon",
+                              "url": "https://openlibrary.org/authors/OL2453782A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [],
+                          "contributors_total": 0,
+                          "first_publish_year": 1999,
+                          "edition_count": 2,
+                          "open_library_url": "https://openlibrary.org/works/OL20651930W?edition=key%3A/books/OL28419647M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/3153152-M.jpg",
+                          "match_tier": "c",
+                          "match_tier_label": "Near-match title + author",
+                          "matched_subjects": [],
+                          "explanation": "Near title match; also published as Bilbo le Hobbit; Charles Dixon is the primary author; 2 editions.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 4,
+                          "work_id": "OL631598W",
+                          "title": "El hobbit",
+                          "subtitle": "historia de una idea y una vuelta",
+                          "author": "Chuck Dixon",
+                          "primary_authors": [
+                            {
+                              "key": "OL48516A",
+                              "name": "Chuck Dixon",
+                              "url": "https://openlibrary.org/authors/OL48516A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [],
+                          "contributors_total": 0,
+                          "first_publish_year": 2001,
+                          "edition_count": 1,
+                          "open_library_url": "https://openlibrary.org/works/OL631598W?edition=key%3A/books/OL22990748M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/12885783-M.jpg",
+                          "match_tier": "c",
+                          "match_tier_label": "Near-match title + author",
+                          "matched_subjects": [],
+                          "explanation": "Near title match; Chuck Dixon is the primary author; 1 edition.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 5,
+                          "work_id": "OL34930168W",
+                          "title": "EL HOBBIT ED. DE LUJO",
+                          "subtitle": null,
+                          "author": "Chuck Dixon, David Wenzel",
+                          "primary_authors": [
+                            {
+                              "key": "OL48516A",
+                              "name": "Chuck Dixon",
+                              "url": "https://openlibrary.org/authors/OL48516A"
+                            },
+                            {
+                              "key": "OL459696A",
+                              "name": "David Wenzel",
+                              "url": "https://openlibrary.org/authors/OL459696A"
+                            }
+                          ],
+                          "primary_authors_total": 2,
+                          "contributors": [],
+                          "contributors_total": 0,
+                          "first_publish_year": 2012,
+                          "edition_count": 1,
+                          "open_library_url": "https://openlibrary.org/works/OL34930168W?edition=key%3A/books/OL47289025M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/13749189-M.jpg",
+                          "match_tier": "d",
+                          "match_tier_label": "Author only",
+                          "matched_subjects": [],
+                          "explanation": "Author-only match; Chuck Dixon and David Wenzel are the primary authors; 1 edition.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        }
+                      ],
+                      "meta": {
+                        "request_id": "00-a92809e3e265c6af67110fa0e1395821-22c9173f9592f1ec-00",
+                        "elapsed_ms": 2651,
+                        "timings_ms": {
+                          "clean": 0,
+                          "interpret": 861,
+                          "rank": 37,
+                          "retrieve": 899,
+                          "judge": 0,
+                          "explain": 1751
+                        },
+                        "open_library": {
+                          "calls": 1,
+                          "cache_hits": 0,
+                          "upstream_requests": 1,
+                          "retries": 0,
+                          "slow_empty_requeries": 0,
+                          "budget": 5,
+                          "steps": [
+                            {
+                              "step": "broad",
+                              "outcome": "ok",
+                              "cache_hit": false,
+                              "attempts": 1,
+                              "elapsed_ms": 429,
+                              "results": 9,
+                              "num_found": 9
+                            }
+                          ]
+                        },
+                        "llm": {
+                          "provider": "openai",
+                          "model": "gpt-4.1-mini",
+                          "calls": 2,
+                          "cache_hits": 0,
+                          "input_tokens": 1547,
+                          "output_tokens": 221,
+                          "est_cost_usd": 0.0009724,
+                          "prompt_versions": {
+                            "interpret": "interpret.v5",
+                            "explain": "explain.v4"
+                          },
+                          "steps": [
+                            {
+                              "operation": "interpret",
+                              "provider": "openai",
+                              "model": "gpt-4.1-mini",
+                              "prompt_id": "interpret.v5",
+                              "status": "ok",
+                              "cache_hit": false,
+                              "elapsed_ms": 861,
+                              "input_tokens": 668,
+                              "output_tokens": 51
+                            },
+                            {
+                              "operation": "explain",
+                              "provider": "openai",
+                              "model": "gpt-4.1-mini",
+                              "prompt_id": "explain.v4",
+                              "status": "ok",
+                              "cache_hit": false,
+                              "elapsed_ms": 1747,
+                              "input_tokens": 879,
+                              "output_tokens": 170
+                            }
+                          ]
+                        },
+                        "judge": {
+                          "enabled": false,
+                          "status": "off",
+                          "pick": null,
+                          "probability": null,
+                          "threshold": 0.9,
+                          "agreed": null,
+                          "model": null,
+                          "latency_ms": null,
+                          "input_tokens": null,
+                          "est_cost_usd": null,
+                          "detail": null
+                        }
+                      }
+                    }
+                  },
+                  "degraded_llm_down": {
+                    "summary": "Degraded: no LLM available",
+                    "description": "No LLM provider configured: heuristic parse and template explanations, still a useful answer. degraded=true says why; the LLM never causes an error status. Recorded on build 918d7b88 with the LLM off (AI:Provider=none).",
+                    "value": {
+                      "query": "mark huckleberry",
+                      "status": "ambiguous",
+                      "status_reason": "near_title_author",
+                      "hint": "Several books fit. Add the author or more of the title to narrow it.",
+                      "degraded": true,
+                      "degraded_reasons": [
+                        "ai_not_configured",
+                        "explanation_fallback"
+                      ],
+                      "interpretation": {
+                        "title": null,
+                        "author": null,
+                        "characters": [],
+                        "keywords": [
+                          "mark",
+                          "huckleberry"
+                        ],
+                        "english_title": null,
+                        "original_title": null,
+                        "year": null,
+                        "removed_noise": [],
+                        "source": "heuristic",
+                        "intent": "book",
+                        "topics": []
+                      },
+                      "candidates": [
+                        {
+                          "rank": 1,
+                          "work_id": "OL53908W",
+                          "title": "Adventures of Huckleberry Finn",
+                          "subtitle": null,
+                          "author": "Mark Twain",
+                          "primary_authors": [
+                            {
+                              "key": "OL18319A",
+                              "name": "Mark Twain",
+                              "url": "https://openlibrary.org/authors/OL18319A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Rudy Nebres",
+                              "role": "illustrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "J. A. De Larrinaga",
+                              "role": "translator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Sherry Neidigh",
+                              "role": "illustrator"
+                            }
+                          ],
+                          "contributors_total": 25,
+                          "first_publish_year": 1876,
+                          "edition_count": 2623,
+                          "open_library_url": "https://openlibrary.org/works/OL53908W?edition=key%3A/books/OL26482905M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/8157718-M.jpg",
+                          "match_tier": "c",
+                          "match_tier_label": "Near-match title + author",
+                          "matched_subjects": [],
+                          "explanation": "Near title match on the word “huckleberry”; also published as Huckleberry Finn; Mark Twain is the primary author; Huckleberry Finn is a listed character; 5 duplicate records merged.",
+                          "explanation_source": "template",
+                          "second_opinion": false,
+                          "duplicates_folded": 5
+                        },
+                        {
+                          "rank": 2,
+                          "work_id": "OL53919W",
+                          "title": "The Adventures of Tom Sawyer",
+                          "subtitle": null,
+                          "author": "Mark Twain",
+                          "primary_authors": [
+                            {
+                              "key": "OL18319A",
+                              "name": "Mark Twain",
+                              "url": "https://openlibrary.org/authors/OL18319A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "E. R. Cruz",
+                              "role": "illustrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "D. H. Howe",
+                              "role": "editor"
+                            },
+                            {
+                              "key": null,
+                              "name": "Nivio Lopez",
+                              "role": "illustrator"
+                            }
+                          ],
+                          "contributors_total": 23,
+                          "first_publish_year": 1817,
+                          "edition_count": 879,
+                          "open_library_url": "https://openlibrary.org/works/OL53919W?edition=key%3A/books/OL13537112M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/12043351-M.jpg",
+                          "match_tier": "d",
+                          "match_tier_label": "Author only",
+                          "matched_subjects": [],
+                          "explanation": "Author-only match; Mark Twain is the primary author; Huckleberry Finn is a listed character; 879 editions.",
+                          "explanation_source": "template",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 3,
+                          "work_id": "OL413674W",
+                          "title": "Tom Sawyer Abroad",
+                          "subtitle": null,
+                          "author": "Mark Twain",
+                          "primary_authors": [
+                            {
+                              "key": "OL18319A",
+                              "name": "Mark Twain",
+                              "url": "https://openlibrary.org/authors/OL18319A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Erik Sellin",
+                              "role": "narrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Nat Hentoff",
+                              "role": "introduction"
+                            },
+                            {
+                              "key": null,
+                              "name": "Dan Beard",
+                              "role": "illustrator"
+                            }
+                          ],
+                          "contributors_total": 7,
+                          "first_publish_year": 1894,
+                          "edition_count": 333,
+                          "open_library_url": "https://openlibrary.org/works/OL413674W?edition=key%3A/books/OL31959414M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/9162125-M.jpg",
+                          "match_tier": "d",
+                          "match_tier_label": "Author only",
+                          "matched_subjects": [],
+                          "explanation": "Author-only match; Mark Twain is the primary author; 333 editions.",
+                          "explanation_source": "template",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 4,
+                          "work_id": "OL53994W",
+                          "title": "The Prince and the Pauper",
+                          "subtitle": null,
+                          "author": "Mark Twain",
+                          "primary_authors": [
+                            {
+                              "key": "OL18319A",
+                              "name": "Mark Twain",
+                              "url": "https://openlibrary.org/authors/OL18319A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Thea Kliros",
+                              "role": "illustrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Suzanne Fisher Staples",
+                              "role": "foreword"
+                            },
+                            {
+                              "key": null,
+                              "name": "Robert Tine",
+                              "role": "introduction"
+                            }
+                          ],
+                          "contributors_total": 7,
+                          "first_publish_year": 1881,
+                          "edition_count": 755,
+                          "open_library_url": "https://openlibrary.org/works/OL53994W?edition=key%3A/books/OL24178317M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/8221267-M.jpg",
+                          "match_tier": "d",
+                          "match_tier_label": "Author only",
+                          "matched_subjects": [],
+                          "explanation": "Author-only match; Mark Twain is the primary author; 755 editions.",
+                          "explanation_source": "template",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 5,
+                          "work_id": "OL17901897W",
+                          "title": "Adventures of Huckleberry Finn and Related Readings",
+                          "subtitle": null,
+                          "author": "Mark Twain",
+                          "primary_authors": [
+                            {
+                              "key": "OL18319A",
+                              "name": "Mark Twain",
+                              "url": "https://openlibrary.org/authors/OL18319A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": "OL26459A",
+                              "name": "Langston Hughes",
+                              "role": "also credited"
+                            },
+                            {
+                              "key": "OL2943471A",
+                              "name": "Daniel Fisher",
+                              "role": "also credited"
+                            },
+                            {
+                              "key": "OL238257A",
+                              "name": "Rita Dove",
+                              "role": "also credited"
+                            }
+                          ],
+                          "contributors_total": 7,
+                          "first_publish_year": 1997,
+                          "edition_count": 2,
+                          "open_library_url": "https://openlibrary.org/works/OL17901897W?edition=key%3A/books/OL27766390M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/9176082-M.jpg",
+                          "match_tier": "d",
+                          "match_tier_label": "Author only",
+                          "matched_subjects": [],
+                          "explanation": "Author-only match; Mark Twain is the primary author; Huckleberry Finn is a listed character; 2 editions.",
+                          "explanation_source": "template",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        }
+                      ],
+                      "meta": {
+                        "request_id": "00-0b6566bae0738bd78522b701e3772738-edb4e748b54a86df-00",
+                        "elapsed_ms": 1301,
+                        "timings_ms": {
+                          "clean": 4,
+                          "interpret": 2,
+                          "rank": 43,
+                          "retrieve": 1280,
+                          "explain": 12,
+                          "judge": 0
+                        },
+                        "open_library": {
+                          "calls": 2,
+                          "cache_hits": 0,
+                          "upstream_requests": 2,
+                          "retries": 0,
+                          "slow_empty_requeries": 0,
+                          "budget": 5,
+                          "steps": [
+                            {
+                              "step": "broad",
+                              "outcome": "ok",
+                              "cache_hit": false,
+                              "attempts": 1,
+                              "elapsed_ms": 833,
+                              "results": 20,
+                              "num_found": 1025
+                            },
+                            {
+                              "step": "person_fallback",
+                              "outcome": "ok",
+                              "cache_hit": false,
+                              "attempts": 1,
+                              "elapsed_ms": 399,
+                              "results": 16,
+                              "num_found": 16
+                            }
+                          ]
+                        },
+                        "llm": {
+                          "provider": "none",
+                          "model": null,
+                          "calls": 0,
+                          "cache_hits": 0,
+                          "input_tokens": 0,
+                          "output_tokens": 0,
+                          "est_cost_usd": 0,
+                          "prompt_versions": {
+                            "interpret": "interpret.v5",
+                            "explain": "explain.v4"
+                          },
+                          "steps": [
+                            {
+                              "operation": "interpret",
+                              "provider": "none",
+                              "model": "",
+                              "prompt_id": "interpret.v5",
+                              "status": "not_configured",
+                              "cache_hit": false,
+                              "elapsed_ms": 0,
+                              "input_tokens": null,
+                              "output_tokens": null
+                            },
+                            {
+                              "operation": "explain",
+                              "provider": "none",
+                              "model": "",
+                              "prompt_id": "explain.v4",
+                              "status": "not_configured",
+                              "cache_hit": false,
+                              "elapsed_ms": 0,
+                              "input_tokens": null,
+                              "output_tokens": null
+                            }
+                          ]
+                        },
+                        "judge": {
+                          "enabled": false,
+                          "status": "off",
+                          "pick": null,
+                          "probability": null,
+                          "threshold": 0.9,
+                          "agreed": null,
+                          "model": null,
+                          "latency_ms": null,
+                          "input_tokens": null,
+                          "est_cost_usd": null,
+                          "detail": null
+                        }
+                      }
+                    }
+                  },
+                  "none": {
+                    "summary": "No match: xqzv blorptangle",
+                    "description": "Nothing usable: a 200 with an empty list and a hint (\"no book matched\" is an answer, not a 404). Recorded on build 918d7b88 with gpt-4.1-mini, judge off; with Gemini (the default) the meta.llm provider/model differ, and the LLM-written parts (interpretation, explanation wording) may too.",
+                    "value": {
+                      "query": "xqzv blorptangle",
+                      "status": "none",
+                      "status_reason": "no_candidates",
+                      "hint": "Check the spelling or add an author.",
+                      "degraded": false,
+                      "degraded_reasons": [],
+                      "interpretation": {
+                        "title": null,
+                        "author": null,
+                        "characters": [],
+                        "keywords": [
+                          "xqzv",
+                          "blorptangle"
+                        ],
+                        "english_title": null,
+                        "original_title": null,
+                        "year": null,
+                        "removed_noise": [],
+                        "source": "llm",
+                        "intent": "book",
+                        "topics": []
+                      },
+                      "candidates": [],
+                      "meta": {
+                        "request_id": "00-4ef63f125af6fd7574c9ed645cf76d3e-5d832b1f81c40461-00",
+                        "elapsed_ms": 1324,
+                        "timings_ms": {
+                          "clean": 0,
+                          "interpret": 1222,
+                          "rank": 0,
+                          "retrieve": 1323
+                        },
+                        "open_library": {
+                          "calls": 2,
+                          "cache_hits": 0,
+                          "upstream_requests": 2,
+                          "retries": 0,
+                          "slow_empty_requeries": 0,
+                          "budget": 5,
+                          "steps": [
+                            {
+                              "step": "broad",
+                              "outcome": "ok",
+                              "cache_hit": false,
+                              "attempts": 1,
+                              "elapsed_ms": 204,
+                              "results": 0,
+                              "num_found": 0
+                            },
+                            {
+                              "step": "any_of",
+                              "outcome": "ok",
+                              "cache_hit": false,
+                              "attempts": 1,
+                              "elapsed_ms": 100,
+                              "results": 0,
+                              "num_found": 0
+                            }
+                          ]
+                        },
+                        "llm": {
+                          "provider": "openai",
+                          "model": "gpt-4.1-mini",
+                          "calls": 1,
+                          "cache_hits": 0,
+                          "input_tokens": 671,
+                          "output_tokens": 46,
+                          "est_cost_usd": 0.000342,
+                          "prompt_versions": {
+                            "interpret": "interpret.v5"
+                          },
+                          "steps": [
+                            {
+                              "operation": "interpret",
+                              "provider": "openai",
+                              "model": "gpt-4.1-mini",
+                              "prompt_id": "interpret.v5",
+                              "status": "ok",
+                              "cache_hit": false,
+                              "elapsed_ms": 1222,
+                              "input_tokens": 671,
+                              "output_tokens": 46
+                            }
+                          ]
+                        },
+                        "judge": {
+                          "enabled": false,
+                          "status": "off",
+                          "pick": null,
+                          "probability": null,
+                          "threshold": 0.9,
+                          "agreed": null,
+                          "model": null,
+                          "latency_ms": null,
+                          "input_tokens": null,
+                          "est_cost_usd": null,
+                          "detail": null
+                        }
+                      }
+                    }
+                  },
+                  "topic_none": {
+                    "summary": "Topic with nothing about it: a book about xqzv",
+                    "description": "A topic request (found by the cleaner with the LLM off) that no Open Library subject matches: none, candidates [] and a hint. Recorded on build 918d7b88 with the LLM off (AI:Provider=none).",
+                    "value": {
+                      "query": "a book about xqzv",
+                      "status": "none",
+                      "status_reason": "no_candidates",
+                      "hint": "Try a broader topic, or add a title or author.",
+                      "degraded": true,
+                      "degraded_reasons": [
+                        "ai_not_configured"
+                      ],
+                      "interpretation": {
+                        "title": null,
+                        "author": null,
+                        "characters": [],
+                        "keywords": [
+                          "xqzv"
+                        ],
+                        "english_title": null,
+                        "original_title": null,
+                        "year": null,
+                        "removed_noise": [
+                          "book"
+                        ],
+                        "source": "heuristic",
+                        "intent": "topic",
+                        "topics": [
+                          "xqzv"
+                        ]
+                      },
+                      "candidates": [],
+                      "meta": {
+                        "request_id": "00-a67133e34c3dba01116b741690bd0000-a242d65a71d9cc69-00",
+                        "elapsed_ms": 727,
+                        "timings_ms": {
+                          "clean": 3,
+                          "interpret": 0,
+                          "rank": 1,
+                          "retrieve": 723
+                        },
+                        "open_library": {
+                          "calls": 2,
+                          "cache_hits": 0,
+                          "upstream_requests": 2,
+                          "retries": 0,
+                          "slow_empty_requeries": 0,
+                          "budget": 5,
+                          "steps": [
+                            {
+                              "step": "broad",
+                              "outcome": "ok",
+                              "cache_hit": false,
+                              "attempts": 1,
+                              "elapsed_ms": 407,
+                              "results": 0,
+                              "num_found": 0
+                            },
+                            {
+                              "step": "topic",
+                              "outcome": "ok",
+                              "cache_hit": false,
+                              "attempts": 1,
+                              "elapsed_ms": 717,
+                              "results": 0,
+                              "num_found": 0
+                            }
+                          ]
+                        },
+                        "llm": {
+                          "provider": "none",
+                          "model": null,
+                          "calls": 0,
+                          "cache_hits": 0,
+                          "input_tokens": 0,
+                          "output_tokens": 0,
+                          "est_cost_usd": 0,
+                          "prompt_versions": {
+                            "interpret": "interpret.v5"
+                          },
+                          "steps": [
+                            {
+                              "operation": "interpret",
+                              "provider": "none",
+                              "model": "",
+                              "prompt_id": "interpret.v5",
+                              "status": "not_configured",
+                              "cache_hit": false,
+                              "elapsed_ms": 0,
+                              "input_tokens": null,
+                              "output_tokens": null
+                            }
+                          ]
+                        },
+                        "judge": {
+                          "enabled": false,
+                          "status": "off",
+                          "pick": null,
+                          "probability": null,
+                          "threshold": 0.9,
+                          "agreed": null,
+                          "model": null,
+                          "latency_ms": null,
+                          "input_tokens": null,
+                          "est_cost_usd": null,
+                          "detail": null
+                        }
+                      }
+                    }
+                  },
+                  "topic_search": {
+                    "summary": "Topic request: find me a book about bears",
+                    "description": "A natural-sentence topic request: the LLM reads intent topic and the subject \"bears\"; the candidates are books about it (status ambiguous, reason topic_search, never a match), each with the Open Library subjects that matched. Recorded on build 918d7b88 with gpt-4.1-mini, judge off; with Gemini (the default) the meta.llm provider/model differ, and the LLM-written parts (interpretation, explanation wording) may too.",
+                    "value": {
+                      "query": "find me a book about bears",
+                      "status": "ambiguous",
+                      "status_reason": "topic_search",
+                      "hint": "Add a title or author to find a specific one.",
+                      "degraded": false,
+                      "degraded_reasons": [],
+                      "interpretation": {
+                        "title": null,
+                        "author": null,
+                        "characters": [],
+                        "keywords": [
+                          "bears"
+                        ],
+                        "english_title": null,
+                        "original_title": null,
+                        "year": null,
+                        "removed_noise": [
+                          "book"
+                        ],
+                        "source": "llm",
+                        "intent": "topic",
+                        "topics": [
+                          "bears"
+                        ]
+                      },
+                      "candidates": [
+                        {
+                          "rank": 1,
+                          "work_id": "OL59133W",
+                          "title": "Brown Bear, Brown Bear, What Do You See?",
+                          "subtitle": null,
+                          "author": "Bill Martin Jr.",
+                          "primary_authors": [
+                            {
+                              "key": "OL28506A",
+                              "name": "Bill Martin Jr.",
+                              "url": "https://openlibrary.org/authors/OL28506A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": "OL34330A",
+                              "name": "Eric Carle",
+                              "role": "illustrator"
+                            }
+                          ],
+                          "contributors_total": 1,
+                          "first_publish_year": 1967,
+                          "edition_count": 82,
+                          "open_library_url": "https://openlibrary.org/works/OL59133W?edition=key%3A/books/OL28740276M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/12624136-M.jpg",
+                          "match_tier": "e",
+                          "match_tier_label": "No clear winner",
+                          "matched_subjects": [
+                            "Bears",
+                            "Bears, fiction"
+                          ],
+                          "explanation": "Topic match; Bill Martin Jr. is the primary author; Open Library lists the subjects Bears and Bears, fiction.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 2,
+                          "work_id": "OL832133W",
+                          "title": "We're Going on a Bear Hunt",
+                          "subtitle": null,
+                          "author": "Michael Rosen",
+                          "primary_authors": [
+                            {
+                              "key": "OL71086A",
+                              "name": "Michael Rosen",
+                              "url": "https://openlibrary.org/authors/OL71086A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Mair Treharne",
+                              "role": "translator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Helen Oxenbury",
+                              "role": "illustrator"
+                            }
+                          ],
+                          "contributors_total": 2,
+                          "first_publish_year": 1746,
+                          "edition_count": 119,
+                          "open_library_url": "https://openlibrary.org/works/OL832133W?edition=key%3A/books/OL32843753M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/433694-M.jpg",
+                          "match_tier": "e",
+                          "match_tier_label": "No clear winner",
+                          "matched_subjects": [
+                            "Bears",
+                            "Bears, fiction",
+                            "Bear hunting"
+                          ],
+                          "explanation": "Topic match; Michael Rosen is the primary author; Open Library lists the subjects Bears and Bears, fiction.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 3,
+                          "work_id": "OL19870W",
+                          "title": "The Jungle Book",
+                          "subtitle": null,
+                          "author": "Rudyard Kipling",
+                          "primary_authors": [
+                            {
+                              "key": "OL24461A",
+                              "name": "Rudyard Kipling",
+                              "url": "https://openlibrary.org/authors/OL24461A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Inga Moore",
+                              "role": "illustrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Tony Robinson",
+                              "role": "narrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Richard Shepherd",
+                              "role": "editor"
+                            }
+                          ],
+                          "contributors_total": 22,
+                          "first_publish_year": 1893,
+                          "edition_count": 537,
+                          "open_library_url": "https://openlibrary.org/works/OL19870W?edition=key%3A/books/OL37044548M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/3344204-M.jpg",
+                          "match_tier": "e",
+                          "match_tier_label": "No clear winner",
+                          "matched_subjects": [],
+                          "explanation": "Suggested for this topic; Rudyard Kipling is the primary author.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 4,
+                          "work_id": "OL476471W",
+                          "title": "The House at Pooh Corner",
+                          "subtitle": null,
+                          "author": "A. A. Milne",
+                          "primary_authors": [
+                            {
+                              "key": "OL29881A",
+                              "name": "A. A. Milne",
+                              "url": "https://openlibrary.org/authors/OL29881A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Peter Dennis",
+                              "role": "narrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "E.H. Shepard",
+                              "role": "illustrator"
+                            },
+                            {
+                              "key": null,
+                              "name": "Jim Broadbent",
+                              "role": "narrator"
+                            }
+                          ],
+                          "contributors_total": 9,
+                          "first_publish_year": 1925,
+                          "edition_count": 87,
+                          "open_library_url": "https://openlibrary.org/works/OL476471W?edition=key%3A/books/OL9506490M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/8743133-M.jpg",
+                          "match_tier": "e",
+                          "match_tier_label": "No clear winner",
+                          "matched_subjects": [
+                            "teddy bears",
+                            "bears",
+                            "Bears, fiction"
+                          ],
+                          "explanation": "Topic match; A. A. Milne is the primary author; Open Library lists the subjects teddy bears and bears.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        },
+                        {
+                          "rank": 5,
+                          "work_id": "OL279316W",
+                          "title": "Little Bear",
+                          "subtitle": null,
+                          "author": "Else Holmelund Minarik",
+                          "primary_authors": [
+                            {
+                              "key": "OL770431A",
+                              "name": "Else Holmelund Minarik",
+                              "url": "https://openlibrary.org/authors/OL770431A"
+                            }
+                          ],
+                          "primary_authors_total": 1,
+                          "contributors": [
+                            {
+                              "key": null,
+                              "name": "Maurice Sendak",
+                              "role": "illustrator"
+                            }
+                          ],
+                          "contributors_total": 1,
+                          "first_publish_year": 1957,
+                          "edition_count": 69,
+                          "open_library_url": "https://openlibrary.org/works/OL279316W?edition=key%3A/books/OL22259306M",
+                          "cover_url": "https://covers.openlibrary.org/b/id/51275-M.jpg",
+                          "match_tier": "e",
+                          "match_tier_label": "No clear winner",
+                          "matched_subjects": [
+                            "Little Bear (Fictitious character : Minarik)",
+                            "Bears",
+                            "Bears, fiction"
+                          ],
+                          "explanation": "Topic match; Else Holmelund Minarik is the primary author; Open Library lists the subjects Bears and Bears, fiction.",
+                          "explanation_source": "llm",
+                          "second_opinion": false,
+                          "duplicates_folded": 0
+                        }
+                      ],
+                      "meta": {
+                        "request_id": "00-a7d20b7ad9668ba1a37be1ab8dd9afc4-48cd9476ab9a3dd4-00",
+                        "elapsed_ms": 3922,
+                        "timings_ms": {
+                          "clean": 4,
+                          "interpret": 1095,
+                          "rank": 31,
+                          "retrieve": 2452,
+                          "judge": 0,
+                          "explain": 1465
+                        },
+                        "open_library": {
+                          "calls": 3,
+                          "cache_hits": 0,
+                          "upstream_requests": 3,
+                          "retries": 0,
+                          "slow_empty_requeries": 0,
+                          "budget": 5,
+                          "steps": [
+                            {
+                              "step": "broad",
+                              "outcome": "ok",
+                              "cache_hit": false,
+                              "attempts": 1,
+                              "elapsed_ms": 1226,
+                              "results": 20,
+                              "num_found": 54706
+                            },
+                            {
+                              "step": "topic",
+                              "outcome": "ok",
+                              "cache_hit": false,
+                              "attempts": 1,
+                              "elapsed_ms": 428,
+                              "results": 20,
+                              "num_found": 15119
+                            },
+                            {
+                              "step": "suggestions",
+                              "outcome": "ok",
+                              "cache_hit": false,
+                              "attempts": 1,
+                              "elapsed_ms": 1321,
+                              "results": 20,
+                              "num_found": 47510
+                            }
+                          ]
+                        },
+                        "llm": {
+                          "provider": "openai",
+                          "model": "gpt-4.1-mini",
+                          "calls": 2,
+                          "cache_hits": 0,
+                          "input_tokens": 1529,
+                          "output_tokens": 281,
+                          "est_cost_usd": 0.0010612,
+                          "prompt_versions": {
+                            "interpret": "interpret.v5",
+                            "explain": "explain.v4"
+                          },
+                          "steps": [
+                            {
+                              "operation": "interpret",
+                              "provider": "openai",
+                              "model": "gpt-4.1-mini",
+                              "prompt_id": "interpret.v5",
+                              "status": "ok",
+                              "cache_hit": false,
+                              "elapsed_ms": 1090,
+                              "input_tokens": 670,
+                              "output_tokens": 119
+                            },
+                            {
+                              "operation": "explain",
+                              "provider": "openai",
+                              "model": "gpt-4.1-mini",
+                              "prompt_id": "explain.v4",
+                              "status": "ok",
+                              "cache_hit": false,
+                              "elapsed_ms": 1461,
+                              "input_tokens": 859,
+                              "output_tokens": 162
+                            }
+                          ]
+                        },
+                        "judge": {
+                          "enabled": false,
+                          "status": "off",
+                          "pick": null,
+                          "probability": null,
+                          "threshold": 0.9,
+                          "agreed": null,
+                          "model": null,
+                          "latency_ms": null,
+                          "input_tokens": null,
+                          "est_cost_usd": null,
+                          "detail": null
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                },
+                "examples": {
+                  "no_searchable_terms": {
+                    "summary": "Only stop words",
+                    "description": "\"the\" or \"a of the\": nothing left to search (DE-05).",
+                    "value": {
+                      "type": "/problems/no-searchable-terms",
+                      "title": "The query has no searchable words.",
+                      "status": 400,
+                      "errors": {
+                        "Q": [
+                          "Add a title or author."
+                        ]
+                      },
+                      "code": "no_searchable_terms",
+                      "hint": "Add a title or author.",
+                      "trace_id": "00-002abaa5f14359a89211d7437e439cf0-9372df5f1a7db3a5-00"
+                    }
+                  },
+                  "validation_failed": {
+                    "summary": "Invalid parameters",
+                    "description": "Field errors are keyed by C# member name (Q, Limit); every problem is reported at once.",
+                    "value": {
+                      "type": "/problems/validation-failed",
+                      "title": "One or more validation errors occurred.",
+                      "status": 400,
+                      "errors": {
+                        "Limit": [
+                          "The field Limit must be a whole number between 1 and 10."
+                        ],
+                        "Q": [
+                          "The query must be at most 300 characters."
+                        ]
+                      },
+                      "code": "validation_failed",
+                      "trace_id": "00-21c442fe70d91900aa19fd2923dbba75-7bcb72d6929aa2b9-00"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                },
+                "examples": {
+                  "rate_limited": {
+                    "summary": "Rate limited",
+                    "description": "Per-client or global search limit reached. Retry-After says when to try again.",
+                    "value": {
+                      "type": "/problems/rate-limited",
+                      "title": "Too many requests",
+                      "status": 429,
+                      "detail": "The search limit was reached. Try again in 60 s.",
+                      "code": "rate_limited",
+                      "trace_id": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                },
+                "examples": {
+                  "catalog_bad_response": {
+                    "summary": "Open Library sent something unusable",
+                    "description": "Unparseable JSON or an unexpected non-transient status on the first call.",
+                    "value": {
+                      "type": "/problems/catalog-bad-response",
+                      "title": "Open Library returned an unexpected response",
+                      "status": 502,
+                      "detail": "The response could not be used (1 attempt(s)).",
+                      "code": "catalog_bad_response",
+                      "trace_id": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                },
+                "examples": {
+                  "catalog_unavailable": {
+                    "summary": "Open Library unavailable",
+                    "description": "5xx/429 after retries, or the circuit breaker is open. Retry-After is Open Library's, or 15 s.",
+                    "value": {
+                      "type": "/problems/catalog-unavailable",
+                      "title": "Open Library is unavailable",
+                      "status": 503,
+                      "detail": "Open Library did not answer successfully after 3 attempt(s). Try again shortly.",
+                      "code": "catalog_unavailable",
+                      "trace_id": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                },
+                "examples": {
+                  "catalog_timeout": {
+                    "summary": "Open Library timed out",
+                    "description": "Every attempt of the first call timed out.",
+                    "value": {
+                      "type": "/problems/catalog-timeout",
+                      "title": "Open Library did not answer in time",
+                      "status": 504,
+                      "detail": "Every attempt timed out (3 attempt(s)). Try again shortly.",
+                      "code": "catalog_timeout",
+                      "trace_id": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
+                    }
+                  },
+                  "search_timeout": {
+                    "summary": "Deadline passed with nothing in hand",
+                    "description": "No Open Library results arrived within the 25 s deadline. With partial results the answer is a 200 with degraded_reasons [deadline_reached] instead.",
+                    "value": {
+                      "type": "/problems/search-timeout",
+                      "title": "The search did not finish in time",
+                      "status": 504,
+                      "detail": "No Open Library results arrived before the request deadline. Try again shortly.",
+                      "code": "search_timeout",
+                      "trace_id": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/suggest": {
+      "get": {
+        "tags": [
+          "Suggest"
+        ],
+        "summary": "Autocomplete titles from a local index of real works",
+        "description": "Prefix lookup over a prebuilt index of the most-published Open Library works: no Open Library or\nLLM call per keystroke. Match order: whole title starts with the prefix > a title word does > the\nauthor's surname does, then edition count. An empty prefix returns an empty list (a typing state,\nnot an error). On select, run a normal search with the chosen title and author.\nCached by clients for an hour; its own, higher rate limit (default 120 per minute per client).",
+        "operationId": "SuggestBooks",
+        "parameters": [
+          {
+            "name": "prefix",
+            "in": "query",
+            "description": "What has been typed so far, up to 100 characters. Empty returns an empty list.",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            },
+            "example": "har"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "How many suggestions to return (default 8).",
+            "schema": {
+              "maximum": 10,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 8
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuggestResponse"
+                },
+                "examples": {
+                  "empty_prefix": {
+                    "summary": "Empty prefix",
+                    "description": "A typing state, not an error.",
+                    "value": {
+                      "prefix": "",
+                      "suggestions": []
+                    }
+                  },
+                  "prefix_harry": {
+                    "summary": "Typing \"harry\"",
+                    "description": "Whole-title prefix matches first, then title-word matches, then author surnames; edition count breaks ties. Live response.",
+                    "value": {
+                      "prefix": "harry",
+                      "suggestions": [
+                        {
+                          "work_id": "OL82563W",
+                          "title": "Harry Potter and the Philosopher's Stone",
+                          "author": "J. K. Rowling",
+                          "first_publish_year": 1997,
+                          "cover_url": "https://covers.openlibrary.org/b/id/15155833-M.jpg",
+                          "edition_count": 400,
+                          "open_library_url": "https://openlibrary.org/works/OL82563W",
+                          "match": "title"
+                        },
+                        {
+                          "work_id": "OL82537W",
+                          "title": "Harry Potter and the Chamber of Secrets",
+                          "author": "J. K. Rowling",
+                          "first_publish_year": 1998,
+                          "cover_url": "https://covers.openlibrary.org/b/id/15158664-M.jpg",
+                          "edition_count": 306,
+                          "open_library_url": "https://openlibrary.org/works/OL82537W",
+                          "match": "title"
+                        },
+                        {
+                          "work_id": "OL82536W",
+                          "title": "Harry Potter and the Prisoner of Azkaban",
+                          "author": "J. K. Rowling",
+                          "first_publish_year": 1999,
+                          "cover_url": "https://covers.openlibrary.org/b/id/10580435-M.jpg",
+                          "edition_count": 279,
+                          "open_library_url": "https://openlibrary.org/works/OL82536W",
+                          "match": "title"
+                        },
+                        {
+                          "work_id": "OL82548W",
+                          "title": "Harry Potter and the Order of the Phoenix",
+                          "author": "J. K. Rowling",
+                          "first_publish_year": 2003,
+                          "cover_url": "https://covers.openlibrary.org/b/id/15158666-M.jpg",
+                          "edition_count": 247,
+                          "open_library_url": "https://openlibrary.org/works/OL82548W",
+                          "match": "title"
+                        },
+                        {
+                          "work_id": "OL82560W",
+                          "title": "Harry Potter and the Goblet of Fire",
+                          "author": "J. K. Rowling",
+                          "first_publish_year": 2000,
+                          "cover_url": "https://covers.openlibrary.org/b/id/12059372-M.jpg",
+                          "edition_count": 244,
+                          "open_library_url": "https://openlibrary.org/works/OL82560W",
+                          "match": "title"
+                        },
+                        {
+                          "work_id": "OL82565W",
+                          "title": "Harry Potter and the Half-Blood Prince",
+                          "author": "J. K. Rowling",
+                          "first_publish_year": 2005,
+                          "cover_url": "https://covers.openlibrary.org/b/id/10716273-M.jpg",
+                          "edition_count": 177,
+                          "open_library_url": "https://openlibrary.org/works/OL82565W",
+                          "match": "title"
+                        },
+                        {
+                          "work_id": "OL82586W",
+                          "title": "Harry Potter and the Deathly Hallows",
+                          "author": "J. K. Rowling",
+                          "first_publish_year": 2007,
+                          "cover_url": "https://covers.openlibrary.org/b/id/15158660-M.jpg",
+                          "edition_count": 144,
+                          "open_library_url": "https://openlibrary.org/works/OL82586W",
+                          "match": "title"
+                        },
+                        {
+                          "work_id": "OL109866W",
+                          "title": "Harry Heathcote of Gangoil",
+                          "author": "Anthony Trollope",
+                          "first_publish_year": 1874,
+                          "cover_url": "https://covers.openlibrary.org/b/id/118788-M.jpg",
+                          "edition_count": 129,
+                          "open_library_url": "https://openlibrary.org/works/OL109866W",
+                          "match": "title"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                },
+                "examples": {
+                  "validation_failed": {
+                    "summary": "Prefix too long",
+                    "description": "Prefixes are 0-100 characters; limit is 1-10.",
+                    "value": {
+                      "type": "/problems/validation-failed",
+                      "title": "One or more validation errors occurred.",
+                      "status": 400,
+                      "errors": {
+                        "Prefix": [
+                          "The field Prefix must be at most 100 characters."
+                        ]
+                      },
+                      "code": "validation_failed",
+                      "trace_id": "00-148821668b859a06b21b035795c92820-052453236532001f-00"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                },
+                "examples": {
+                  "rate_limited": {
+                    "summary": "Rate limited",
+                    "description": "Suggest has its own per-client allowance (120 per minute by default).",
+                    "value": {
+                      "type": "/problems/rate-limited",
+                      "title": "Too many requests",
+                      "status": 429,
+                      "detail": "The suggest limit was reached. Try again in 60 s.",
+                      "code": "rate_limited",
+                      "trace_id": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Liveness and configuration summary",
+        "description": "Never calls Open Library or an LLM (a probe must not burn quota). Always 200 while the process runs.",
+        "operationId": "Health",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                },
+                "examples": {
+                  "ok": {
+                    "summary": "Healthy",
+                    "description": "Never calls Open Library or an LLM.",
+                    "value": {
+                      "status": "ok",
+                      "version": "1.0.0",
+                      "environment": "Production",
+                      "ai_provider": "gemini",
+                      "ai_configured": true,
+                      "judge_enabled": false,
+                      "suggest_index": {
+                        "version": "1-2026-09-30",
+                        "count": 50000
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AuthorLink": {
+        "required": [
+          "key",
+          "name",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Open Library author id, e.g. \"OL26320A\", when known."
+          },
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "CatalogCallOutcome": {
+        "enum": [
+          "ok",
+          "failed",
+          "rejected",
+          "deadline"
+        ]
+      },
+      "CatalogStep": {
+        "required": [
+          "step",
+          "outcome",
+          "cache_hit",
+          "attempts",
+          "elapsed_ms",
+          "results",
+          "num_found"
+        ],
+        "type": "object",
+        "properties": {
+          "step": {
+            "type": "string",
+            "description": "broad, short_title, hypothesis, original_title, person, person_any, any_of, person_fallback, author_works…"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/CatalogCallOutcome"
+          },
+          "cache_hit": {
+            "type": "boolean"
+          },
+          "attempts": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "elapsed_ms": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "results": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Works returned (null when the call failed).",
+            "format": "int32"
+          },
+          "num_found": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Open Library's numFound (null when the call failed).",
+            "format": "int32"
+          }
+        }
+      },
+      "ContributorLink": {
+        "required": [
+          "key",
+          "name",
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "adapter, illustrator, editor, translator… as Open Library lists it."
+          }
+        }
+      },
+      "DegradedReason": {
+        "enum": [
+          "ai_not_configured",
+          "ai_budget_exhausted",
+          "interpretation_fallback",
+          "explanation_fallback",
+          "catalog_partial",
+          "deadline_reached"
+        ]
+      },
+      "ExplanationSource": {
+        "enum": [
+          "llm",
+          "template"
+        ]
+      },
+      "HealthResponse": {
+        "required": [
+          "status",
+          "version",
+          "environment",
+          "ai_provider",
+          "ai_configured",
+          "judge_enabled",
+          "suggest_index"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Always \"ok\" when the process answers."
+          },
+          "version": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string"
+          },
+          "ai_provider": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The active LLM provider (gemini, anthropic, openai, none); null if unknown."
+          },
+          "ai_configured": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Whether the active provider has a key. False means heuristic parsing and template explanations."
+          },
+          "judge_enabled": {
+            "type": [
+              "null",
+              "boolean"
+            ]
+          },
+          "suggest_index": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/SuggestIndexInfo"
+              }
+            ]
+          }
+        },
+        "description": "Liveness only: never calls Open Library or an LLM, so probes can't burn quota."
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "detail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "instance": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "InterpretationSource": {
+        "enum": [
+          "llm",
+          "heuristic"
+        ]
+      },
+      "JudgeMeta": {
+        "required": [
+          "enabled",
+          "status",
+          "pick",
+          "probability",
+          "threshold",
+          "agreed",
+          "model",
+          "latency_ms",
+          "input_tokens",
+          "est_cost_usd",
+          "detail"
+        ],
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "status": {
+            "description": "off, skipped (not meaningful for this ranking), agreed, disagreed, chose_none, refused, unavailable.",
+            "$ref": "#/components/schemas/JudgeStatus"
+          },
+          "pick": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The judge's chosen work id (null for none or no verdict)."
+          },
+          "probability": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "description": "Probability of the pick.",
+            "format": "double"
+          },
+          "threshold": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "description": "Agreement needs the same pick at or above this probability.",
+            "format": "double"
+          },
+          "agreed": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Null when there was no verdict."
+          },
+          "model": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "latency_ms": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "input_tokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "est_cost_usd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "detail": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Why it was skipped or unavailable (not_applicable, no_candidates, deadline…)."
+          }
+        },
+        "description": "The optional second opinion (OpenAI Decisions). It can only gate status; it never reorders candidates."
+      },
+      "JudgeStatus": {
+        "enum": [
+          "off",
+          "skipped",
+          "agreed",
+          "disagreed",
+          "chose_none",
+          "refused",
+          "unavailable"
+        ]
+      },
+      "LlmCallStatus": {
+        "enum": [
+          "ok",
+          "not_configured",
+          "budget_exhausted",
+          "timeout",
+          "rate_limited",
+          "provider_error",
+          "malformed_output",
+          "truncated",
+          "refused"
+        ]
+      },
+      "LlmMeta": {
+        "required": [
+          "provider",
+          "model",
+          "calls",
+          "cache_hits",
+          "input_tokens",
+          "output_tokens",
+          "est_cost_usd",
+          "prompt_versions",
+          "steps"
+        ],
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Provider(s) of the calls made; null when none were attempted."
+          },
+          "model": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "calls": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Requests that reached the provider (cache hits and calls skipped for no key or budget excluded).",
+            "format": "int32"
+          },
+          "cache_hits": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "input_tokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Sum over provider requests; null if any of them didn't report usage.",
+            "format": "int64"
+          },
+          "output_tokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "est_cost_usd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "description": "Paid-tier equivalent in USD (even on a free tier); null when tokens or the model's price are unknown.",
+            "format": "double"
+          },
+          "prompt_versions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Operation → prompt id, e.g. interpret → interpret.v3."
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LlmStep"
+            }
+          }
+        }
+      },
+      "LlmStep": {
+        "required": [
+          "operation",
+          "provider",
+          "model",
+          "prompt_id",
+          "status",
+          "cache_hit",
+          "elapsed_ms",
+          "input_tokens",
+          "output_tokens"
+        ],
+        "type": "object",
+        "properties": {
+          "operation": {
+            "type": "string",
+            "description": "interpret or explain."
+          },
+          "provider": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "prompt_id": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/LlmCallStatus"
+          },
+          "cache_hit": {
+            "type": "boolean"
+          },
+          "elapsed_ms": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "input_tokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "output_tokens": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          }
+        }
+      },
+      "MatchStatus": {
+        "enum": [
+          "match",
+          "ambiguous",
+          "none"
+        ]
+      },
+      "MatchTier": {
+        "enum": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e"
+        ]
+      },
+      "OpenLibraryMeta": {
+        "required": [
+          "calls",
+          "cache_hits",
+          "upstream_requests",
+          "retries",
+          "slow_empty_requeries",
+          "budget",
+          "steps"
+        ],
+        "type": "object",
+        "properties": {
+          "calls": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Logical search.json calls, cache hits included (so a warm and a cold run count the same calls).",
+            "format": "int32"
+          },
+          "cache_hits": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "upstream_requests": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "HTTP requests actually sent (retries and re-queries included; 0 for cache hits).",
+            "format": "int32"
+          },
+          "retries": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Requests repeated after a timeout, 429 or 5xx.",
+            "format": "int32"
+          },
+          "slow_empty_requeries": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Calls whose slow empty answer was asked once more (a slow 0-hit reply is treated as a cut-off, IN-064).",
+            "format": "int32"
+          },
+          "budget": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The per-query call budget (Search:MaxCatalogCalls).",
+            "format": "int32"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CatalogStep"
+            }
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "detail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "instance": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "QueryIntent": {
+        "enum": [
+          "book",
+          "topic"
+        ]
+      },
+      "SearchCandidate": {
+        "required": [
+          "rank",
+          "work_id",
+          "title",
+          "subtitle",
+          "author",
+          "primary_authors",
+          "primary_authors_total",
+          "contributors",
+          "contributors_total",
+          "first_publish_year",
+          "edition_count",
+          "open_library_url",
+          "cover_url",
+          "match_tier",
+          "match_tier_label",
+          "matched_subjects",
+          "explanation",
+          "explanation_source",
+          "second_opinion",
+          "duplicates_folded"
+        ],
+        "type": "object",
+        "properties": {
+          "rank": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "work_id": {
+            "type": "string",
+            "description": "Open Library work id, e.g. \"OL27482W\"."
+          },
+          "title": {
+            "type": "string"
+          },
+          "subtitle": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "author": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Primary author(s) joined with \", \" (at most three names, then \"and N more\"); null if Open Library lists none."
+          },
+          "primary_authors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuthorLink"
+            },
+            "description": "Primary authors (at most three; the matched author is always kept)."
+          },
+          "primary_authors_total": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "How many primary authors the work has in total.",
+            "format": "int32"
+          },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContributorLink"
+            },
+            "description": "Contributors with their role (adapter, illustrator…): lower-signal credits, at most three; the matched one is always kept."
+          },
+          "contributors_total": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "How many contributors the work has in total.",
+            "format": "int32"
+          },
+          "first_publish_year": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "As listed by Open Library; null when absent or implausible. Some classics carry a wrong year upstream.",
+            "format": "int32"
+          },
+          "edition_count": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "open_library_url": {
+            "type": "string",
+            "description": "The work page, opened on the edition the search matched when known (?edition=…); /books/{id} for an orphan edition record."
+          },
+          "cover_url": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Medium cover image, or null when Open Library has none."
+          },
+          "match_tier": {
+            "description": "The brief's hierarchy: a exact title + primary author · b exact title + contributor-only author · c near title + author · d author only · e no clear winner. Tiers label evidence; the score orders.",
+            "$ref": "#/components/schemas/MatchTier"
+          },
+          "match_tier_label": {
+            "type": "string"
+          },
+          "matched_subjects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Topic requests: up to three of this work's Open Library subject headings that contain a topic word; empty otherwise."
+          },
+          "explanation": {
+            "type": "string",
+            "description": "One sentence citing concrete fields (grounded; a template when the LLM's sentence failed the check)."
+          },
+          "explanation_source": {
+            "$ref": "#/components/schemas/ExplanationSource"
+          },
+          "second_opinion": {
+            "type": "boolean",
+            "description": "True only on the judge's pick when it disagreed with rank 1."
+          },
+          "duplicates_folded": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Duplicate Open Library records folded into this work.",
+            "format": "int32"
+          }
+        },
+        "description": "One Open Library work. title, author, first_publish_year and explanation are the brief's fields, byte for byte."
+      },
+      "SearchInterpretation": {
+        "required": [
+          "title",
+          "author",
+          "characters",
+          "keywords",
+          "english_title",
+          "original_title",
+          "year",
+          "removed_noise",
+          "source",
+          "intent",
+          "topics"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Title the LLM read from the text (null with the heuristic)."
+          },
+          "author": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "characters": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Other meaningful words. With the heuristic: the cleaned search words."
+          },
+          "english_title": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The English title when the text names a translated work."
+          },
+          "original_title": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The original-language title, when known."
+          },
+          "year": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Publication year taken from the query (only with at least two other words; a soft ±1 bonus, never a filter).",
+            "format": "int32"
+          },
+          "removed_noise": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Format and edition words removed from the search text (illustrated, deluxe…)."
+          },
+          "source": {
+            "description": "llm, or heuristic when the LLM was off, failed or added nothing.",
+            "$ref": "#/components/schemas/InterpretationSource"
+          },
+          "intent": {
+            "description": "book: one particular book. topic: any books about a subject (\"find me a book about bears\"); the candidates are then books about it, never one match.",
+            "$ref": "#/components/schemas/QueryIntent"
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The subject terms searched for a topic request (from the LLM, or the \"book about …\" words without it); empty for a book request."
+          }
+        },
+        "description": "How the query was read. The hypothesis only steers retrieval: a book is returned only if Open Library has it."
+      },
+      "SearchMeta": {
+        "required": [
+          "request_id",
+          "elapsed_ms",
+          "timings_ms",
+          "open_library",
+          "llm",
+          "judge"
+        ],
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "description": "Same value as the X-Request-Id header and an error's trace_id."
+          },
+          "elapsed_ms": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "timings_ms": {
+            "type": "object",
+            "additionalProperties": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int64"
+            },
+            "description": "Per stage: clean, interpret, retrieve, rank, explain, judge."
+          },
+          "open_library": {
+            "$ref": "#/components/schemas/OpenLibraryMeta"
+          },
+          "llm": {
+            "$ref": "#/components/schemas/LlmMeta"
+          },
+          "judge": {
+            "$ref": "#/components/schemas/JudgeMeta"
+          }
+        },
+        "description": "What this request actually did. Measured, never estimated, except est_cost_usd (a paid-tier estimate). Null = not known."
+      },
+      "SearchResponse": {
+        "required": [
+          "query",
+          "status",
+          "status_reason",
+          "hint",
+          "degraded",
+          "degraded_reasons",
+          "interpretation",
+          "candidates",
+          "meta"
+        ],
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The query as searched: trimmed, with control and zero-width characters removed."
+          },
+          "status": {
+            "description": "match: one confident answer (top candidate is tier A or B and clearly ahead). ambiguous: several plausible works, listed in order. none: nothing usable; see hint.",
+            "$ref": "#/components/schemas/MatchStatus"
+          },
+          "status_reason": {
+            "description": "Why this status was chosen.",
+            "$ref": "#/components/schemas/StatusReason"
+          },
+          "hint": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "What to add to the query to narrow it (set for ambiguous and none)."
+          },
+          "degraded": {
+            "type": "boolean",
+            "description": "True when the answer is lower quality than normal: the LLM was unavailable (heuristic parse, template sentences), a later Open Library call failed, or the deadline cut retrieval short."
+          },
+          "degraded_reasons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DegradedReason"
+            },
+            "description": "Empty unless degraded."
+          },
+          "interpretation": {
+            "$ref": "#/components/schemas/SearchInterpretation"
+          },
+          "candidates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchCandidate"
+            },
+            "description": "At most limit works in final order. When the judge disagreed, its pick may take the last slot (second_opinion = true)."
+          },
+          "meta": {
+            "$ref": "#/components/schemas/SearchMeta"
+          }
+        },
+        "description": "The search answer: 200 for match, ambiguous and none alike (\"no book matched\" is an answer, not an error).\nAll fields are always present; unknown values are null, never guessed."
+      },
+      "StatusReason": {
+        "enum": [
+          "exact_title_primary_author",
+          "exact_title_contributor_author",
+          "exact_title",
+          "near_title_author",
+          "author_only",
+          "close_scores",
+          "score_conflict",
+          "unsupported_guess",
+          "weak_evidence",
+          "judge_agreed",
+          "judge_low_confidence",
+          "judge_disagreed",
+          "judge_chose_none",
+          "no_candidates",
+          "no_searchable_terms",
+          "topic_search"
+        ]
+      },
+      "SuggestIndexInfo": {
+        "required": [
+          "version",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "count": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "SuggestionItem": {
+        "required": [
+          "work_id",
+          "title",
+          "author",
+          "first_publish_year",
+          "cover_url",
+          "edition_count",
+          "open_library_url",
+          "match"
+        ],
+        "type": "object",
+        "properties": {
+          "work_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "author": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Primary author, when the index has one."
+          },
+          "first_publish_year": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "cover_url": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "edition_count": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "open_library_url": {
+            "type": "string"
+          },
+          "match": {
+            "description": "title: the whole title starts with the prefix · word: a title word does · author: the author's surname does.",
+            "$ref": "#/components/schemas/SuggestMatch"
+          }
+        }
+      },
+      "SuggestMatch": {
+        "enum": [
+          "title",
+          "word",
+          "author"
+        ]
+      },
+      "SuggestResponse": {
+        "required": [
+          "prefix",
+          "suggestions"
+        ],
+        "type": "object",
+        "properties": {
+          "prefix": {
+            "type": "string",
+            "description": "The prefix as looked up (trimmed, control characters removed). Empty → no suggestions."
+          },
+          "suggestions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SuggestionItem"
+            }
+          }
+        },
+        "description": "Autocomplete from a prebuilt local index of real works: no Open Library or LLM call per keystroke."
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Books",
+      "description": "Search: interpret, retrieve, rank, explain."
+    },
+    {
+      "name": "Suggest",
+      "description": "Autocomplete from a local index (no upstream calls)."
+    },
+    {
+      "name": "System",
+      "description": "Health."
+    }
+  ]
+}

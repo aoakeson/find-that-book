@@ -1,0 +1,331 @@
+{
+  "summary": "Clear match: tolkien hobbit illustrated deluxe 1937",
+  "description": "A dense, noisy query. Edition words are removed as noise and the year is a soft bonus; tier a, status match. Recorded on build 918d7b88 with gpt-4.1-mini, judge off; with Gemini (the default) the meta.llm provider/model differ, and the LLM-written parts (interpretation, explanation wording) may too.",
+  "value": {
+    "query": "tolkien hobbit illustrated deluxe 1937",
+    "status": "match",
+    "status_reason": "exact_title_primary_author",
+    "hint": null,
+    "degraded": false,
+    "degraded_reasons": [],
+    "interpretation": {
+      "title": "The Hobbit, or There and Back Again",
+      "author": "J.R.R. Tolkien",
+      "characters": [],
+      "keywords": [
+        "illustrated",
+        "deluxe",
+        "fantasy",
+        "adventure"
+      ],
+      "english_title": null,
+      "original_title": null,
+      "year": 1937,
+      "removed_noise": [
+        "illustrated",
+        "deluxe"
+      ],
+      "source": "llm",
+      "intent": "book",
+      "topics": []
+    },
+    "candidates": [
+      {
+        "rank": 1,
+        "work_id": "OL27482W",
+        "title": "The Hobbit",
+        "subtitle": null,
+        "author": "J.R.R. Tolkien",
+        "primary_authors": [
+          {
+            "key": "OL26320A",
+            "name": "J.R.R. Tolkien",
+            "url": "https://openlibrary.org/authors/OL26320A"
+          }
+        ],
+        "primary_authors_total": 1,
+        "contributors": [
+          {
+            "key": null,
+            "name": "Michael Hague",
+            "role": "illustrator"
+          },
+          {
+            "key": null,
+            "name": "Alan Lee",
+            "role": "illustrator"
+          },
+          {
+            "key": null,
+            "name": "Martin Shaw",
+            "role": "narrator"
+          }
+        ],
+        "contributors_total": 10,
+        "first_publish_year": 1937,
+        "edition_count": 482,
+        "open_library_url": "https://openlibrary.org/works/OL27482W?edition=key%3A/books/OL51709286M",
+        "cover_url": "https://covers.openlibrary.org/b/id/14627509-M.jpg",
+        "match_tier": "a",
+        "match_tier_label": "Exact title + primary author",
+        "matched_subjects": [],
+        "explanation": "Exact title match; J.R.R. Tolkien is the primary author; Open Library's first publication year 1937 matches the year in the search; 482 editions.",
+        "explanation_source": "llm",
+        "second_opinion": false,
+        "duplicates_folded": 0
+      },
+      {
+        "rank": 2,
+        "work_id": "OL27513W",
+        "title": "The Fellowship of the Ring",
+        "subtitle": null,
+        "author": "J.R.R. Tolkien",
+        "primary_authors": [
+          {
+            "key": "OL26320A",
+            "name": "J.R.R. Tolkien",
+            "url": "https://openlibrary.org/authors/OL26320A"
+          }
+        ],
+        "primary_authors_total": 1,
+        "contributors": [
+          {
+            "key": null,
+            "name": "Alan Lee",
+            "role": "illustrator"
+          },
+          {
+            "key": null,
+            "name": "Moises Rodriguez Barcia",
+            "role": "translator"
+          }
+        ],
+        "contributors_total": 2,
+        "first_publish_year": 1954,
+        "edition_count": 319,
+        "open_library_url": "https://openlibrary.org/works/OL27513W?edition=key%3A/books/OL23077320M",
+        "cover_url": "https://covers.openlibrary.org/b/id/14627060-M.jpg",
+        "match_tier": "d",
+        "match_tier_label": "Author only",
+        "matched_subjects": [],
+        "explanation": "Author-only match; J.R.R. Tolkien is the primary author; 319 editions.",
+        "explanation_source": "llm",
+        "second_opinion": false,
+        "duplicates_folded": 0
+      },
+      {
+        "rank": 3,
+        "work_id": "OL27479W",
+        "title": "The Two Towers",
+        "subtitle": null,
+        "author": "J.R.R. Tolkien",
+        "primary_authors": [
+          {
+            "key": "OL26320A",
+            "name": "J.R.R. Tolkien",
+            "url": "https://openlibrary.org/authors/OL26320A"
+          }
+        ],
+        "primary_authors_total": 1,
+        "contributors": [
+          {
+            "key": null,
+            "name": "Moises Rodriguez Barcia",
+            "role": "translator"
+          },
+          {
+            "key": null,
+            "name": "Alan Lee",
+            "role": "illustrator"
+          },
+          {
+            "key": null,
+            "name": "Rob Inglis",
+            "role": "narrator"
+          }
+        ],
+        "contributors_total": 3,
+        "first_publish_year": 1954,
+        "edition_count": 290,
+        "open_library_url": "https://openlibrary.org/works/OL27479W?edition=key%3A/books/OL51711624M",
+        "cover_url": "https://covers.openlibrary.org/b/id/14627564-M.jpg",
+        "match_tier": "d",
+        "match_tier_label": "Author only",
+        "matched_subjects": [],
+        "explanation": "Author-only match; J.R.R. Tolkien is the primary author; 290 editions.",
+        "explanation_source": "llm",
+        "second_opinion": false,
+        "duplicates_folded": 0
+      },
+      {
+        "rank": 4,
+        "work_id": "OL27448W",
+        "title": "The Lord of the Rings",
+        "subtitle": null,
+        "author": "J.R.R. Tolkien",
+        "primary_authors": [
+          {
+            "key": "OL26320A",
+            "name": "J.R.R. Tolkien",
+            "url": "https://openlibrary.org/authors/OL26320A"
+          }
+        ],
+        "primary_authors_total": 1,
+        "contributors": [
+          {
+            "key": null,
+            "name": "Ian Holm",
+            "role": "narrator"
+          },
+          {
+            "key": null,
+            "name": "Rob Inglis",
+            "role": "narrator, reader"
+          },
+          {
+            "key": null,
+            "name": "Brian Sibley",
+            "role": "narrator"
+          }
+        ],
+        "contributors_total": 3,
+        "first_publish_year": 1954,
+        "edition_count": 253,
+        "open_library_url": "https://openlibrary.org/works/OL27448W?edition=key%3A/books/OL26885115M",
+        "cover_url": "https://covers.openlibrary.org/b/id/14625765-M.jpg",
+        "match_tier": "d",
+        "match_tier_label": "Author only",
+        "matched_subjects": [],
+        "explanation": "Author-only match; J.R.R. Tolkien is the primary author; 253 editions.",
+        "explanation_source": "llm",
+        "second_opinion": false,
+        "duplicates_folded": 0
+      },
+      {
+        "rank": 5,
+        "work_id": "OL219602W",
+        "title": "The Hobbit",
+        "subtitle": null,
+        "author": "J.R.R. Tolkien",
+        "primary_authors": [
+          {
+            "key": "OL26320A",
+            "name": "J.R.R. Tolkien",
+            "url": "https://openlibrary.org/authors/OL26320A"
+          }
+        ],
+        "primary_authors_total": 1,
+        "contributors": [
+          {
+            "key": "OL2453782A",
+            "name": "Charles Dixon",
+            "role": "adapter"
+          },
+          {
+            "key": "OL758306A",
+            "name": "Sean Deming",
+            "role": "adapter"
+          },
+          {
+            "key": null,
+            "name": "Donato Giancola",
+            "role": "illustrator"
+          }
+        ],
+        "contributors_total": 4,
+        "first_publish_year": 1990,
+        "edition_count": 10,
+        "open_library_url": "https://openlibrary.org/works/OL219602W?edition=key%3A/books/OL22039557M",
+        "cover_url": "https://covers.openlibrary.org/b/id/8406766-M.jpg",
+        "match_tier": "a",
+        "match_tier_label": "Exact title + primary author",
+        "matched_subjects": [],
+        "explanation": "Exact title match; J.R.R. Tolkien is the primary author; Charles Dixon is listed as adapter; Sean Deming is listed as adapter; 10 editions.",
+        "explanation_source": "llm",
+        "second_opinion": false,
+        "duplicates_folded": 0
+      }
+    ],
+    "meta": {
+      "request_id": "00-78d06ed290d40a7e121c2eaf29c66dd3-c28f03005c9de29e-00",
+      "elapsed_ms": 3477,
+      "timings_ms": {
+        "clean": 4,
+        "interpret": 1498,
+        "rank": 29,
+        "retrieve": 1540,
+        "judge": 0,
+        "explain": 1927
+      },
+      "open_library": {
+        "calls": 1,
+        "cache_hits": 0,
+        "upstream_requests": 1,
+        "retries": 0,
+        "slow_empty_requeries": 0,
+        "budget": 5,
+        "steps": [
+          {
+            "step": "broad",
+            "outcome": "ok",
+            "cache_hit": false,
+            "attempts": 1,
+            "elapsed_ms": 861,
+            "results": 20,
+            "num_found": 232
+          }
+        ]
+      },
+      "llm": {
+        "provider": "openai",
+        "model": "gpt-4.1-mini",
+        "calls": 2,
+        "cache_hits": 0,
+        "input_tokens": 1515,
+        "output_tokens": 259,
+        "est_cost_usd": 0.0010204,
+        "prompt_versions": {
+          "interpret": "interpret.v5",
+          "explain": "explain.v4"
+        },
+        "steps": [
+          {
+            "operation": "interpret",
+            "provider": "openai",
+            "model": "gpt-4.1-mini",
+            "prompt_id": "interpret.v5",
+            "status": "ok",
+            "cache_hit": false,
+            "elapsed_ms": 1490,
+            "input_tokens": 673,
+            "output_tokens": 83
+          },
+          {
+            "operation": "explain",
+            "provider": "openai",
+            "model": "gpt-4.1-mini",
+            "prompt_id": "explain.v4",
+            "status": "ok",
+            "cache_hit": false,
+            "elapsed_ms": 1891,
+            "input_tokens": 842,
+            "output_tokens": 176
+          }
+        ]
+      },
+      "judge": {
+        "enabled": false,
+        "status": "off",
+        "pick": null,
+        "probability": null,
+        "threshold": 0.9,
+        "agreed": null,
+        "model": null,
+        "latency_ms": null,
+        "input_tokens": null,
+        "est_cost_usd": null,
+        "detail": null
+      }
+    }
+  }
+}

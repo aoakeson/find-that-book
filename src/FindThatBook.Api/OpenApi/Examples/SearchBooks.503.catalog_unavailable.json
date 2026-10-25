@@ -1,0 +1,12 @@
+{
+  "summary": "Open Library unavailable",
+  "description": "5xx/429 after retries, or the circuit breaker is open. Retry-After is Open Library's, or 15 s.",
+  "value": {
+    "type": "/problems/catalog-unavailable",
+    "title": "Open Library is unavailable",
+    "status": 503,
+    "detail": "Open Library did not answer successfully after 3 attempt(s). Try again shortly.",
+    "code": "catalog_unavailable",
+    "trace_id": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
+  }
+}

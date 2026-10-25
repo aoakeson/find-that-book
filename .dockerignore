@@ -1,0 +1,36 @@
+# Keys reach the container only as environment variables (compose env_file / docker run --env-file), never the image.
+.env
+.env.*
+!.env.example
+**/appsettings.*.local.json
+
+# Local build output and installs: the image builds its own.
+**/bin/
+**/obj/
+artifacts/
+**/node_modules/
+src/FindThatBook.Api/wwwroot/
+web/dist/
+web/test-results/
+web/playwright-report/
+web/coverage/
+TestResults/
+*.trx
+
+# Not needed to build or run the app.
+.git/
+.github/
+.vs/
+.vscode/
+.idea/
+*.user
+**/.DS_Store
+docs/
+eval/
+research/
+tests/
+tools/
+scripts/
+Dockerfile
+compose.yaml
+.dockerignore
