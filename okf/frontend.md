@@ -4,7 +4,7 @@ title: Frontend
 description: Render the API honestly in one accessible, responsive search interface.
 tags: [frontend, ui, accessibility]
 status: stable
-generated: { by: cursor/claude-opus-5.5, at: 2026-10-25T22:40:00Z }
+generated: { by: cursor/claude-opus-5.5, at: 2026-10-25T23:15:00Z }
 sources:
   - resource: ../docs/DESIGN.md
     title: Visual and interaction rules
@@ -20,6 +20,6 @@ sources:
 
 # Invariants
 
-Show candidates in server order with the server's status, explanation, and degraded reasons. Never rerank, infer confidence, fabricate missing book data, or show guessed progress. Search is an explicit, cancellable action: focus, navigation, remount, and history restore must not spend another API/LLM call. History stores only its allowlisted snapshot; keys stay out of React state and storage.
+Show candidates in server order with the server's status, explanation, and degraded reasons. The client asks for the API's maximum (`limit=10`), shows five, and reveals the rest of that same answer on "Show more"; never fetch more by searching again. Never rerank, infer confidence, fabricate missing book data, or show guessed progress. Search is an explicit, cancellable action: focus, navigation, remount, and history restore must not spend another API/LLM call. History stores only its allowlisted snapshot; keys stay out of React state and storage.
 
 Follow [the design guide](../docs/DESIGN.md) for the single composer, restrained palette and motion, 16px editable text, keyboard support, 320px layouts, readable status text, contrast, and reduced motion. Verify rendered interactions when changing UI.

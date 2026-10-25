@@ -1,17 +1,41 @@
-import { useId } from "react"
+import { useId, useRef, useState } from "react"
+import { flushSync } from "react-dom"
 import { SearchXIcon } from "lucide-react"
-import type { ResultSnapshot } from "@/features/history/snapshot"
+import type { CandidateSnapshot, ResultSnapshot } from "@/features/history/snapshot"
 import { Button } from "@/components/ui/button"
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { formatList } from "@/lib/format"
+import { cn } from "@/lib/utils"
 import { Candidate } from "./Candidate"
 
-/** The answer in the server's order and status. Nothing is re-ranked, scored or hidden here. */
+/** How many books show before "Show more": the brief's "up to 5 ordered candidates". */
+export const INITIALLY_SHOWN = 5
+
+/**
+ * The answer in the server's order and status. Nothing is re-ranked or scored; books past the first five wait behind
+ * "Show more", in the same order, and are already part of this answer (no new request).
+ */
 export function ResultList({ snapshot, onEditSearch }: { snapshot: ResultSnapshot; onEditSearch: () => void }) {
   const newTabNoteId = useId()
   const headingId = useId()
   const othersId = useId()
-  const [first, ...rest] = snapshot.candidates
+  const [expandedFor, setExpandedFor] = useState<ResultSnapshot | null>(null)
+  const firstRevealedRef = useRef<HTMLHeadingElement>(null)
+
+  const all = snapshot.candidates
+  const initial = initialCount(all)
+  const expanded = expandedFor === snapshot
+  const visible = expanded ? all : all.slice(0, initial)
+  const hidden = all.length - visible.length
+  const titleRef = (index: number) => (expanded && index === initial ? firstRevealedRef : undefined)
+  const showMore = () => {
+    flushSync(() => setExpandedFor(snapshot))
+    firstRevealedRef.current?.focus()
+  }
+  const showMoreButton = (className?: string) =>
+    hidden > 0 && <ShowMoreButton count={hidden} onClick={showMore} className={className} />
+
+  const [first, ...rest] = visible
 
   const topics = snapshot.topics.length > 0 ? formatList(snapshot.topics) : null
   if (snapshot.status === "none" || !first)
@@ -43,12 +67,13 @@ export function ResultList({ snapshot, onEditSearch }: { snapshot: ResultSnapsho
               Other possibilities
             </h2>
             <ul role="list" className="divide-y divide-line">
-              {rest.map((c) => (
+              {rest.map((c, i) => (
                 <li key={c.work_id} className="py-5 last:pb-0">
-                  <Candidate candidate={c} variant="other" newTabNoteId={newTabNoteId} />
+                  <Candidate candidate={c} variant="other" newTabNoteId={newTabNoteId} titleRef={titleRef(i + 1)} />
                 </li>
               ))}
             </ul>
+            {showMoreButton("mt-4")}
           </section>
         )}
         {note}
@@ -65,14 +90,29 @@ export function ResultList({ snapshot, onEditSearch }: { snapshot: ResultSnapsho
         {snapshot.hint && <p className="wrap-break-word text-ink-secondary">{snapshot.hint}</p>}
       </div>
       <ol role="list" className="divide-y divide-line rounded-panel border border-line bg-surface">
-        {snapshot.candidates.map((c) => (
+        {visible.map((c, i) => (
           <li key={c.work_id} className="p-4 sm:p-5">
-            <Candidate candidate={c} variant="equal" newTabNoteId={newTabNoteId} />
+            <Candidate candidate={c} variant="equal" newTabNoteId={newTabNoteId} titleRef={titleRef(i)} />
           </li>
         ))}
       </ol>
+      {showMoreButton()}
       {note}
     </section>
+  )
+}
+
+/** The judge's pick (`second_opinion`) is a book the server chose to show, so it is never behind the button. */
+function initialCount(candidates: CandidateSnapshot[]): number {
+  const pick = candidates.findIndex((c) => c.second_opinion)
+  return Math.max(INITIALLY_SHOWN, pick + 1)
+}
+
+function ShowMoreButton({ count, onClick, className }: { count: number; onClick: () => void; className?: string }) {
+  return (
+    <Button variant="outline" onClick={onClick} className={cn("self-start", className)}>
+      Show {count} more {count === 1 ? "book" : "books"}
+    </Button>
   )
 }
 

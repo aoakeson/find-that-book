@@ -13,7 +13,7 @@ lockfile at the repo root. TypeScript stays on 6.0 because typescript-eslint sup
 
 | Need | Endpoint (verified against `/openapi/v1.json`, the C# contracts and live calls) | Used by |
 |---|---|---|
-| Search | `GET /api/books/search?q=` (`limit` 1–10, default 5; the UI sends none, so the brief's "up to 5") → 200 for `match`, `ambiguous` and `none` | `features/search/session.tsx` |
+| Search | `GET /api/books/search?q=&limit=10` (`limit` 1–10, default 5; the UI asks for the maximum and shows the brief's "up to 5" first) → 200 for `match`, `ambiguous` and `none` | `features/search/session.tsx`, `api/endpoints.ts` |
 | Topic requests | Same endpoint: `interpretation.intent` = `topic`, `interpretation.topics`, `status_reason` `topic_search`, `candidates[].matched_subjects` | `features/search/results` |
 | Suggestions | `GET /api/suggest?prefix=&limit=6`: local index, no upstream call, empty prefix → `[]`, works from one character | `features/search/composer` |
 | Health | `GET /api/health`: provider, `ai_configured`, environment; never calls Open Library or an LLM | `api/health.ts` (the "AI is off" note) |
@@ -43,7 +43,7 @@ The check caught three real contract changes during the build (`query_rejected` 
 |---|---|---|---|
 | Messy plain-text query | One composer, free text, any script, IME-safe Enter, examples from the brief fill (never search). "More things you can search for" opens the rest, grouped, with Needs AI on the ones that require a provider | `composer/Composer.tsx`, `ExampleQueries.tsx`, `example-catalog.ts`, `components/ui/autocomplete.tsx` | `composer/Composer.test.tsx`, `ExampleQueries.test.tsx`, e2e `search.spec.ts` |
 | Autocomplete | `/api/suggest` only, 150 ms debounce, superseded requests aborted, late answers dropped, the last list stays (busy) until the new one arrives, failures silent | `composer/use-suggestions.ts` | `composer/Composer.test.tsx` |
-| Ordered list, up to 5, server order | Rendered exactly as returned; no re-ranking or confidence | `results/ResultList.tsx` | `results/ResultsRegion.test.tsx` (every API example) |
+| Ordered list, up to 5, server order | Rendered exactly as returned; no re-ranking or confidence. The first five show (more if the second-opinion pick sits lower); **Show N more books** reveals the rest of the same answer in order, with no new request, and moves focus to the first new title | `results/ResultList.tsx` | `results/ResultsRegion.test.tsx` (every API example; "more than five books") |
 | match / ambiguous / none | "Best match" + "Other possibilities" · "A few books fit your clues" + hint · "No book matched" + hint | `results/ResultList.tsx` | same, parameterised |
 | Topic requests | "Books about bears" + hint, equal cards (never one best match), matched subjects as chips; "No books found about bears" | `results/ResultList.tsx`, `Candidate.tsx` | `results/ResultsRegion.test.tsx` (topic requests) |
 | Required fields | title, primary author(s), first publish year only when present, Open Library link, cover or a stable placeholder, explanation | `results/Candidate.tsx`, `BookCover.tsx` | `results/ResultsRegion.test.tsx` |
