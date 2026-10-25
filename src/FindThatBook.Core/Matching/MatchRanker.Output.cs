@@ -114,6 +114,8 @@ public static partial class MatchRanker
         var shown = work.ShownTitle;
         var typedTitleWords = work.NonAuthorTokens.Concat(context.OptionalTitleWords.Where(t => shown.Tokens.Contains(t))).Distinct();
         IReadOnlyList<string> NameWords(string person) => PersonNames.Tokens(person).Where(t => t.Len() > 1).ToList();
+        // A typo is allowed only on 5+ letters: on 4, real words collide ("frodo ring" named King Thranduil; DA-052).
+        static bool CharacterWord(string typed, string name) => typed == name || (Math.Min(typed.Len(), name.Len()) >= 5 && TokenMatch.Equal(typed, name));
 
         return new RankedWork
         {
@@ -136,7 +138,7 @@ public static partial class MatchRanker
                 AuthorFromHypothesis = work.AuthorFromHypothesis,
                 AuthorViaAlternativeName = work.ViaAlternativeName,
                 CharacterCoverage = work.CharacterCoverage,
-                MatchedCharacters = [.. work.Persons.Where(p => NameWords(p).Any(n => work.NonAuthorTokens.Any(t => TokenMatch.Equal(t, n)))).Distinct()],
+                MatchedCharacters = [.. work.Persons.Where(p => NameWords(p).Any(n => work.NonAuthorTokens.Any(t => CharacterWord(t, n)))).Distinct()],
                 IntentMatch = work.IntentHit,
                 YearMatched = work.YearMatched,
                 MatchedEditionTitle = shown.EditionTitle,

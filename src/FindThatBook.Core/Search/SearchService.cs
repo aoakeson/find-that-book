@@ -168,7 +168,7 @@ public sealed class SearchService
                         : svc._explanations.Templates([w], query, hypothesis).ByWorkId[w.Work.WorkId],
                     w.Work.WorkId == decision.SecondOpinionWorkId))
                 .ToList();
-            return Finish(query, hypothesis, source, ranking, decision, items, verdict);
+            return Finish(query, hypothesis, source, ranking, decision, items, verdict) with { GroundingRejections = batch.Rejected };
         }
 
         private async Task<InterpretationOutcome> InterpretAsync(CleanedQuery query, CancellationToken ct)

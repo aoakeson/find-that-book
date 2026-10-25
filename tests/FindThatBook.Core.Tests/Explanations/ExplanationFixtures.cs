@@ -115,6 +115,7 @@ internal static class ExplanationFixtures
         ["huck_partial_e"] = F("OL53908W", "Adventures of Huckleberry Finn", MatchKind.PartialTitle, ["Mark Twain"], 1876, 2623, ["huckleberry"]),
         ["blake_d"] = F("OL45846W", "Matilda", MatchKind.ContributorOnly, ["Roald Dahl"], 1988, 300, [], [("Quentin Blake", "illustrator")], matchedContributor: "Quentin Blake"),
         ["pp_inferred_a"] = F("OL66554W", "Pride and Prejudice", MatchKind.InferredTitle, ["Jane Austen"], 1813, 4042) with { MatchedCharacters = ["Elizabeth Bennet"] },
+        ["tkam_inferred_a"] = F("OL3140822W", "To Kill a Mockingbird", MatchKind.InferredTitle, ["Harper Lee"], null, 213) with { MatchedCharacters = ["Atticus Finch", "Scout Finch"] },
         ["authorless_a"] = F("OL30W", "Beowulf", MatchKind.ExactTitle, [], null, 900),
     };
 

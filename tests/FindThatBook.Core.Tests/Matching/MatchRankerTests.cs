@@ -124,6 +124,18 @@ public sealed class MatchRankerTests
     }
 
     [Fact]
+    public void Evidence_characters_need_a_typed_word_and_allow_a_typo_only_on_five_letters()
+    {
+        // Measured on live data: "ring" named King Thranduil (one edit on four letters, DA-052).
+        var pool = new[] { Work("OL27448W", "The Lord of the Rings", ["J.R.R. Tolkien"], 400, persons: ["Frodo Baggins", "King Thranduil", "Gandalf"]) };
+        var lotr = MatchRanker.Rank(QueryCleaner.Clean("frodo ring"), Hyp("The Lord of the Rings", "J.R.R. Tolkien"), pool);
+        lotr.Ranked.Single().Evidence.MatchedCharacters.ShouldBe(["Frodo Baggins"]);
+
+        var typo = MatchRanker.Rank(QueryCleaner.Clean("frodo gandlaf"), Hyp("The Lord of the Rings", "J.R.R. Tolkien"), pool);
+        typo.Ranked.Single().Evidence.MatchedCharacters.ShouldBe(["Frodo Baggins", "Gandalf"]);
+    }
+
+    [Fact]
     public void Evidence_says_hypothesis_or_original_title_only_when_the_title_came_from_the_interpreter()
     {
         var pool = new[]

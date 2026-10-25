@@ -205,7 +205,12 @@ public static class ExplanationFactsBuilder
                 });
             if (person is null) continue;
             var name = ExplanationText.Cap(ExplanationText.CleanName(person), MaxNameLength);
-            if (name.Length > 0 && !result.Any(r => ExplanationText.SameText(r, name))) result.Add(name);
+            if (name.Length == 0) continue;
+            // One name per character: "Mr. Sherlock Holmes" and "Sherlock Holmes" are both listed; keep the shorter.
+            var words = ExplanationText.Tokens(name);
+            if (result.Any(r => ExplanationText.Tokens(r).All(words.Contains))) continue;
+            result.RemoveAll(r => words.All(ExplanationText.Tokens(r).Contains));
+            result.Add(name);
             if (result.Count == MaxCharacters) break;
         }
         return result;

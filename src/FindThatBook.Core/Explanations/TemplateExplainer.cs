@@ -23,8 +23,9 @@ public static class TemplateExplainer
 
     /// <summary>
     /// How much to say, dropped one step at a time until the sentence fits: edition/duplicate counts, then other
-    /// characters, then the year, then extra contributors, the edition title and the alias; Minimal keeps the match
-    /// phrase, one primary surname and the matched contributor's surname with role (all the grounding check requires).
+    /// characters (the first one stays), then the year, then extra contributors, the edition title and the alias; Minimal
+    /// keeps the match phrase, one primary surname, the matched contributor's surname with role and one listed character
+    /// (all the grounding check requires).
     /// </summary>
     private enum Detail { Minimal, NoContributorExtras, NoYear, NoCharacters, NoCounts, Full }
 
@@ -37,8 +38,11 @@ public static class TemplateExplainer
             clauses.Add(intent == Model.EditionIntent.StudyGuide ? "matches the requested study guide" : "matches the requested adaptation");
         clauses.Add(PrimaryClause(f, shortNames, withAlias: detail > Detail.NoContributorExtras));
         clauses.AddRange(ContributorClauses(f, detail));
-        if (f.Kind != MatchKind.Character && f.MatchedCharacters.Count > 0 && detail > Detail.NoCharacters)
-            clauses.Add(f.MatchedCharacters.Count == 1 ? $"{f.MatchedCharacters[0]} is a listed character" : $"{Join(f.MatchedCharacters)} are listed characters");
+        if (f.Kind != MatchKind.Character && f.MatchedCharacters.Count > 0)
+        {
+            var characters = detail > Detail.NoCharacters ? f.MatchedCharacters : f.MatchedCharacters.Take(1).ToList();
+            clauses.Add(characters.Count == 1 ? $"{characters[0]} is a listed character" : $"{Join(characters)} are listed characters");
+        }
         if (f.FirstPublishYear is { } year && detail > Detail.NoYear)
             clauses.Add($"Open Library's first publication year {year} matches the year in the search");
         if (detail == Detail.Full && ShowsEditionCount(f.Kind))

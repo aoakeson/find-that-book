@@ -14,6 +14,7 @@ public static partial class GroundingCheck
     private sealed class Relations
     {
         public bool PrimaryMentioned { get; private set; }
+        public bool CharacterMentioned { get; private set; }
         public HashSet<int> RoleConfirmed { get; } = [];
 
         public static Relations Analyze(List<Token> tokens, FactModel model, List<string> problems)
@@ -22,6 +23,7 @@ public static partial class GroundingCheck
             var items = Items(tokens, model);
             foreach (var m in items.Where(i => i.Kind == ItemKind.Mention && i.Persons is not null))
                 if (m.Persons!.Any(p => model.Persons[p].IsPrimary)) result.PrimaryMentioned = true;
+            result.CharacterMentioned = items.Any(i => i is { Kind: ItemKind.Mention, IsCharacter: true });
 
             var segments = new List<(List<Item> Items, string Before, string After)>();
             var current = new List<Item>();

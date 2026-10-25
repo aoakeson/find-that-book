@@ -24,6 +24,9 @@ public sealed record SearchOutcome
 
     /// <summary>The full ranking before the limit was applied (for the eval and debugging).</summary>
     public required RankingResult Ranking { get; init; }
+
+    /// <summary>LLM sentences the grounding check rejected (problem codes only; a template was shown), for the eval.</summary>
+    public IReadOnlyList<GroundingRejection> GroundingRejections { get; init; } = [];
 }
 
 public sealed record SearchItem(int Rank, RankedWork Work, Explanation Explanation, bool SecondOpinion);

@@ -26,7 +26,8 @@ public sealed record GroundingResult(IReadOnlyList<string> Problems)
 /// <item>Relations: a contributor called the author, a primary author called a contributor, a wrong role, a role or
 /// authorship given to a character, or a negated claim about a person fail (AI-36).</item>
 /// <item>Meaning: the sentence states the code's match kind and contradicts none of it (no "exact" for a near match,
-/// AI-32), names a primary author, and names the matched contributor with their role (tier B).</item>
+/// AI-32), names a primary author, names the matched contributor with their role (tier B), and names a matched
+/// character when Open Library lists one.</item>
 /// </list>
 /// </summary>
 public static partial class GroundingCheck
@@ -307,6 +308,8 @@ public static partial class GroundingCheck
     {
         if (model.Facts.PrimaryAuthors.Count > 0 && !relations.PrimaryMentioned) problems.Add("primary_author_missing");
         if (model.MatchedContributor >= 0 && !relations.RoleConfirmed.Contains(model.MatchedContributor)) problems.Add("matched_contributor_role_missing");
+        // The typed character names are often the only reason for the result ("scout atticus" → To Kill a Mockingbird).
+        if (model.Facts.MatchedCharacters.Count > 0 && !relations.CharacterMentioned) problems.Add("matched_character_missing");
     }
 
     // ---------------------------------------------------------------- helpers

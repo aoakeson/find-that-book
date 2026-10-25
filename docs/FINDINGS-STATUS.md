@@ -44,14 +44,14 @@ clusters fill 30 rows; together they hold all 280 BT cases). All 28 P1 rows are 
 | Known misses (DE) | 7 | – | 7 | 0 | 0 | 0 | 0 | 0 |
 | Input (IN) | 85 | 5 | 53 | 3 | 7 | 0 | 0 | 22 |
 | Data and catalog (DA) | 74 | 9 | 30 | 2 | 2 | 0 | 0 | 40 |
-| AI, explanations, judge (AI) | 59 | 12 | 46 | 7 | 2 | 0 | 1 | 3 |
+| AI, explanations, judge (AI) | 63 | 12 | 50 | 7 | 2 | 0 | 1 | 3 |
 | System and API (SY) | 39 | 2 | 32 | 3 | 2 | 0 | 0 | 2 |
 | Topic requests (TR) | 13 | – | 12 | 0 | 0 | 0 | 0 | 1 |
 | Round-3 adversarial (R3) | 10 | – | 5 | 1 | 0 | 0 | 0 | 4 |
 | Round-3 clusters (R3-C) | 19 | – | 2 | 0 | 8 | 0 | 0 | 9 |
 | Battle clusters (BT) | 30 | – | 7 | 1 | 12 | 0 | 0 | 10 |
 | Golden-set known misses | 6 | – | 1 | 2 | 2 | 0 | 0 | 1 |
-| **Total** | **342** | **28** | **195** | **19** | **35** | **0** | **1** | **92** |
+| **Total** | **346** | **28** | **199** | **19** | **35** | **0** | **1** | **92** |
 
 Sections: [Known misses (DE)](#known-misses-de) · [Input (IN)](#input-in) · [Data and catalog (DA)](#data-and-catalog-da) ·
 [AI, explanations and judge (AI)](#ai-explanations-and-judge-ai) · [System and API (SY)](#system-and-api-sy) ·
@@ -311,6 +311,10 @@ The LLM interpreter, the explanation writer and its grounding check, the optiona
 | AI-57 | P2 | no key → 200, `degraded`, `ai_not_configured`; health says so | fixed+verified (`PipelineTests.LlmDown_IsA200_Degraded_WithTheHeuristicAndTemplates`; `StructuredLlmTests.Missing_provider_or_key_is_not_configured_without_a_call`; `AiAdminTests.Auto_picks_the_first_provider_that_has_a_key`; `HealthTests.Health_ReportsConfiguration_WithoutCallingOpenLibraryOrTheLlm`) |
 | AI-58 | P3 | the provider can be switched at runtime (Development admin API); caches never mix providers | fixed+verified (`AdminTests.UpdateSettings_SwitchesProviderModelAndJudge`; `AiAdminTests.Admin_can_switch_to_an_explicit_provider_and_back_to_auto`; `AiAdminTests.Runtime_keys_feed_auto_selection_in_priority_order`; `StructuredLlmTests.Same_user_text_with_another_model_is_a_separate_cache_entry`) |
 | AI-59 | P3 | Gemini free-tier region and data-use note for a hosted demo | deferred (not deployed) |
+| AI-60 | P2 | `scout atticus` with the LLM on: the explanation names the typed characters ("Atticus Finch and Scout Finch are listed characters"), not only "Interpreted title match" | fixed+verified (the likely-title call asks for the person field when the model kept typed characters: `CatalogQueriesTests.HypothesisTitle_AsksForCharacterNames_WhenTheModelKeptTypedCharacters`; a sentence that leaves them out fails: `GroundingCheckTests` "matched_character_missing"; prompt `explain.v5`; eval `eval/results/2026-10-25-fix4-golden-v2-live-openai-explain`: 0 grounding rejections of 284 shown, `main` had 17 of 284 on the same set) |
+| AI-61 | P2 | keywords the patron never typed (`scout atticus` → "racial injustice, coming of age, southern United States") are not shown as their clues | fixed+verified (`HypothesisSanitizerTests.Keywords_the_patron_never_typed_are_dropped`) |
+| AI-62 | P3 | a character is matched only on a typed word; a typo counts on 5+ letters (`frodo ring` never names King Thranduil, DA-052) and one name per character (`Sherlock Holmes`, not also `Mr. Sherlock Holmes`) | fixed+verified (`MatchRankerTests.Evidence_characters_need_a_typed_word_and_allow_a_typo_only_on_five_letters`; `ExplanationFactsBuilderTests.Build_Characters_OneNamePerCharacter_TheShorterListing`) |
+| AI-63 | P3 | the explanation never echoes a field name ("matched_terms include frankenstein"), and an author-only result is not described by title words | fixed+verified (prompt `explain.v5`; `LlmExplanationWriterTests.UserContent_PartialTitleKeepsTheMatchedWords_ExactTitleDropsThem`; rejection codes now in `SearchOutcome.GroundingRejections`) |
 
 ## System and API (SY)
 
