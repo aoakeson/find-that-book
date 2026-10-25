@@ -198,7 +198,7 @@ the LLM, or the words after "a book about …" when the LLM is off). The answer 
 - A title that happens to contain request or topic words ("About a Boy", "Looking for Alaska", "Find Me") is still a
   book request (`intent: "book"`).
 
-**Tiers** (the brief's hierarchy; labels, the score orders the list): `a` exact title + primary author (or exact
+**Tiers** (the brief's hierarchy; labels, the score usually orders the list, with typed exact primary titles of at least 10 editions promoted above near-title and author-only hits): `a` exact title + primary author (or exact
 title, no author typed) · `b` exact title + contributor-only author · `c` near-match title + author · `d` author only
 (the author's most-published works) · `e` no clear winner. Only `a`/`b` can be a `match`.
 

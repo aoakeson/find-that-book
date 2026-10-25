@@ -83,6 +83,29 @@ public sealed class MatchRankerTests
     }
 
     [Fact]
+    public void A_lone_explicit_adapter_is_never_promoted_to_primary_author()
+    {
+        var pool = new[] { Work("OL1W", "The Hobbit", ["Charles Dixon"], 10, contributors: ["Charles Dixon (Adapter)"]) };
+        var top = MatchRanker.Rank(QueryCleaner.Clean("hobbit dixon"), null, pool).Ranked[0];
+        top.PrimaryAuthors.ShouldBeEmpty();
+        top.Contributors.ShouldContain(c => c.Name == "Charles Dixon" && c.Role == "adapter");
+        top.Tier.ShouldNotBe(MatchTier.A);
+    }
+
+    [Fact]
+    public void An_exact_primary_title_precedes_a_more_popular_near_title()
+    {
+        var pool = new[]
+        {
+            Work("OL1W", "Quantum Garden", ["Alice Writer"], 10),
+            Work("OL2W", "Quantum Garden Revisited", ["Alice Writer"], 1000),
+        };
+        var top = MatchRanker.Rank(QueryCleaner.Clean("quantum garden alice writer"), null, pool).Ranked[0];
+        top.Work.WorkId.ShouldBe("OL1W");
+        top.Tier.ShouldBe(MatchTier.A);
+    }
+
+    [Fact]
     public void Placeholder_credit_names_never_reach_the_contributor_list() // seen live on OL27482W
     {
         var pool = new[]

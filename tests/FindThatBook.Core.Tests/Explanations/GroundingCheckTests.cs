@@ -121,6 +121,8 @@ public class GroundingCheckTests
         { "hobbit_a_plain", "Exact title match; J.R.R. Tolkien and Christopher Tolkien are the primary authors.", "unknown_word:christopher" },
         { "fellowship_d", "Author-only match; J.R.R. Tolkien is the primary author of The Lord of the Rings.", "unknown_word:lord" },
         { "hobbit_a_plain", "Exact title match; J.R.R. Tolkien is the primary author; 500 editions.", "number_not_in_facts:500" },
+        { "hobbit_a_plain", "Exact title match; J.R.R. Tolkien is the primary author; 2 editions.", "number_not_in_facts:2" },
+        { "hobbit_a_no_year", "Exact title match; J.R.R. Tolkien is the primary author; first published in 482.", "number_not_in_facts:482" },
         { "hobbit_a_plain", "Exact title match; J.R.R. Tolkien is the primary author; no first publish year listed.", "denies_year" },
         // Relations that contradict the facts.
         { "hobbit_b", "Exact title match; Charles Dixon is the primary author.", "contributor_called_author:Charles Dixon" },

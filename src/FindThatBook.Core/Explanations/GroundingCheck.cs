@@ -157,8 +157,24 @@ public static partial class GroundingCheck
 
     private static void CheckNumbers(List<Token> tokens, FactModel model, List<string> problems)
     {
-        foreach (var t in tokens.Where(t => t.Kind == TokenKind.Number))
-            if (!model.Numbers.Contains(TrimZeros(t.Folded))) problems.Add($"number_not_in_facts:{t.Text}");
+        for (var i = 0; i < tokens.Count; i++)
+        {
+            var t = tokens[i];
+            if (t.Kind != TokenKind.Number) continue;
+            var number = TrimZeros(t.Folded);
+            var before = tokens.Skip(Math.Max(0, i - 3)).Take(Math.Min(3, i)).Where(x => x.Kind == TokenKind.Word).Select(x => x.Folded).ToHashSet();
+            var after = tokens.Skip(i + 1).Take(2).Where(x => x.Kind == TokenKind.Word).Select(x => x.Folded).ToHashSet();
+            var expected = after.Overlaps(["edition", "editions", "version", "versions"])
+                ? model.Facts.EditionCount.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                : after.Overlaps(["duplicate", "duplicates", "record", "records"])
+                    ? model.Facts.DuplicateRecords.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                    : before.Overlaps(["published", "publication", "year", "date"]) || after.Overlaps(["year", "years"])
+                        ? model.Facts.FirstPublishYear?.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                        : null;
+            if (expected is not null ? number != expected :
+                (before.Overlaps(["published", "publication", "year", "date"]) || after.Overlaps(["year", "years"])) || !model.Numbers.Contains(number))
+                problems.Add($"number_not_in_facts:{t.Text}");
+        }
     }
 
     // ---------------------------------------------------------------- the code's match meaning

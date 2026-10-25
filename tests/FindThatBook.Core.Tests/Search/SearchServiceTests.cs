@@ -200,6 +200,18 @@ public sealed class SearchServiceTests
     }
 
     [Fact]
+    public async Task Search_EmptyBroadAndTimedOutHypothesis_ThrowsSearchTimeout()
+    {
+        var hypothesis = new QueryHypothesis("Adventures of Huckleberry Finn", "Mark Twain", [], [], null, null);
+        var catalog = new FakeCatalog().On(q => q.Q == "mark huckleberry", [])
+            .On(_ => true, TimeSpan.FromSeconds(30));
+        var options = new SearchOptions { RequestDeadline = TimeSpan.FromMilliseconds(600), PostRetrievalReserve = TimeSpan.FromMilliseconds(200) };
+
+        await Should.ThrowAsync<SearchTimeoutException>(() => Service(catalog, new FakeInterpreter(hypothesis), options: options)
+            .SearchAsync("mark huckleberry", null, Ct));
+    }
+
+    [Fact]
     public async Task Search_LlmUnavailable_UsesHeuristicArmAndSaysWhy()
     {
         var catalog = new FakeCatalog().On(q => q.Q == "tolkien hobbit", Hobbit);

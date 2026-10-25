@@ -157,7 +157,7 @@ and, for a topic, gives 1–3 English subject headings and up to 5 well-known bo
 | **D** | author only: the author's most-published works | `dickens` |
 | **E** | no clear winner: partial title, keywords or characters | `scout atticus` (LLM off) |
 
-**The tiers decide what we claim; the score decides the order.** Only a tier A/B top can be `match`. Ordering strictly
+**The tiers decide what we claim; the score usually decides the order.** A typed exact title by its primary author with at least 10 editions moves ahead of near-title and author-only results; tiny exact-title records keep the score order. Only a tier A/B top can be `match`. Ordering strictly
 A→E measured worse because Open Library has junk records with exact titles (a 2-edition "Harry Potter" box set beats
 *Philosopher's Stone* on title alone), so candidates are ordered by a score:
 `4·title similarity + 2·author role + 2.5·log10(editions) + 0.5·log10(reading logs) + 0.5·year ±1 + 4·character coverage

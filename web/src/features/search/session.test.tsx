@@ -209,6 +209,38 @@ describe("stale answers", () => {
 })
 
 describe("errors", () => {
+  it.each([
+    {},
+    { degraded_reasons: "bad" },
+    { candidates: "bad" },
+    { ...fixtures.match(), candidates: [{ title: "Broken" }] },
+  ])("a malformed successful response is recoverable", async (body) => {
+    let malformed = true
+    fakeApi({ "GET /api/books/search": () => json(malformed ? body : fixtures.match()) })
+    await renderApp("/")
+    typeAndSubmit("tolkien hobbit")
+    await waitFor(() => expect(view()).toMatchObject({ kind: "failed", error: { kind: "unexpected" } }))
+    malformed = false
+    act(() => session().retry())
+    await waitFor(() => expect(view().kind).toBe("success"))
+  })
+
+  it("does not attach a delayed validation error to an edited draft", async () => {
+    const search = manual()
+    fakeApi({ "GET /api/books/search": search.handler })
+    await renderApp("/")
+    typeAndSubmit("the")
+    await waitFor(() => expect(search.requests).toHaveLength(1))
+    act(() => session().setDraft("tolkien hobbit"))
+    await act(async () => search.requests[0].respond(problem(fixtures.noSearchableTerms())))
+    await waitFor(() => expect(view().kind).toBe("home"))
+    expect(session().fieldError).toBeNull()
+    act(() => session().submit())
+    await waitFor(() => expect(search.requests).toHaveLength(2))
+    await act(async () => search.requests[1].respond(json(fixtures.match())))
+    await waitFor(() => expect(view().kind).toBe("success"))
+  })
+
   it("a failed search keeps the answer that was on screen, as previous results", async () => {
     let offline = false
     fakeApi({
