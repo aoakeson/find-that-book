@@ -10,6 +10,8 @@ sources:
     title: Project overview, behavior, and live demo
   - resource: ../docs/adr/0001-ai-interprets-code-decides.md
     title: AI interprets, code decides
+  - resource: ../docs/DEPLOYMENT.md
+    title: Fly.io release and verification
   - resource: ../fly.toml
     title: Hosted demo configuration
 ---
@@ -24,4 +26,4 @@ AI may interpret the query and phrase explanations. Code retrieves and validates
 
 # Deployment
 
-The live demo is <https://books.andrewoakeson.com/>, the repo's Docker image on Fly.io in Production, so admin routes are off. Point readers to `/how-it-works` for the illustrated walkthrough.
+The live demo is <https://books.andrewoakeson.com/>, the repo's Docker image on Fly.io in Production, so admin routes are off. Pushes to `main` deploy after CI passes. Point readers to `/how-it-works` for the illustrated walkthrough.

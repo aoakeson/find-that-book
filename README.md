@@ -17,7 +17,8 @@ reference is live at [/scalar](https://books.andrewoakeson.com/scalar).
 The demo is this repo's Docker image on Fly.io (`fly.toml`), running in Production with an AI key set. Because it is
 Production, the Admin page is off by design; [`/api/health`](https://books.andrewoakeson.com/api/health) shows which AI
 provider is active. The machine stops when idle, so the first search after a quiet spell can take a few extra seconds.
-The usual [rate limits](docs/RUNNING.md#rate-limits-and-concurrency) apply.
+The usual [rate limits](docs/RUNNING.md#rate-limits-and-concurrency) apply. A push to `main` deploys automatically once
+CI passes ([docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)).
 
 ## Quick start
 
@@ -227,7 +228,7 @@ never estimates presented as measurements.
 | Return title, primary authors, year, OL ids/links, cover, explanation | `SearchResponse` |
 | README, AI setup, Gemini default | this file |
 | Simple modern UI | React app in `web/` (see [Frontend](#frontend) and [docs/FRONTEND.md](docs/FRONTEND.md)) |
-| Live demo | [books.andrewoakeson.com](https://books.andrewoakeson.com/), with the walkthrough at [/how-it-works](https://books.andrewoakeson.com/how-it-works) |
+| Live demo | [books.andrewoakeson.com](https://books.andrewoakeson.com/), with the walkthrough at [/how-it-works](https://books.andrewoakeson.com/how-it-works) (Fly.io; see [deployment](docs/DEPLOYMENT.md)) |
 
 Traceability (brief → code → tests) and the edge-case ledger: [docs/TRACEABILITY.md](docs/TRACEABILITY.md),
 [docs/FINDINGS-STATUS.md](docs/FINDINGS-STATUS.md).
@@ -428,6 +429,7 @@ Measured on the eval build `918d7b88` (details per row in `eval/results/`; the e
 - [docs/API.md](docs/API.md): frontend contract · [docs/adr/](docs/adr/): 7 short ADRs · [eval/README.md](eval/README.md): datasets and how to run the eval
 - [docs/TRACEABILITY.md](docs/TRACEABILITY.md) · [docs/FINDINGS-STATUS.md](docs/FINDINGS-STATUS.md) · [docs/ai-smoke.md](docs/ai-smoke.md)
 - Frontend: [docs/FRONTEND.md](docs/FRONTEND.md) · [docs/DESIGN.md](docs/DESIGN.md) · [docs/RUNNING.md](docs/RUNNING.md) (full cross-platform run guide)
+- Production: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) (Fly.io release and verification)
 
 ## Frontend
 
